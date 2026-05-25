@@ -1,16 +1,16 @@
 import * as t from "drizzle-orm/pg-core";
 import { pgTable as table } from "drizzle-orm/pg-core";
-import { workspaces } from ".";
-import { timestamps } from "./column.helper";
+import { boards } from ".";
+import { timestamps } from "./utils/helpers";
 
-const boards = table("boards", {
+const boardColumns = table("board_columns", {
   id: t.uuid().primaryKey().defaultRandom().notNull(),
   title: t.text().notNull(),
-  workspaceId: t
+  boardId: t
     .uuid()
     .notNull()
-    .references(() => workspaces.id, { onDelete: "cascade" }),
+    .references(() => boards.id, { onDelete: "cascade" }),
   ...timestamps,
 });
 
-export { boards };
+export { boardColumns };

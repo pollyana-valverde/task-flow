@@ -1,7 +1,7 @@
 import * as t from "drizzle-orm/pg-core";
 import { pgTable as table } from "drizzle-orm/pg-core";
 import { users } from ".";
-import { timestamps } from "./column.helper";
+import { timestamps } from "./utils/helpers";
 
 const workspaces = table("workspaces", {
   id: t.uuid().primaryKey().defaultRandom().notNull(),

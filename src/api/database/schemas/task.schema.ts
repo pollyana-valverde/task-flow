@@ -1,7 +1,7 @@
 import * as t from "drizzle-orm/pg-core";
 import { pgEnum as Enum, pgTable as table } from "drizzle-orm/pg-core";
 import { boardColumns, users, workspaceMembers } from ".";
-import { timestamps } from "./column.helper";
+import { timestamps } from "./utils/helpers";
 
 const taskPriorityEnum = Enum("task_priority", [
   "low",
