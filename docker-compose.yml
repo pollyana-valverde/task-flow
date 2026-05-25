@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: taskflow-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: taskflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - taskflow-pgdata:/bitnami/postgresql
+      - taskflow-initdb:/docker-entrypoint-initdb.d
+      - taskflow-preinitdb:/docker-entrypoint-preinitdb.d
+
+volumes:
+  taskflow-pgdata:
+    name: taskflow-pgdata
+  taskflow-initdb:
+    name: taskflow-initdb
+  taskflow-preinitdb:
+    name: taskflow-preinitdb
