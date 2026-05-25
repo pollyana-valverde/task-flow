@@ -17,7 +17,6 @@ interface Task {
   updatedAt: Date;
   createdBy: string;
   updatedBy: string;
-  position: number;
 }
 
 export type { Task, TaskPriority };
