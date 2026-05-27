@@ -8,7 +8,7 @@ interface IWorkspaceRepository {
   ): Promise<Workspace>;
   update(
     id: Workspace["id"],
-    data: Partial<Workspace>,
+    title: Workspace["title"],
   ): Promise<Workspace | null>;
   delete(id: Workspace["id"]): Promise<void>;
 }
@@ -25,7 +25,7 @@ interface IWorkspaceService {
   ): Promise<Workspace>;
   update(
     id: Workspace["id"],
-    data: Partial<Workspace>,
+    title: Workspace["title"],
     ownerId: Workspace["ownerId"],
   ): Promise<Workspace>;
   delete(id: Workspace["id"], ownerId: Workspace["ownerId"]): Promise<void>;

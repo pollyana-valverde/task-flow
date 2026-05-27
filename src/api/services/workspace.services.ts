@@ -58,7 +58,7 @@ class WorkspaceService implements IWorkspaceService {
 
   async update(
     id: Workspace["id"],
-    data: Partial<Workspace>,
+    title: Workspace["title"],
     ownerId: Workspace["ownerId"],
   ) {
     // Fetch the existing workspace
@@ -75,7 +75,7 @@ class WorkspaceService implements IWorkspaceService {
     }
 
     // Update the workspace with the provided data
-    const updatedWorkspace = await this.workspaceRepository.update(id, data);
+    const updatedWorkspace = await this.workspaceRepository.update(id, title);
 
     // Validate that the workspace was updated successfully
     if (!updatedWorkspace) {

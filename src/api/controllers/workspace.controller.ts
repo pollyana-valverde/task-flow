@@ -50,11 +50,8 @@ class WorkspaceController {
     const { title } = bodySchema.parse(body);
     const { id: ownerId } = c.get("user");
 
-    const workspace = await this.workspaceService.update(
-      id,
-      { title },
-      ownerId,
-    );
+    const workspace = await this.workspaceService.update(id, title, ownerId);
+    console.log("Updating workspace with body:");
 
     return c.json(workspace, 200);
   };

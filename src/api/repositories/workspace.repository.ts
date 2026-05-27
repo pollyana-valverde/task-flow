@@ -28,11 +28,12 @@ class WorkspaceRepository implements IWorkspaceRepository {
     return result[0];
   }
 
-  async update(id: Workspace["id"], data: Partial<Workspace>) {
+  async update(id: Workspace["id"], title: Workspace["title"]) {
     const result = await database
       .update(workspaces)
-      .set(data)
-      .where(eq(workspaces.id, id));
+      .set({ title })
+      .where(eq(workspaces.id, id))
+      .returning();
 
     return result[0] ?? null;
   }
