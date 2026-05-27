@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { ensureAuthenticated } from "@/api/middlewares/ensure-authenticated";
 import { authRoutes } from "./auth.routes";
+import { workspaceRoutes } from "./workspace.routes";
 
 const routes = new Hono();
 
@@ -8,6 +8,6 @@ const routes = new Hono();
 routes.route("/auth", authRoutes);
 
 // Rotas privadas
-routes.use("*", ensureAuthenticated);
+routes.route("/workspace", workspaceRoutes);
 
 export { routes };

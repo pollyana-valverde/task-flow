@@ -1,20 +1,20 @@
 import { Hono } from "hono";
-import { WorkspaceController } from "../controllers/workspace.controller";
-import { verifyAuthorization } from "../middlewares/verify-authorization";
-import type { WorkspaceMemberRole } from "../models/workspace-member.model";
-import { WorkspaceRepository } from "../repositories/workspace.repository";
-import { WorkspaceService } from "../services/workspace.services";
+import { WorkspaceController } from "@/api/controllers/workspace.controller";
+// import { verifyAuthorization } from "@/api/middlewares/verify-authorization";
+// import type { WorkspaceMemberRole } from "@/api/models/workspace-member.model";
+import { WorkspaceRepository } from "@/api/repositories/workspace.repository";
+import { WorkspaceService } from "@/api/services/workspace.services";
+import { ensureAuthenticated } from "../middlewares/ensure-authenticated";
 
 const workspaceRoutes = new Hono();
+
+workspaceRoutes.use("*", ensureAuthenticated);
 
 const workspaceRepository = new WorkspaceRepository();
 const workspaceService = new WorkspaceService(workspaceRepository);
 const workspaceController = new WorkspaceController(workspaceService);
 
-workspaceRoutes.get(
-  "/:ownerId",
-  verifyAuthorization(["owner"] as WorkspaceMemberRole[]),
-  workspaceController.findByOwnerId,
-);
+workspaceRoutes.get("/", workspaceController.findByOwnerId);
+workspaceRoutes.post("/", workspaceController.create);
 
 export { workspaceRoutes };

@@ -7,41 +7,47 @@ const paramsSchema = z.object({
 });
 
 const bodySchema = z.object({
-  title: z.string().min(1, "Workspace name is required"),
+  title: z
+    .string("Workspace title must be a string")
+    .min(1, "Workspace title is required"),
 });
 
 class WorkspaceController {
   constructor(private workspaceService: IWorkspaceService) {}
 
-  async findById(c: Context) {
+  findById = async (c: Context) => {
     const { id } = paramsSchema.parse(c.req.param());
     const { id: ownerId } = c.get("user");
 
     const workspace = await this.workspaceService.findById(id, ownerId);
 
     return c.json(workspace, 200);
-  }
+  };
 
-  async findByOwnerId(c: Context) {
+  findByOwnerId = async (c: Context) => {
     const { id: ownerId } = c.get("user");
 
     const workspaces = await this.workspaceService.findByOwnerId(ownerId);
 
     return c.json(workspaces, 200);
-  }
+  };
 
-  async create(c: Context) {
-    const { title } = bodySchema.parse(c.req.json());
+  create = async (c: Context) => {
+    const body = await c.req.json();
+
+    const { title } = bodySchema.parse(body);
     const { id: ownerId } = c.get("user");
 
     const workspace = await this.workspaceService.create(title, ownerId);
 
     return c.json(workspace, 201);
-  }
+  };
 
-  async update(c: Context) {
+  update = async (c: Context) => {
+    const body = await c.req.json();
+
     const { id } = paramsSchema.parse(c.req.param());
-    const { title } = bodySchema.parse(c.req.json());
+    const { title } = bodySchema.parse(body);
     const { id: ownerId } = c.get("user");
 
     const workspace = await this.workspaceService.update(
@@ -51,16 +57,16 @@ class WorkspaceController {
     );
 
     return c.json(workspace, 200);
-  }
+  };
 
-  async delete(c: Context) {
+  delete = async (c: Context) => {
     const { id } = paramsSchema.parse(c.req.param());
     const { id: ownerId } = c.get("user");
 
     await this.workspaceService.delete(id, ownerId);
 
     return c.json({ message: "Workspace deleted successfully" }, 200);
-  }
+  };
 }
 
 export { WorkspaceController };

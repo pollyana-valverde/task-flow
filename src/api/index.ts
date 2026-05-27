@@ -5,7 +5,15 @@ import { routes } from "@/api/routes";
 
 const app = new Hono().basePath("/api");
 
-app.use("*", cors({ origin: "http://localhost:3000" }));
+app.use(
+  "*",
+  cors({
+    origin: "http://localhost:3000",
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    credentials: true,
+  }),
+);
 
 app.route("/", routes);
 app.onError(errorHandler);

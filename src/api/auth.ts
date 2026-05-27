@@ -2,6 +2,7 @@ import { hash as bHash, compare } from "bcrypt";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { database } from "@/api/database";
+
 import { apiEnv } from "@/api-env";
 
 const auth = betterAuth({
