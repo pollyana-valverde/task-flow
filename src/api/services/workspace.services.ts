@@ -277,7 +277,8 @@ class WorkspaceService implements IWorkspaceService {
     // Count the number of owners in the workspace
     const ownerCount = members.filter((m) => m.role === "owner").length;
 
-    if (ownerCount === 1) {
+    // Prevent removing the last owner from the workspace
+    if (member.role === "owner" && ownerCount === 1) {
       throw new AppError("You need more than one owner in the workspace", 403);
     }
 
