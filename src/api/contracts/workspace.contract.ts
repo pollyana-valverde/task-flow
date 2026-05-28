@@ -1,6 +1,13 @@
 import type { Workspace } from "@/api/models/workspace.model";
+import type { User } from "../models/user.model";
+import type {
+  WorkspaceMember,
+  WorkspaceMemberRole,
+  WorkspaceMemberStatus,
+} from "../models/workspace-member.model";
 
 interface IWorkspaceRepository {
+  // workspace
   findById(id: Workspace["id"]): Promise<Workspace | null>;
   findByOwnerId(ownerId: Workspace["ownerId"]): Promise<Workspace[]>;
   create(
@@ -11,12 +18,37 @@ interface IWorkspaceRepository {
     title: Workspace["title"],
   ): Promise<Workspace | null>;
   delete(id: Workspace["id"]): Promise<void>;
+
+  // workspace members
+  findMembers(workspaceId: Workspace["id"]): Promise<WorkspaceMember[]>;
+  findMember(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+  ): Promise<WorkspaceMember | null>;
+  addMember(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    status?: WorkspaceMemberStatus,
+    role?: WorkspaceMemberRole,
+  ): Promise<WorkspaceMember>;
+  updateMemberRole(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    role: WorkspaceMemberRole,
+  ): Promise<WorkspaceMemberRole | null>;
+  updateMemberStatus(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    status: WorkspaceMemberStatus,
+  ): Promise<WorkspaceMemberStatus | null>;
+  removeMember(workspaceId: Workspace["id"], userId: User["id"]): Promise<void>;
 }
 
 interface IWorkspaceService {
+  // workspace
   findById(
     id: Workspace["id"],
-    ownerId: Workspace["ownerId"],
+    userId: WorkspaceMember["userId"],
   ): Promise<Workspace>;
   findByOwnerId(ownerId: Workspace["ownerId"]): Promise<Workspace[]>;
   create(
@@ -29,6 +61,26 @@ interface IWorkspaceService {
     ownerId: Workspace["ownerId"],
   ): Promise<Workspace>;
   delete(id: Workspace["id"], ownerId: Workspace["ownerId"]): Promise<void>;
+
+  // workspace members
+  inviteMember(
+    workspaceId: Workspace["id"],
+    email: User["email"],
+  ): Promise<WorkspaceMember>;
+  acceptInvite(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+  ): Promise<WorkspaceMemberStatus>;
+  declineInvite(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+  ): Promise<WorkspaceMemberStatus>;
+  updateMemberRole(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    role: WorkspaceMemberRole,
+  ): Promise<WorkspaceMemberRole>;
+  removeMember(workspaceId: Workspace["id"], userId: User["id"]): Promise<void>;
 }
 
 export type { IWorkspaceRepository, IWorkspaceService };

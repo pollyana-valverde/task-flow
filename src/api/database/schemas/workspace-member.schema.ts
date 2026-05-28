@@ -4,6 +4,12 @@ import { users, workspaces } from ".";
 
 const memberRoleEnum = Enum("member_role", ["owner", "admin", "member"]);
 
+const memberStatusEnum = Enum("member_status", [
+  "active",
+  "pending",
+  "declined",
+]);
+
 const workspaceMembers = table("workspace_members", {
   id: t.uuid().primaryKey().defaultRandom().notNull(),
   userId: t
@@ -15,7 +21,8 @@ const workspaceMembers = table("workspace_members", {
     .notNull()
     .references(() => workspaces.id, { onDelete: "cascade" }),
   role: memberRoleEnum().notNull().default("member"),
+  status: memberStatusEnum().notNull().default("pending"),
   joinedAt: t.timestamp().notNull().defaultNow(),
 });
 
-export { workspaceMembers, memberRoleEnum };
+export { workspaceMembers, memberRoleEnum, memberStatusEnum };

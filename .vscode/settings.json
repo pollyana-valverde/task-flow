@@ -6,5 +6,6 @@
   },
   "[drizzle]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "AllAutocomplete.showCurrentDocument": false
 }
