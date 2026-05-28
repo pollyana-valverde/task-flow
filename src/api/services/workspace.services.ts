@@ -268,6 +268,19 @@ class WorkspaceService implements IWorkspaceService {
       throw new AppError("User is not a member of this workspace", 404);
     }
 
+    const members = await this.workspaceRepository.findMembers(workspaceId);
+
+    if (!members) {
+      throw new AppError("Failed to fetch workspace members", 500);
+    }
+
+    // Count the number of owners in the workspace
+    const ownerCount = members.filter((m) => m.role === "owner").length;
+
+    if (ownerCount === 1) {
+      throw new AppError("You need more than one owner in the workspace", 403);
+    }
+
     return await this.workspaceRepository.removeMember(workspaceId, userId);
   }
 }
