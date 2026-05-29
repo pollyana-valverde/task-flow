@@ -15,7 +15,8 @@ const workspaceService = new WorkspaceService(workspaceRepository);
 const workspaceController = new WorkspaceController(workspaceService);
 
 // workspace
-workspaceRoutes.get("/", workspaceController.findByOwnerId);
+workspaceRoutes.get("/", workspaceController.findAll);
+workspaceRoutes.get("/owned", workspaceController.findByOwnerId);
 workspaceRoutes.get(
   "/:id",
   verifyAuthorization(
@@ -52,6 +53,12 @@ workspaceRoutes.patch(
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
   workspaceController.updateRole,
 );
+workspaceRoutes.patch(
+  "/:id/transfer-ownership",
+  verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
+  workspaceController.transferOwnership,
+);
+workspaceRoutes.delete("/:id/exit", workspaceController.exitWorkspace);
 workspaceRoutes.delete(
   "/:id/members/:uid",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),

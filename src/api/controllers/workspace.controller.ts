@@ -26,10 +26,22 @@ const updateRoleSchema = z.object({
   role: z.enum(["admin", "member"]),
 });
 
+const transferOwnershipSchema = z.object({
+  newOwnerId: z.uuid("Invalid user ID format"),
+});
+
 class WorkspaceController {
   constructor(private workspaceService: IWorkspaceService) {}
 
   // workspace
+  findAll = async (c: Context) => {
+    const { id: userId } = c.get("user");
+
+    const workspaces = await this.workspaceService.findAll(userId);
+
+    return c.json(workspaces, 200);
+  };
+
   findById = async (c: Context) => {
     const { id } = paramsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
@@ -124,6 +136,31 @@ class WorkspaceController {
     );
 
     return c.json({ message: "Member role updated" }, 200);
+  };
+
+  transferOwnership = async (c: Context) => {
+    const { id: workspaceId } = paramsSchema.parse(c.req.param());
+    const { id: oldOwnerId } = c.get("user");
+
+    const body = await c.req.json();
+    const { newOwnerId } = transferOwnershipSchema.parse(body);
+
+    await this.workspaceService.transferOwnership(
+      workspaceId,
+      oldOwnerId,
+      newOwnerId,
+    );
+
+    return c.json({ message: "Ownership transferred" }, 200);
+  };
+
+  exitWorkspace = async (c: Context) => {
+    const { id: workspaceId } = paramsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
+
+    await this.workspaceService.exitWorkspace(workspaceId, userId);
+
+    return c.json({ message: "Exited workspace" }, 200);
   };
 
   removeMember = async (c: Context) => {

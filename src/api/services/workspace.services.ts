@@ -16,6 +16,16 @@ class WorkspaceService implements IWorkspaceService {
   constructor(private workspaceRepository: IWorkspaceRepository) {}
 
   // workspace
+  async findAll(userId: User["id"]) {
+    const workspaces = await this.workspaceRepository.findAll(userId);
+
+    if (!workspaces) {
+      throw new AppError("Failed to fetch workspaces", 500);
+    }
+
+    return workspaces;
+  }
+
   async findById(id: Workspace["id"], userId: WorkspaceMember["userId"]) {
     // Fetch the workspace by its ID
     const workspace = await this.workspaceRepository.findById(id);
@@ -257,6 +267,90 @@ class WorkspaceService implements IWorkspaceService {
     return updatedRole;
   }
 
+  async transferOwnership(
+    workspaceId: Workspace["id"],
+    oldOwnerId: User["id"],
+    newOwnerId: User["id"],
+  ) {
+    const workspace = await this.workspaceRepository.findById(workspaceId);
+
+    // Validate that the workspace exists
+    if (!workspace) {
+      throw new AppError("Workspace not found", 404);
+    }
+
+    // Validate that the current user is the owner of the workspace
+    if (workspace.ownerId !== oldOwnerId) {
+      throw new AppError("You're not the owner of this workspace", 403);
+    }
+
+    const newOwnerMember = await this.workspaceRepository.findMember(
+      workspaceId,
+      newOwnerId,
+    );
+
+    // Validate that the new owner is a member of the workspace
+    if (!newOwnerMember || newOwnerMember.status !== "active") {
+      throw new AppError(
+        "New owner must be an active member of the workspace",
+        400,
+      );
+    }
+
+    const updatedWorkspaceOwner =
+      await this.workspaceRepository.transferOwnership(workspaceId, newOwnerId);
+
+    // Validate that the ownership was transferred successfully
+    if (!updatedWorkspaceOwner) {
+      throw new AppError("Failed to transfer workspace ownership", 500);
+    }
+
+    // Update the roles of the old and new owners
+    const updatedOldOwnerRole = await this.workspaceRepository.updateMemberRole(
+      workspaceId,
+      oldOwnerId,
+      "member" as WorkspaceMemberRole,
+    );
+
+    if (!updatedOldOwnerRole) {
+      throw new AppError("Failed to update old owner role", 500);
+    }
+
+    const updatedNewOwnerRole = await this.workspaceRepository.updateMemberRole(
+      workspaceId,
+      newOwnerId,
+      "owner" as WorkspaceMemberRole,
+    );
+
+    if (!updatedNewOwnerRole) {
+      throw new AppError("Failed to update new owner role", 500);
+    }
+
+    return updatedWorkspaceOwner;
+  }
+
+  async exitWorkspace(workspaceId: Workspace["id"], userId: User["id"]) {
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
+
+    // Check if the user is a member of the workspace
+    if (!member) {
+      throw new AppError("You are not a member of this workspace", 404);
+    }
+
+    // Prevent removing the owner from the workspace
+    if (member.role === "owner") {
+      throw new AppError(
+        "You need to transfer ownership before exiting the workspace",
+        403,
+      );
+    }
+
+    return await this.workspaceRepository.removeMember(workspaceId, userId);
+  }
+
   async removeMember(workspaceId: Workspace["id"], userId: User["id"]) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
@@ -266,20 +360,6 @@ class WorkspaceService implements IWorkspaceService {
     // Check if the user is a member of the workspace
     if (!member) {
       throw new AppError("User is not a member of this workspace", 404);
-    }
-
-    const members = await this.workspaceRepository.findMembers(workspaceId);
-
-    if (!members) {
-      throw new AppError("Failed to fetch workspace members", 500);
-    }
-
-    // Count the number of owners in the workspace
-    const ownerCount = members.filter((m) => m.role === "owner").length;
-
-    // Prevent removing the last owner from the workspace
-    if (member.role === "owner" && ownerCount === 1) {
-      throw new AppError("You need more than one owner in the workspace", 403);
     }
 
     return await this.workspaceRepository.removeMember(workspaceId, userId);

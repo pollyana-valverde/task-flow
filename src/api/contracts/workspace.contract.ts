@@ -8,6 +8,7 @@ import type {
 
 interface IWorkspaceRepository {
   // workspace
+  findAll(userId: User["id"]): Promise<Workspace[]>;
   findById(id: Workspace["id"]): Promise<Workspace | null>;
   findByOwnerId(ownerId: Workspace["ownerId"]): Promise<Workspace[]>;
   create(
@@ -31,6 +32,10 @@ interface IWorkspaceRepository {
     status?: WorkspaceMemberStatus,
     role?: WorkspaceMemberRole,
   ): Promise<WorkspaceMember>;
+  transferOwnership(
+    workspaceId: Workspace["id"],
+    newOwnerId: User["id"],
+  ): Promise<Workspace | null>;
   updateMemberRole(
     workspaceId: Workspace["id"],
     userId: User["id"],
@@ -46,6 +51,7 @@ interface IWorkspaceRepository {
 
 interface IWorkspaceService {
   // workspace
+  findAll(userId: User["id"]): Promise<Workspace[]>;
   findById(
     id: Workspace["id"],
     userId: WorkspaceMember["userId"],
@@ -80,6 +86,15 @@ interface IWorkspaceService {
     userId: User["id"],
     role: WorkspaceMemberRole,
   ): Promise<WorkspaceMemberRole>;
+  transferOwnership(
+    workspaceId: Workspace["id"],
+    oldOwnerId: User["id"],
+    newOwnerId: User["id"],
+  ): Promise<Workspace | null>;
+  exitWorkspace(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+  ): Promise<void>;
   removeMember(workspaceId: Workspace["id"], userId: User["id"]): Promise<void>;
 }
 

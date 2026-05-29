@@ -12,6 +12,19 @@ import type {
 
 class WorkspaceRepository implements IWorkspaceRepository {
   // workspace
+  async findAll(userId: User["id"]) {
+    const result = await database
+      .select()
+      .from(workspaces)
+      .innerJoin(
+        workspaceMembers,
+        eq(workspaceMembers.workspaceId, workspaces.id),
+      )
+      .where(eq(workspaceMembers.userId, userId));
+
+    return result.map((row) => row.workspaces);
+  }
+
   async findById(id: Workspace["id"]) {
     const result = await database
       .select()
@@ -91,6 +104,19 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .returning();
 
     return result[0] as WorkspaceMember;
+  }
+
+  async transferOwnership(
+    workspaceId: Workspace["id"],
+    newOwnerId: User["id"],
+  ) {
+    const result = await database
+      .update(workspaces)
+      .set({ ownerId: newOwnerId })
+      .where(eq(workspaces.id, workspaceId))
+      .returning();
+
+    return result[0] ?? null;
   }
 
   async updateMemberRole(
