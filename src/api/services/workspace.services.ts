@@ -2,15 +2,15 @@ import type {
   IWorkspaceRepository,
   IWorkspaceService,
 } from "@/api/contracts/workspace.contract";
+import type { User } from "@/api/models/user.model";
 import type { Workspace } from "@/api/models/workspace.model";
-import { AppError } from "@/api/utils/app-error";
-import type { User } from "../models/user.model";
 import type {
   WorkspaceMember,
   WorkspaceMemberRole,
   WorkspaceMemberStatus,
-} from "../models/workspace-member.model";
-import { getUserIdByEmail } from "../utils/get-user-email";
+} from "@/api/models/workspace-member.model";
+import { AppError } from "@/api/utils/app-error";
+import { getUserIdByEmail } from "@/api/utils/get-user-email";
 
 class WorkspaceService implements IWorkspaceService {
   constructor(private workspaceRepository: IWorkspaceRepository) {}

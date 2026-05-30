@@ -51,7 +51,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
   async update(id: Workspace["id"], title: Workspace["title"]) {
     const result = await database
       .update(workspaces)
-      .set({ title })
+      .set({ title, updatedAt: new Date() })
       .where(eq(workspaces.id, id))
       .returning();
 
@@ -112,7 +112,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
   ) {
     const result = await database
       .update(workspaces)
-      .set({ ownerId: newOwnerId })
+      .set({ ownerId: newOwnerId, updatedAt: new Date() })
       .where(eq(workspaces.id, workspaceId))
       .returning();
 

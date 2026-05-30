@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { database } from "../database";
-import { users } from "../database/schemas";
+import { database } from "@/api/database";
+import { users } from "@/api/database/schemas";
 
 async function getUserIdByEmail(email: string) {
   const user = await database

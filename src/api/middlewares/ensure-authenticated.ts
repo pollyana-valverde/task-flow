@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 import { type AuthSession, auth } from "@/api/auth";
-import { AppError } from "../utils/app-error";
+import { AppError } from "@/api/utils/app-error";
 
 const ensureAuthenticated = createMiddleware<{
   Variables: {

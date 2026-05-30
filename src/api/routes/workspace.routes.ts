@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { WorkspaceController } from "@/api/controllers/workspace.controller";
+import { ensureAuthenticated } from "@/api/middlewares/ensure-authenticated";
 import { verifyAuthorization } from "@/api/middlewares/verify-authorization";
 import type { WorkspaceMemberRole } from "@/api/models/workspace-member.model";
 import { WorkspaceRepository } from "@/api/repositories/workspace.repository";
 import { WorkspaceService } from "@/api/services/workspace.services";
-import { ensureAuthenticated } from "../middlewares/ensure-authenticated";
 
 const workspaceRoutes = new Hono();
 

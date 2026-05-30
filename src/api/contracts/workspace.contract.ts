@@ -1,10 +1,10 @@
+import type { User } from "@/api/models/user.model";
 import type { Workspace } from "@/api/models/workspace.model";
-import type { User } from "../models/user.model";
 import type {
   WorkspaceMember,
   WorkspaceMemberRole,
   WorkspaceMemberStatus,
-} from "../models/workspace-member.model";
+} from "@/api/models/workspace-member.model";
 
 interface IWorkspaceRepository {
   // workspace

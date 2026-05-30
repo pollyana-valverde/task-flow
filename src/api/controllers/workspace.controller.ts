@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { z } from "zod";
 import type { IWorkspaceService } from "@/api/contracts/workspace.contract";
-import type { WorkspaceMemberRole } from "../models/workspace-member.model";
+import type { WorkspaceMemberRole } from "@/api/models/workspace-member.model";
 
 const paramsSchema = z.object({
   id: z.uuid("Invalid workspace ID format"),
