@@ -11,9 +11,7 @@ interface IWorkspaceRepository {
   findAll(userId: User["id"]): Promise<Workspace[]>;
   findById(id: Workspace["id"]): Promise<Workspace | null>;
   findByOwnerId(ownerId: Workspace["ownerId"]): Promise<Workspace[]>;
-  create(
-    data: Omit<Workspace, "id" | "createdAt" | "updatedAt">,
-  ): Promise<Workspace>;
+  create(title: Workspace["title"]): Promise<Workspace>;
   update(
     id: Workspace["id"],
     title: Workspace["title"],
