@@ -1,11 +1,19 @@
 import type { Board } from "@/api/models/board.model";
 import type { BoardColumn } from "../models/board-column.model";
+import type { Task } from "../models/task.model";
 
 interface IBoardRepository {
   // board
-  findById(id: Board["id"]): Promise<Board | null>;
+  findById(id: Board["id"]): Promise<{
+    board: Board;
+    board_columns: BoardColumn;
+    tasks: Task;
+  } | null>;
   findByWorkspaceId(workspaceId: Board["workspaceId"]): Promise<Board | null>;
-  create(title: Board["title"]): Promise<Board>;
+  create(
+    workspaceId: Board["workspaceId"],
+    title: Board["title"],
+  ): Promise<Board>;
   update(id: Board["id"], title: Board["title"]): Promise<Board | null>;
   delete(id: Board["id"]): Promise<void>;
 
@@ -13,11 +21,11 @@ interface IBoardRepository {
   createColumn(
     boardId: Board["id"],
     title: BoardColumn["title"],
-  ): Promise<void>;
+  ): Promise<BoardColumn | null>;
   updateColumn(
     columnId: BoardColumn["id"],
     title: BoardColumn["title"],
-  ): Promise<void>;
+  ): Promise<BoardColumn | null>;
   deleteColumn(columnId: BoardColumn["id"]): Promise<void>;
 }
 
@@ -43,12 +51,12 @@ interface IBoardService {
   createColumn(
     boardId: Board["id"],
     title: BoardColumn["title"],
-  ): Promise<void>;
+  ): Promise<BoardColumn | null>;
   updateColumn(
     boardId: Board["id"],
     columnId: BoardColumn["id"],
     title: BoardColumn["title"],
-  ): Promise<void>;
+  ): Promise<BoardColumn | null>;
   deleteColumn(
     columnId: BoardColumn["id"],
     boardId: Board["id"],
