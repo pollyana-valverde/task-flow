@@ -34,7 +34,11 @@ interface IBoardService {
   findById(
     id: Board["id"],
     workspaceId: Board["workspaceId"],
-  ): Promise<Board | null>;
+  ): Promise<{
+    board: Board;
+    board_columns: BoardColumn;
+    tasks: Task;
+  } | null>;
   findByWorkspaceId(workspaceId: Board["workspaceId"]): Promise<Board | null>;
   create(
     title: Board["title"],
