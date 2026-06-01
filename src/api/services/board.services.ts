@@ -1,11 +1,11 @@
 import type {
   IBoardRepository,
   IBoardService,
-} from "../contracts/board.contract";
-import type { IWorkspaceRepository } from "../contracts/workspace.contract";
-import type { Board } from "../models/board.model";
-import type { BoardColumn } from "../models/board-column.model";
-import { AppError } from "../utils/app-error";
+} from "@/api/contracts/board.contract";
+import type { IWorkspaceRepository } from "@/api/contracts/workspace.contract";
+import type { Board } from "@/api/models/board.model";
+import type { BoardColumn } from "@/api/models/board-column.model";
+import { AppError } from "@/api/utils/app-error";
 
 class BoardService implements IBoardService {
   constructor(
