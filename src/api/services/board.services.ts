@@ -6,6 +6,7 @@ import type { IWorkspaceRepository } from "@/api/contracts/workspace.contract";
 import type { Board } from "@/api/models/board.model";
 import type { BoardColumn } from "@/api/models/board-column.model";
 import { AppError } from "@/api/utils/app-error";
+import type { User } from "../models/user.model";
 
 class BoardService implements IBoardService {
   constructor(
@@ -48,12 +49,32 @@ class BoardService implements IBoardService {
     return existingBoards;
   }
 
-  async create(title: Board["title"], workspaceId: Board["workspaceId"]) {
+  async create(
+    title: Board["title"],
+    workspaceId: Board["workspaceId"],
+    userId: User["id"],
+  ) {
     const existingWorkspace =
       await this.workspaceRepository.findById(workspaceId);
 
     if (!existingWorkspace) {
       throw new AppError("Workspace not found", 404);
+    }
+
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
+
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
+    }
+
+    if (member.role === "member") {
+      throw new AppError(
+        "User does not have permission to create a board",
+        403,
+      );
     }
 
     const createdBoard = await this.boardRepository.create(title, workspaceId);
@@ -66,21 +87,31 @@ class BoardService implements IBoardService {
   }
 
   async update(
+    userId: User["id"],
     id: Board["id"],
     title: Board["title"],
     workspaceId: Board["workspaceId"],
   ) {
-    const existingWorkspace =
-      await this.workspaceRepository.findById(workspaceId);
-
-    if (!existingWorkspace) {
-      throw new AppError("Workspace not found", 404);
-    }
-
     const existingBoard = await this.boardRepository.findById(id);
 
     if (!existingBoard) {
       throw new AppError("Board not found", 404);
+    }
+
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
+
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
+    }
+
+    if (member.role === "member") {
+      throw new AppError(
+        "User does not have permission to update a board",
+        403,
+      );
     }
 
     const updatedBoard = await this.boardRepository.update(id, title);
@@ -92,29 +123,63 @@ class BoardService implements IBoardService {
     return updatedBoard;
   }
 
-  async delete(id: Board["id"], workspaceId: Board["workspaceId"]) {
-    const existingWorkspace =
-      await this.workspaceRepository.findById(workspaceId);
-
-    if (!existingWorkspace) {
-      throw new AppError("Workspace not found", 404);
-    }
-
+  async delete(
+    userId: User["id"],
+    id: Board["id"],
+    workspaceId: Board["workspaceId"],
+  ) {
     const existingBoard = await this.boardRepository.findById(id);
 
     if (!existingBoard) {
       throw new AppError("Board not found", 404);
     }
 
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
+
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
+    }
+
+    if (member.role === "member") {
+      throw new AppError(
+        "User does not have permission to delete a board",
+        403,
+      );
+    }
+
     return await this.boardRepository.delete(id);
   }
 
   // board column
-  async createColumn(boardId: Board["id"], title: BoardColumn["title"]) {
+  async createColumn(
+    boardId: Board["id"],
+    title: BoardColumn["title"],
+    workspaceId: Board["workspaceId"],
+    userId: User["id"],
+  ) {
     const existingBoard = await this.boardRepository.findById(boardId);
 
     if (!existingBoard) {
       throw new AppError("Board not found", 404);
+    }
+
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
+
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
+    }
+
+    if (member.role === "member") {
+      throw new AppError(
+        "User does not have permission to create a column in this board",
+        403,
+      );
     }
 
     const createdColumn = await this.boardRepository.createColumn(
@@ -130,33 +195,58 @@ class BoardService implements IBoardService {
   }
 
   async updateColumn(
-    boardId: Board["id"],
     columnId: BoardColumn["id"],
     title: BoardColumn["title"],
+    workspaceId: Board["workspaceId"],
+    userId: User["id"],
   ) {
-    const existingBoard = await this.boardRepository.findById(boardId);
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
 
-    if (!existingBoard) {
-      throw new AppError("Board not found", 404);
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
     }
 
-    const existingColumn = await this.boardRepository.updateColumn(
+    if (member.role === "member") {
+      throw new AppError(
+        "User does not have permission to update a column in this board",
+        403,
+      );
+    }
+
+    const updatedColumn = await this.boardRepository.updateColumn(
       columnId,
       title,
     );
 
-    if (!existingColumn) {
+    if (!updatedColumn) {
       throw new AppError("Failed to update column", 500);
     }
 
-    return existingColumn;
+    return updatedColumn;
   }
 
-  async deleteColumn(columnId: BoardColumn["id"], boardId: Board["id"]) {
-    const existingBoard = await this.boardRepository.findById(boardId);
+  async deleteColumn(
+    columnId: BoardColumn["id"],
+    workspaceId: Board["workspaceId"],
+    userId: User["id"],
+  ) {
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
 
-    if (!existingBoard) {
-      throw new AppError("Board not found", 404);
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
+    }
+
+    if (member.role === "member") {
+      throw new AppError(
+        "User does not have permission to delete a column in this board",
+        403,
+      );
     }
 
     return await this.boardRepository.deleteColumn(columnId);
