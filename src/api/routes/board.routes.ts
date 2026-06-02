@@ -14,8 +14,8 @@ const workspaceRepository = new WorkspaceRepository();
 const boardService = new BoardService(boardRepository, workspaceRepository);
 const boardController = new BoardController(boardService);
 
-boardRoutes.get("/:boardId", boardController.findById);
 boardRoutes.get("/", boardController.findByWorkspaceId);
+boardRoutes.get("/:boardId", boardController.findById);
 
 boardRoutes.post("/", boardController.create);
 boardRoutes.put("/:boardId", boardController.update);

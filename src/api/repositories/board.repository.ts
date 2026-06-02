@@ -1,10 +1,9 @@
 import { eq } from "drizzle-orm";
 import type { IBoardRepository } from "@/api/contracts/board.contract";
 import { database } from "@/api/database";
-import { boardColumns, boards, tasks } from "@/api/database/schemas";
+import { boardColumns, boards } from "@/api/database/schemas";
 import type { Board } from "@/api/models/board.model";
 import type { BoardColumn } from "@/api/models/board-column.model";
-import type { Task } from "@/api/models/task.model";
 
 class BoardRepository implements IBoardRepository {
   // board
@@ -12,16 +11,10 @@ class BoardRepository implements IBoardRepository {
     const result = await database
       .select()
       .from(boards)
-      .innerJoin(boardColumns, eq(boardColumns.boardId, boards.id))
-      .innerJoin(tasks, eq(tasks.columnId, boardColumns.id))
       .where(eq(boards.id, id))
       .limit(1);
 
-    return (result.map((row) => ({
-      board: row.boards as Board,
-      board_columns: row.board_columns as BoardColumn,
-      tasks: row.tasks as Task,
-    })) ?? null)[0];
+    return result[0] ?? null;
   }
 
   async findByWorkspaceId(workspaceId: Board["workspaceId"]) {
@@ -31,7 +24,7 @@ class BoardRepository implements IBoardRepository {
       .where(eq(boards.workspaceId, workspaceId))
       .limit(1);
 
-    return result[0] ?? null;
+    return result;
   }
 
   async create(title: Board["title"], workspaceId: Board["workspaceId"]) {
@@ -58,6 +51,15 @@ class BoardRepository implements IBoardRepository {
   }
 
   // board columns
+  async findColumns(boardId: Board["id"]) {
+    const result = await database
+      .select()
+      .from(boardColumns)
+      .where(eq(boardColumns.boardId, boardId));
+
+    return result;
+  }
+
   async createColumn(boardId: Board["id"], title: BoardColumn["title"]) {
     const result = await database
       .insert(boardColumns)

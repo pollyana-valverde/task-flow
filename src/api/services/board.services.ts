@@ -28,7 +28,16 @@ class BoardService implements IBoardService {
       throw new AppError("Board not found", 404);
     }
 
-    return existingBoard;
+    const board_columns = await this.boardRepository.findColumns(id);
+
+    if (!board_columns) {
+      throw new AppError("Failed to fetch board columns", 500);
+    }
+
+    return {
+      board: existingBoard,
+      board_columns,
+    };
   }
 
   async findByWorkspaceId(workspaceId: Board["workspaceId"]) {
@@ -41,10 +50,6 @@ class BoardService implements IBoardService {
 
     const existingBoards =
       await this.boardRepository.findByWorkspaceId(workspaceId);
-
-    if (!existingBoards) {
-      throw new AppError("Boards not found", 404);
-    }
 
     return existingBoards;
   }

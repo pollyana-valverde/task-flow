@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { IBoardService } from "@/api/contracts/board.contract";
 
 const workspaceParamsSchema = z.object({
-  workspaceId: z.uuid("Invalid workspace ID format"),
+  id: z.uuid("Invalid workspace ID format"),
 });
 
 const boardParamsSchema = z.object({
@@ -30,7 +30,7 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { workspaceId } = workspaceParamsSchema.parse(params);
+    const { id: workspaceId } = workspaceParamsSchema.parse(params);
 
     const board = await this.boardService.findById(boardId, workspaceId);
 
@@ -38,7 +38,7 @@ class BoardController {
   };
 
   findByWorkspaceId = async (c: Context) => {
-    const { workspaceId } = workspaceParamsSchema.parse(c.req.param());
+    const { id: workspaceId } = workspaceParamsSchema.parse(c.req.param());
 
     const boards = await this.boardService.findByWorkspaceId(workspaceId);
 
@@ -46,13 +46,13 @@ class BoardController {
   };
 
   create = async (c: Context) => {
-    const { workspaceId } = workspaceParamsSchema.parse(c.req.param());
+    const { id: workspaceId } = workspaceParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
     const body = await c.req.json();
     const { title } = boardBodySchema.parse(body);
 
-    const board = await this.boardService.create(userId, title, workspaceId);
+    const board = await this.boardService.create(title, workspaceId, userId);
 
     return c.json(board, 201);
   };
@@ -61,7 +61,7 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { workspaceId } = workspaceParamsSchema.parse(params);
+    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { id: userId } = c.get("user");
 
     const body = await c.req.json();
@@ -81,7 +81,7 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { workspaceId } = workspaceParamsSchema.parse(params);
+    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { id: userId } = c.get("user");
 
     await this.boardService.delete(userId, boardId, workspaceId);
@@ -94,7 +94,7 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { workspaceId } = workspaceParamsSchema.parse(params);
+    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { id: userId } = c.get("user");
 
     const body = await c.req.json();
@@ -113,7 +113,7 @@ class BoardController {
   updateColumn = async (c: Context) => {
     const params = c.req.param();
 
-    const { workspaceId } = workspaceParamsSchema.parse(params);
+    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { boardId } = boardParamsSchema.parse(params);
     const { columnId } = columnParamsSchema.parse(params);
     const { id: userId } = c.get("user");
@@ -135,7 +135,7 @@ class BoardController {
   deleteColumn = async (c: Context) => {
     const params = c.req.param();
 
-    const { workspaceId } = workspaceParamsSchema.parse(params);
+    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { boardId } = boardParamsSchema.parse(params);
     const { columnId } = columnParamsSchema.parse(params);
     const { id: userId } = c.get("user");
