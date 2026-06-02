@@ -25,6 +25,7 @@ workspaceRoutes.get(
   ),
   workspaceController.findById,
 );
+
 workspaceRoutes.post("/", workspaceController.create);
 workspaceRoutes.patch(
   "/:id",
@@ -48,6 +49,7 @@ workspaceRoutes.post(
 );
 workspaceRoutes.post("/:id/invite/accept", workspaceController.acceptInvite);
 workspaceRoutes.post("/:id/invite/decline", workspaceController.declineInvite);
+
 workspaceRoutes.patch(
   "/:id/members/:uid/role",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
@@ -58,6 +60,7 @@ workspaceRoutes.patch(
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
   workspaceController.transferOwnership,
 );
+
 workspaceRoutes.delete("/:id/exit", workspaceController.exitWorkspace);
 workspaceRoutes.delete(
   "/:id/members/:uid",

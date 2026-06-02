@@ -62,18 +62,20 @@ interface IBoardService {
   createColumn(
     userId: User["id"],
     boardId: Board["id"],
-    title: BoardColumn["title"],
     workspaceId: Board["workspaceId"],
+    title: BoardColumn["title"],
   ): Promise<BoardColumn | null>;
   updateColumn(
     userId: User["id"],
+    boardId: Board["id"],
     columnId: BoardColumn["id"],
-    title: BoardColumn["title"],
     workspaceId: Board["workspaceId"],
+    title: BoardColumn["title"],
   ): Promise<BoardColumn | null>;
   deleteColumn(
     userId: User["id"],
     columnId: BoardColumn["id"],
+    boardId: Board["id"],
     workspaceId: Board["workspaceId"],
   ): Promise<void>;
 }

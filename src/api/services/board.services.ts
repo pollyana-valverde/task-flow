@@ -156,9 +156,9 @@ class BoardService implements IBoardService {
   // board column
   async createColumn(
     boardId: Board["id"],
-    title: BoardColumn["title"],
     workspaceId: Board["workspaceId"],
     userId: User["id"],
+    title: BoardColumn["title"],
   ) {
     const existingBoard = await this.boardRepository.findById(boardId);
 
@@ -196,10 +196,17 @@ class BoardService implements IBoardService {
 
   async updateColumn(
     columnId: BoardColumn["id"],
-    title: BoardColumn["title"],
+    boardId: Board["id"],
     workspaceId: Board["workspaceId"],
     userId: User["id"],
+    title: BoardColumn["title"],
   ) {
+    const existingBoard = await this.boardRepository.findById(boardId);
+
+    if (!existingBoard) {
+      throw new AppError("Board not found", 404);
+    }
+
     const member = await this.workspaceRepository.findMember(
       workspaceId,
       userId,
@@ -230,9 +237,16 @@ class BoardService implements IBoardService {
 
   async deleteColumn(
     columnId: BoardColumn["id"],
+    boardId: Board["id"],
     workspaceId: Board["workspaceId"],
     userId: User["id"],
   ) {
+    const existingBoard = await this.boardRepository.findById(boardId);
+
+    if (!existingBoard) {
+      throw new AppError("Board not found", 404);
+    }
+
     const member = await this.workspaceRepository.findMember(
       workspaceId,
       userId,
