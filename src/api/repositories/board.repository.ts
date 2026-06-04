@@ -8,13 +8,18 @@ import type { BoardColumn } from "@/api/models/board-column.model";
 class BoardRepository implements IBoardRepository {
   // board
   async findById(id: Board["id"]) {
-    const result = await database
-      .select()
-      .from(boards)
-      .where(eq(boards.id, id))
-      .limit(1);
+    const result = await database.query.boards.findFirst({
+      where: eq(boards.id, id),
+      with: {
+        columns: {
+          with: {
+            tasks: true,
+          },
+        },
+      },
+    });
 
-    return result[0] ?? null;
+    return (result as Board) ?? null;
   }
 
   async findByWorkspaceId(workspaceId: Board["workspaceId"]) {
@@ -50,23 +55,15 @@ class BoardRepository implements IBoardRepository {
   }
 
   // board columns
-  async findColumns(boardId: Board["id"]) {
-    const result = await database
-      .select()
-      .from(boardColumns)
-      .where(eq(boardColumns.boardId, boardId));
+  async findColumnWithBoard(columnId: BoardColumn["id"]) {
+    const result = await database.query.boardColumns.findFirst({
+      where: eq(boardColumns.id, columnId),
+      with: {
+        boards: true,
+      },
+    });
 
-    return result;
-  }
-
-  async findColumn(columnId: BoardColumn["id"]) {
-    const result = await database
-      .select()
-      .from(boardColumns)
-      .where(eq(boardColumns.id, columnId))
-      .limit(1);
-
-    return result[0] ?? null;
+    return result ?? null;
   }
 
   async createColumn(boardId: Board["id"], title: BoardColumn["title"]) {

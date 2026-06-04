@@ -30,16 +30,7 @@ class BoardService implements IBoardService {
       throw new AppError("User is not a member of the workspace", 403);
     }
 
-    const board_columns = await this.boardRepository.findColumns(id);
-
-    if (!board_columns) {
-      throw new AppError("Failed to fetch board columns", 500);
-    }
-
-    return {
-      board: existingBoard,
-      board_columns,
-    };
+    return existingBoard;
   }
 
   async findByWorkspaceId(workspaceId: Board["workspaceId"]) {
@@ -196,22 +187,15 @@ class BoardService implements IBoardService {
     columnId: BoardColumn["id"],
     title: BoardColumn["title"],
   ) {
-    const board_columns = await this.boardRepository.findColumn(columnId);
+    const board_columns =
+      await this.boardRepository.findColumnWithBoard(columnId);
 
     if (!board_columns) {
       throw new AppError("Column not found", 404);
     }
 
-    const existingBoard = await this.boardRepository.findById(
-      board_columns.boardId,
-    );
-
-    if (!existingBoard) {
-      throw new AppError("Board not found", 404);
-    }
-
     const member = await this.workspaceRepository.findMember(
-      existingBoard.workspaceId,
+      board_columns.boards?.workspaceId as string,
       userId,
     );
 
@@ -239,18 +223,15 @@ class BoardService implements IBoardService {
   }
 
   async deleteColumn(userId: User["id"], columnId: BoardColumn["id"]) {
-    const board_columns = await this.boardRepository.findColumn(columnId);
+    const board_columns =
+      await this.boardRepository.findColumnWithBoard(columnId);
 
-    const existingBoard = await this.boardRepository.findById(
-      board_columns.boardId,
-    );
-
-    if (!existingBoard) {
-      throw new AppError("Board not found", 404);
+    if (!board_columns) {
+      throw new AppError("Column not found", 404);
     }
 
     const member = await this.workspaceRepository.findMember(
-      existingBoard.workspaceId,
+      board_columns.boards?.workspaceId as string,
       userId,
     );
 

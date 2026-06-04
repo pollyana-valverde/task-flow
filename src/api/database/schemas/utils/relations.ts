@@ -68,7 +68,7 @@ const boardsRelations = relations(boards, ({ one, many }) => ({
 
 // board columns
 const boardColumnsRelations = relations(boardColumns, ({ one, many }) => ({
-  board: one(boards, {
+  boards: one(boards, {
     fields: [boardColumns.boardId],
     references: [boards.id],
   }),
@@ -98,13 +98,13 @@ const tasksRelations = relations(tasks, ({ one }) => ({
   }),
 }));
 
-export const schema = {
-  users: usersRelations,
-  sessions: sessionsRelations,
-  accounts: accountsRelations,
-  workspaces: workspacesRelations,
-  workspaceMembers: workspaceMembersRelations,
-  boards: boardsRelations,
-  boardColumns: boardColumnsRelations,
-  tasks: tasksRelations,
+export {
+  usersRelations,
+  sessionsRelations,
+  accountsRelations,
+  workspacesRelations,
+  workspaceMembersRelations,
+  boardsRelations,
+  boardColumnsRelations,
+  tasksRelations,
 };

@@ -15,8 +15,7 @@ interface IBoardRepository {
   delete(id: Board["id"]): Promise<void>;
 
   //board columns
-  findColumns(boardId: Board["id"]): Promise<BoardColumn[]>;
-  findColumn(columnId: BoardColumn["id"]): Promise<BoardColumn>;
+  findColumnWithBoard(columnId: BoardColumn["id"]): Promise<BoardColumn | null>;
   createColumn(
     boardId: Board["id"],
     title: BoardColumn["title"],
@@ -30,14 +29,7 @@ interface IBoardRepository {
 
 interface IBoardService {
   // board
-  findById(
-    id: Board["id"],
-    userId: User["id"],
-  ): Promise<{
-    board: Board;
-    board_columns: BoardColumn[];
-    // tasks: Task[];
-  } | null>;
+  findById(id: Board["id"], userId: User["id"]): Promise<Board | null>;
   findByWorkspaceId(workspaceId: Board["workspaceId"]): Promise<Board[]>;
   create(
     userId: User["id"],
