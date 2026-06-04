@@ -21,8 +21,7 @@ class BoardRepository implements IBoardRepository {
     const result = await database
       .select()
       .from(boards)
-      .where(eq(boards.workspaceId, workspaceId))
-      .limit(1);
+      .where(eq(boards.workspaceId, workspaceId));
 
     return result;
   }

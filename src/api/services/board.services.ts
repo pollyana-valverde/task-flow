@@ -160,9 +160,9 @@ class BoardService implements IBoardService {
 
   // board column
   async createColumn(
+    userId: User["id"],
     boardId: Board["id"],
     workspaceId: Board["workspaceId"],
-    userId: User["id"],
     title: BoardColumn["title"],
   ) {
     const existingBoard = await this.boardRepository.findById(boardId);
@@ -200,10 +200,10 @@ class BoardService implements IBoardService {
   }
 
   async updateColumn(
-    columnId: BoardColumn["id"],
-    boardId: Board["id"],
-    workspaceId: Board["workspaceId"],
     userId: User["id"],
+    boardId: Board["id"],
+    columnId: BoardColumn["id"],
+    workspaceId: Board["workspaceId"],
     title: BoardColumn["title"],
   ) {
     const existingBoard = await this.boardRepository.findById(boardId);
@@ -241,10 +241,10 @@ class BoardService implements IBoardService {
   }
 
   async deleteColumn(
+    userId: User["id"],
     columnId: BoardColumn["id"],
     boardId: Board["id"],
     workspaceId: Board["workspaceId"],
-    userId: User["id"],
   ) {
     const existingBoard = await this.boardRepository.findById(boardId);
 

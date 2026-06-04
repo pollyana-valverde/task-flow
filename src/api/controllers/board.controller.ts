@@ -101,10 +101,10 @@ class BoardController {
     const { title } = columnBodySchema.parse(body);
 
     const column = await this.boardService.createColumn(
-      boardId,
-      title,
-      workspaceId,
       userId,
+      boardId,
+      workspaceId,
+      title,
     );
 
     return c.json(column, 201);
@@ -122,10 +122,10 @@ class BoardController {
     const { title } = columnBodySchema.parse(body);
 
     const column = await this.boardService.updateColumn(
-      columnId,
-      boardId,
-      workspaceId,
       userId,
+      boardId,
+      columnId,
+      workspaceId,
       title,
     );
 
@@ -141,10 +141,10 @@ class BoardController {
     const { id: userId } = c.get("user");
 
     await this.boardService.deleteColumn(
+      userId,
       columnId,
       boardId,
       workspaceId,
-      userId,
     );
 
     return c.json({ message: "Column deleted successfully" }, 200);
