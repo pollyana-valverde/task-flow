@@ -14,18 +14,20 @@ class BoardService implements IBoardService {
     private workspaceRepository: IWorkspaceRepository,
   ) {}
   // board
-  async findById(id: Board["id"], workspaceId: Board["workspaceId"]) {
-    const existingWorkspace =
-      await this.workspaceRepository.findById(workspaceId);
-
-    if (!existingWorkspace) {
-      throw new AppError("Workspace not found", 404);
-    }
-
+  async findById(id: Board["id"], userId: User["id"]) {
     const existingBoard = await this.boardRepository.findById(id);
 
     if (!existingBoard) {
       throw new AppError("Board not found", 404);
+    }
+
+    const member = await this.workspaceRepository.findMember(
+      existingBoard.workspaceId,
+      userId,
+    );
+
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
     }
 
     const board_columns = await this.boardRepository.findColumns(id);
@@ -91,12 +93,7 @@ class BoardService implements IBoardService {
     return createdBoard;
   }
 
-  async update(
-    userId: User["id"],
-    id: Board["id"],
-    title: Board["title"],
-    workspaceId: Board["workspaceId"],
-  ) {
+  async update(userId: User["id"], id: Board["id"], title: Board["title"]) {
     const existingBoard = await this.boardRepository.findById(id);
 
     if (!existingBoard) {
@@ -104,7 +101,7 @@ class BoardService implements IBoardService {
     }
 
     const member = await this.workspaceRepository.findMember(
-      workspaceId,
+      existingBoard.workspaceId,
       userId,
     );
 
@@ -128,11 +125,7 @@ class BoardService implements IBoardService {
     return updatedBoard;
   }
 
-  async delete(
-    userId: User["id"],
-    id: Board["id"],
-    workspaceId: Board["workspaceId"],
-  ) {
+  async delete(userId: User["id"], id: Board["id"]) {
     const existingBoard = await this.boardRepository.findById(id);
 
     if (!existingBoard) {
@@ -140,7 +133,7 @@ class BoardService implements IBoardService {
     }
 
     const member = await this.workspaceRepository.findMember(
-      workspaceId,
+      existingBoard.workspaceId,
       userId,
     );
 
@@ -162,7 +155,6 @@ class BoardService implements IBoardService {
   async createColumn(
     userId: User["id"],
     boardId: Board["id"],
-    workspaceId: Board["workspaceId"],
     title: BoardColumn["title"],
   ) {
     const existingBoard = await this.boardRepository.findById(boardId);
@@ -172,7 +164,7 @@ class BoardService implements IBoardService {
     }
 
     const member = await this.workspaceRepository.findMember(
-      workspaceId,
+      existingBoard.workspaceId,
       userId,
     );
 
@@ -201,19 +193,25 @@ class BoardService implements IBoardService {
 
   async updateColumn(
     userId: User["id"],
-    boardId: Board["id"],
     columnId: BoardColumn["id"],
-    workspaceId: Board["workspaceId"],
     title: BoardColumn["title"],
   ) {
-    const existingBoard = await this.boardRepository.findById(boardId);
+    const board_columns = await this.boardRepository.findColumn(columnId);
+
+    if (!board_columns) {
+      throw new AppError("Column not found", 404);
+    }
+
+    const existingBoard = await this.boardRepository.findById(
+      board_columns.boardId,
+    );
 
     if (!existingBoard) {
       throw new AppError("Board not found", 404);
     }
 
     const member = await this.workspaceRepository.findMember(
-      workspaceId,
+      existingBoard.workspaceId,
       userId,
     );
 
@@ -240,20 +238,19 @@ class BoardService implements IBoardService {
     return updatedColumn;
   }
 
-  async deleteColumn(
-    userId: User["id"],
-    columnId: BoardColumn["id"],
-    boardId: Board["id"],
-    workspaceId: Board["workspaceId"],
-  ) {
-    const existingBoard = await this.boardRepository.findById(boardId);
+  async deleteColumn(userId: User["id"], columnId: BoardColumn["id"]) {
+    const board_columns = await this.boardRepository.findColumn(columnId);
+
+    const existingBoard = await this.boardRepository.findById(
+      board_columns.boardId,
+    );
 
     if (!existingBoard) {
       throw new AppError("Board not found", 404);
     }
 
     const member = await this.workspaceRepository.findMember(
-      workspaceId,
+      existingBoard.workspaceId,
       userId,
     );
 

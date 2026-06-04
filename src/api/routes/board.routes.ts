@@ -5,25 +5,31 @@ import { BoardRepository } from "@/api/repositories/board.repository";
 import { WorkspaceRepository } from "@/api/repositories/workspace.repository";
 import { BoardService } from "@/api/services/board.services";
 
+const workspaceBoardRoutes = new Hono();
 const boardRoutes = new Hono();
+const boardColumnsRoutes = new Hono();
 
+workspaceBoardRoutes.use("*", ensureAuthenticated);
 boardRoutes.use("*", ensureAuthenticated);
+boardColumnsRoutes.use("*", ensureAuthenticated);
 
 const boardRepository = new BoardRepository();
 const workspaceRepository = new WorkspaceRepository();
 const boardService = new BoardService(boardRepository, workspaceRepository);
 const boardController = new BoardController(boardService);
 
-boardRoutes.get("/", boardController.findByWorkspaceId);
+workspaceBoardRoutes.get("/", boardController.findByWorkspaceId);
+workspaceBoardRoutes.post("/", boardController.create);
+
 boardRoutes.get("/:boardId", boardController.findById);
 
-boardRoutes.post("/", boardController.create);
 boardRoutes.put("/:boardId", boardController.update);
 boardRoutes.delete("/:boardId", boardController.delete);
 
 // board columns
-boardRoutes.post("/:boardId/columns", boardController.createColumn);
-boardRoutes.put("/:boardId/columns/:columnId", boardController.updateColumn);
-boardRoutes.delete("/:boardId/columns/:columnId", boardController.deleteColumn);
+boardRoutes.post("/:boardId/column", boardController.createColumn);
 
-export { boardRoutes };
+boardColumnsRoutes.put("/:columnId", boardController.updateColumn);
+boardColumnsRoutes.delete("/:columnId", boardController.deleteColumn);
+
+export { boardRoutes, workspaceBoardRoutes, boardColumnsRoutes };

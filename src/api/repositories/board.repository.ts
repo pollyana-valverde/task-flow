@@ -59,6 +59,16 @@ class BoardRepository implements IBoardRepository {
     return result;
   }
 
+  async findColumn(columnId: BoardColumn["id"]) {
+    const result = await database
+      .select()
+      .from(boardColumns)
+      .where(eq(boardColumns.id, columnId))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
   async createColumn(boardId: Board["id"], title: BoardColumn["title"]) {
     const result = await database
       .insert(boardColumns)

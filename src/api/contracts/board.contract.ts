@@ -16,6 +16,7 @@ interface IBoardRepository {
 
   //board columns
   findColumns(boardId: Board["id"]): Promise<BoardColumn[]>;
+  findColumn(columnId: BoardColumn["id"]): Promise<BoardColumn>;
   createColumn(
     boardId: Board["id"],
     title: BoardColumn["title"],
@@ -31,7 +32,7 @@ interface IBoardService {
   // board
   findById(
     id: Board["id"],
-    workspaceId: Board["workspaceId"],
+    userId: User["id"],
   ): Promise<{
     board: Board;
     board_columns: BoardColumn[];
@@ -47,34 +48,21 @@ interface IBoardService {
     userId: User["id"],
     id: Board["id"],
     title: Board["title"],
-    workspaceId: Board["workspaceId"],
   ): Promise<Board | null>;
-  delete(
-    userId: User["id"],
-    id: Board["id"],
-    workspaceId: Board["workspaceId"],
-  ): Promise<void>;
+  delete(userId: User["id"], id: Board["id"]): Promise<void>;
 
   //board columns
   createColumn(
     userId: User["id"],
     boardId: Board["id"],
-    workspaceId: Board["workspaceId"],
     title: BoardColumn["title"],
   ): Promise<BoardColumn | null>;
   updateColumn(
     userId: User["id"],
-    boardId: Board["id"],
     columnId: BoardColumn["id"],
-    workspaceId: Board["workspaceId"],
     title: BoardColumn["title"],
   ): Promise<BoardColumn | null>;
-  deleteColumn(
-    userId: User["id"],
-    columnId: BoardColumn["id"],
-    boardId: Board["id"],
-    workspaceId: Board["workspaceId"],
-  ): Promise<void>;
+  deleteColumn(userId: User["id"], columnId: BoardColumn["id"]): Promise<void>;
 }
 
 export type { IBoardRepository, IBoardService };

@@ -27,12 +27,10 @@ class BoardController {
 
   // board
   findById = async (c: Context) => {
-    const params = c.req.param();
+    const { boardId } = boardParamsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
 
-    const { boardId } = boardParamsSchema.parse(params);
-    const { id: workspaceId } = workspaceParamsSchema.parse(params);
-
-    const board = await this.boardService.findById(boardId, workspaceId);
+    const board = await this.boardService.findById(boardId, userId);
 
     return c.json(board, 200);
   };
@@ -61,18 +59,12 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { id: userId } = c.get("user");
 
     const body = await c.req.json();
     const { title } = boardBodySchema.parse(body);
 
-    const board = await this.boardService.update(
-      userId,
-      boardId,
-      title,
-      workspaceId,
-    );
+    const board = await this.boardService.update(userId, boardId, title);
 
     return c.json(board, 200);
   };
@@ -81,10 +73,9 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { id: userId } = c.get("user");
 
-    await this.boardService.delete(userId, boardId, workspaceId);
+    await this.boardService.delete(userId, boardId);
 
     return c.json({ message: "Board deleted successfully" }, 200);
   };
@@ -94,28 +85,18 @@ class BoardController {
     const params = c.req.param();
 
     const { boardId } = boardParamsSchema.parse(params);
-    const { id: workspaceId } = workspaceParamsSchema.parse(params);
     const { id: userId } = c.get("user");
 
     const body = await c.req.json();
     const { title } = columnBodySchema.parse(body);
 
-    const column = await this.boardService.createColumn(
-      userId,
-      boardId,
-      workspaceId,
-      title,
-    );
+    const column = await this.boardService.createColumn(userId, boardId, title);
 
     return c.json(column, 201);
   };
 
   updateColumn = async (c: Context) => {
-    const params = c.req.param();
-
-    const { id: workspaceId } = workspaceParamsSchema.parse(params);
-    const { boardId } = boardParamsSchema.parse(params);
-    const { columnId } = columnParamsSchema.parse(params);
+    const { columnId } = columnParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
     const body = await c.req.json();
@@ -123,9 +104,7 @@ class BoardController {
 
     const column = await this.boardService.updateColumn(
       userId,
-      boardId,
       columnId,
-      workspaceId,
       title,
     );
 
@@ -133,19 +112,10 @@ class BoardController {
   };
 
   deleteColumn = async (c: Context) => {
-    const params = c.req.param();
-
-    const { id: workspaceId } = workspaceParamsSchema.parse(params);
-    const { boardId } = boardParamsSchema.parse(params);
-    const { columnId } = columnParamsSchema.parse(params);
+    const { columnId } = columnParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
-    await this.boardService.deleteColumn(
-      userId,
-      columnId,
-      boardId,
-      workspaceId,
-    );
+    await this.boardService.deleteColumn(userId, columnId);
 
     return c.json({ message: "Column deleted successfully" }, 200);
   };
