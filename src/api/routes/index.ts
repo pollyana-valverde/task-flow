@@ -5,6 +5,7 @@ import {
   boardRoutes,
   workspaceBoardRoutes,
 } from "./board.routes";
+import { columnTaskRoutes, taskRoutes } from "./task.routes";
 import { workspaceRoutes } from "./workspace.routes";
 
 const routes = new Hono();
@@ -18,5 +19,7 @@ routes.route("/workspace", workspaceRoutes);
 routes.route("/workspace/:id/board", workspaceBoardRoutes);
 routes.route("/board", boardRoutes);
 routes.route("/column", boardColumnsRoutes);
+routes.route("/task", taskRoutes);
+routes.route("/column/:id/task", columnTaskRoutes);
 
 export { routes };

@@ -22,13 +22,11 @@ workspaceBoardRoutes.get("/", boardController.findByWorkspaceId);
 workspaceBoardRoutes.post("/", boardController.create);
 
 boardRoutes.get("/:boardId", boardController.findById);
-
 boardRoutes.put("/:boardId", boardController.update);
 boardRoutes.delete("/:boardId", boardController.delete);
 
 // board columns
 boardRoutes.post("/:boardId/column", boardController.createColumn);
-
 boardColumnsRoutes.put("/:columnId", boardController.updateColumn);
 boardColumnsRoutes.delete("/:columnId", boardController.deleteColumn);
 
