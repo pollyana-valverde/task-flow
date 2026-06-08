@@ -15,6 +15,13 @@
       "when": 1779920219545,
       "tag": "0001_futuristic_marrow",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780940889484,
+      "tag": "0002_soft_wallop",
+      "breakpoints": true
     }
   ]
 }

@@ -55,8 +55,6 @@ class TaskController {
     const { title, description, assigneeId, dueDate, priority } =
       taskBodySchema.parse(body);
 
-    console.log("AQUI", assigneeId);
-
     const newTask = await this.taskService.create(
       {
         title,

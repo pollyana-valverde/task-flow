@@ -52,18 +52,8 @@ class TaskService implements ITasksService {
       existingColumn.boards?.workspaceId as string,
     );
 
-    console.log("Assignee Member:", assigneeMember);
-
-    if (assigneeMember.find((m) => m.userId === data.assigneeId)) {
+    if (!assigneeMember.find((m) => m.userId === data.assigneeId)) {
       throw new AppError("Assignee user is not a member of the workspace", 400);
-    }
-
-    if (data.title.length >= 200) {
-      throw new AppError("Task title must be less than 200 characters", 400);
-    }
-
-    if ((data.dueDate as Date) < new Date()) {
-      throw new AppError("Due date must be in the future", 400);
     }
 
     const newTask = await this.taskRepository.create(
@@ -104,7 +94,7 @@ class TaskService implements ITasksService {
 
     const updatedTask = await this.taskRepository.update(id, {
       ...data,
-      updatedBy: member.id,
+      updatedBy: userId,
     });
 
     if (!updatedTask) {
@@ -152,7 +142,7 @@ class TaskService implements ITasksService {
     const updatedTask = await this.taskRepository.moveToColumn(
       id,
       newColumnId,
-      member.id,
+      userId,
     );
 
     if (!updatedTask) {

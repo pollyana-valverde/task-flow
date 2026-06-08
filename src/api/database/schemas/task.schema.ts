@@ -1,6 +1,6 @@
 import * as t from "drizzle-orm/pg-core";
 import { pgEnum as Enum, pgTable as table } from "drizzle-orm/pg-core";
-import { boardColumns, users, workspaceMembers } from ".";
+import { boardColumns, users } from ".";
 import { timestamps } from "./utils/helpers";
 
 const taskPriorityEnum = Enum("task_priority", [
@@ -15,9 +15,7 @@ const tasks = table("tasks", {
   title: t.text().notNull(),
   description: t.text(),
   priority: taskPriorityEnum().notNull().default("medium"),
-  assigneeId: t
-    .uuid()
-    .references(() => workspaceMembers.id, { onDelete: "set null" }),
+  assigneeId: t.uuid().references(() => users.id, { onDelete: "set null" }),
   columnId: t
     .uuid()
     .notNull()
@@ -27,9 +25,7 @@ const tasks = table("tasks", {
     .uuid()
     .notNull()
     .references(() => users.id, { onDelete: "restrict" }),
-  updatedBy: t
-    .uuid()
-    .references(() => workspaceMembers.id, { onDelete: "set null" }),
+  updatedBy: t.uuid().references(() => users.id, { onDelete: "set null" }),
   ...timestamps,
 });
 
