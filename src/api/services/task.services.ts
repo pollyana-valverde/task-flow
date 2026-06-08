@@ -25,7 +25,10 @@ class TaskService implements ITasksService {
   }
 
   async create(
-    data: Omit<Task, "id" | "createdAt" | "updatedAt">,
+    data: Omit<
+      Task,
+      "id" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "columnId"
+    >,
     columnId: Task["columnId"],
     userId: Task["createdBy"],
   ) {
@@ -45,6 +48,16 @@ class TaskService implements ITasksService {
       throw new AppError("User is not a member of the workspace", 400);
     }
 
+    const assigneeMember = await this.workspaceRepository.findMembers(
+      existingColumn.boards?.workspaceId as string,
+    );
+
+    console.log("Assignee Member:", assigneeMember);
+
+    if (assigneeMember.find((m) => m.userId === data.assigneeId)) {
+      throw new AppError("Assignee user is not a member of the workspace", 400);
+    }
+
     if (data.title.length >= 200) {
       throw new AppError("Task title must be less than 200 characters", 400);
     }
@@ -54,8 +67,9 @@ class TaskService implements ITasksService {
     }
 
     const newTask = await this.taskRepository.create(
-      { ...data, createdBy: userId },
+      { ...data },
       columnId,
+      userId,
     );
     return newTask;
   }
@@ -90,7 +104,7 @@ class TaskService implements ITasksService {
 
     const updatedTask = await this.taskRepository.update(id, {
       ...data,
-      updatedBy: userId,
+      updatedBy: member.id,
     });
 
     if (!updatedTask) {
@@ -135,7 +149,15 @@ class TaskService implements ITasksService {
       throw new AppError("User is not a member of the workspace", 400);
     }
 
-    const updatedTask = await this.taskRepository.moveToColumn(id, newColumnId);
+    const updatedTask = await this.taskRepository.moveToColumn(
+      id,
+      newColumnId,
+      member.id,
+    );
+
+    if (!updatedTask) {
+      throw new AppError("Failed to move task to new column", 500);
+    }
 
     return updatedTask;
   }

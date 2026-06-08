@@ -20,6 +20,6 @@ routes.route("/workspace/:id/board", workspaceBoardRoutes);
 routes.route("/board", boardRoutes);
 routes.route("/column", boardColumnsRoutes);
 routes.route("/task", taskRoutes);
-routes.route("/column/:id/task", columnTaskRoutes);
+routes.route("/column/:columnId/task", columnTaskRoutes);
 
 export { routes };

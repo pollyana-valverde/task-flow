@@ -39,15 +39,15 @@ const moveTaskBodySchema = z.object({
 class TaskController {
   constructor(private taskService: ITasksService) {}
 
-  async findById(c: Context) {
+  findById = async (c: Context) => {
     const { id } = taskParamsSchema.parse(c.req.param());
 
     const task = await this.taskService.findById(id);
 
     return c.json(task, 200);
-  }
+  };
 
-  async create(c: Context) {
+  create = async (c: Context) => {
     const { columnId } = columnParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
@@ -55,22 +55,24 @@ class TaskController {
     const { title, description, assigneeId, dueDate, priority } =
       taskBodySchema.parse(body);
 
+    console.log("AQUI", assigneeId);
+
     const newTask = await this.taskService.create(
       {
         title,
         description,
+        priority: priority as TaskPriority,
         assigneeId,
         dueDate,
-        priority: priority as TaskPriority,
       },
       columnId,
       userId,
     );
 
     return c.json(newTask, 201);
-  }
+  };
 
-  async update(c: Context) {
+  update = async (c: Context) => {
     const { id } = taskParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
@@ -92,9 +94,9 @@ class TaskController {
     );
 
     return c.json(updatedTask, 200);
-  }
+  };
 
-  async moveToColumn(c: Context) {
+  moveToColumn = async (c: Context) => {
     const { id } = taskParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
@@ -109,15 +111,15 @@ class TaskController {
     );
 
     return c.json(movedTask, 200);
-  }
+  };
 
-  async delete(c: Context) {
+  delete = async (c: Context) => {
     const { id } = taskParamsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
     await this.taskService.delete(id, userId);
     return c.json({ message: "Task deleted successfully" }, 200);
-  }
+  };
 }
 
 export { TaskController };

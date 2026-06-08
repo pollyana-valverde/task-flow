@@ -3,8 +3,12 @@ import type { Task } from "@/api/models/task.model";
 interface ITasksRepository {
   findById(id: Task["id"]): Promise<Task | null>;
   create(
-    data: Omit<Task, "id" | "createdAt" | "updatedAt">,
+    data: Omit<
+      Task,
+      "id" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "columnId"
+    >,
     columnId: Task["columnId"],
+    createdBy: Task["createdBy"],
   ): Promise<Task>;
   update(
     id: Task["id"],
@@ -13,6 +17,7 @@ interface ITasksRepository {
   moveToColumn(
     id: Task["id"],
     newColumnId: Task["columnId"],
+    updatedBy: Task["updatedBy"],
   ): Promise<Task | null>;
   delete(id: Task["id"]): Promise<void>;
 }

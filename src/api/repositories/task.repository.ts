@@ -16,12 +16,16 @@ class TaskRepository implements ITasksRepository {
   }
 
   async create(
-    data: Omit<Task, "id" | "createdAt" | "updatedAt">,
+    data: Omit<
+      Task,
+      "id" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "columnId"
+    >,
     columnId: Task["columnId"],
+    createdBy: Task["createdBy"],
   ) {
     const result = await database
       .insert(tasks)
-      .values({ ...data, columnId })
+      .values({ ...data, columnId: columnId as Task["columnId"], createdBy })
       .returning();
 
     return result[0] as Task;
@@ -40,10 +44,14 @@ class TaskRepository implements ITasksRepository {
     return (result[0] as Task) ?? null;
   }
 
-  async moveToColumn(id: Task["id"], newColumnId: Task["columnId"]) {
+  async moveToColumn(
+    id: Task["id"],
+    newColumnId: Task["columnId"],
+    updatedBy: Task["updatedBy"],
+  ) {
     const result = await database
       .update(tasks)
-      .set({ columnId: newColumnId, updatedAt: new Date() })
+      .set({ columnId: newColumnId, updatedBy, updatedAt: new Date() })
       .where(eq(tasks.id, id))
       .returning();
 

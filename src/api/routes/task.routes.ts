@@ -10,6 +10,7 @@ const taskRoutes = new Hono();
 const columnTaskRoutes = new Hono();
 
 taskRoutes.use("*", ensureAuthenticated);
+columnTaskRoutes.use("*", ensureAuthenticated);
 
 const taskRepository = new TaskRepository();
 const boardRepository = new BoardRepository();
