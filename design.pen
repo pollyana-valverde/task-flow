@@ -1,0 +1,558 @@
+{
+  "version": "2.13",
+  "children": [
+    {
+      "type": "text",
+      "id": "vtqjx",
+      "x": -1209,
+      "y": -513,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 2558,
+      "content": "1 - Autenticação",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "W3dMw",
+      "x": -1209,
+      "y": 100,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Login%20_%20idle.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "HRwmP",
+      "x": 2980,
+      "y": 100,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Login%20_%20enviando%20_Entrando_.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "CpY2J",
+      "x": 7196,
+      "y": 100,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Login%20_%20erro.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "hXTHp",
+      "x": 11446,
+      "y": 100,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Cadastro%20_%20idle.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "e7raN",
+      "x": 15775,
+      "y": 100,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Cadastro%20_%20valida_o.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "text",
+      "id": "kBEDt",
+      "x": -1209,
+      "y": 3412,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 2558,
+      "content": "2 - Dashboard",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "JEsxX",
+      "x": -1209,
+      "y": 4052,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Dashboard%20_%20loading%20_skeleton_.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "Thj48",
+      "x": 2980,
+      "y": 4052,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Dashboard%20_%20carregado.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "fnlOS",
+      "x": 7196,
+      "y": 4052,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Dashboard%20_%20vazio.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "mOuzn",
+      "x": 11446,
+      "y": 4052,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Modal%20_%20Novo%20Workspace.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "text",
+      "id": "xVNcX",
+      "x": -1209,
+      "y": 7395,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 2558,
+      "content": "3 - workspace",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "ISv7u",
+      "x": -1209,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Vis_o%20geral.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "BOmlS",
+      "x": 2980,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Vis_o%20geral%20_%20vazio.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "Lloqg",
+      "x": 7196,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Modal%20_%20Novo%20board.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "ZJDgv",
+      "x": 11446,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Membros.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "U9PDso",
+      "x": 15775,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Modal%20_%20Convidar%20membro.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "G3WHPJ",
+      "x": 20007,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Modal%20_%20Transferir%20propriedade.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "hpQWv",
+      "x": 24281,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Configura_es.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "rectangle",
+      "id": "Rp4QL",
+      "x": 28600,
+      "y": 8080,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "images/Modal%20_%20Excluir%20workspace.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2400
+    },
+    {
+      "type": "text",
+      "id": "b2H9NH",
+      "x": -1209,
+      "y": 11329,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 3840,
+      "content": "4 - Board / kanban",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "dp4W1",
+      "x": -1209,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Kanban%20_%20cards%20detalhados%20_%20colunas%20coloridas.png",
+        "mode": "fill"
+      },
+      "width": 4200,
+      "height": 2520
+    },
+    {
+      "type": "rectangle",
+      "id": "dQyAu",
+      "x": 3351,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Kanban%20_%20cards%20compactos%20_%20colunas%20neutras.png",
+        "mode": "fill"
+      },
+      "width": 4200,
+      "height": 2520
+    },
+    {
+      "type": "rectangle",
+      "id": "pujV3",
+      "x": 7837,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Kanban%20_%20cards%20compactos%20_%20colunas%20coloridas.png",
+        "mode": "fill"
+      },
+      "width": 4200,
+      "height": 2520
+    },
+    {
+      "type": "rectangle",
+      "id": "t7ixA",
+      "x": 12369,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Kanban%20_%20board%20vazio.png",
+        "mode": "fill"
+      },
+      "width": 4200,
+      "height": 2520
+    },
+    {
+      "type": "rectangle",
+      "id": "ckUsk",
+      "x": 17041,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Modal%20_%20Tarefa%20_visualiza_o_.png",
+        "mode": "fill"
+      },
+      "width": 1860,
+      "height": 2040
+    },
+    {
+      "type": "rectangle",
+      "id": "Euzte",
+      "x": 19286,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Modal%20_%20Tarefa%20_edi_o_.png",
+        "mode": "fill"
+      },
+      "width": 1860,
+      "height": 2280
+    },
+    {
+      "type": "rectangle",
+      "id": "v9SgU",
+      "x": 21539,
+      "y": 11980,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Modal%20_%20Nova%20coluna.png",
+        "mode": "fill"
+      },
+      "width": 1680,
+      "height": 1140
+    },
+    {
+      "type": "text",
+      "id": "OEY5C",
+      "x": -1209,
+      "y": 15599,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 3840,
+      "content": "5 - Conta user",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "H9vlWt",
+      "x": -1209,
+      "y": 16309,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Meu%20perfil.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 2760
+    },
+    {
+      "type": "rectangle",
+      "id": "E4O0Mv",
+      "x": 2980,
+      "y": 16309,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Configura_es%20da%20conta.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 3540
+    },
+    {
+      "type": "rectangle",
+      "id": "K95Re",
+      "x": 7196,
+      "y": 16309,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Notifica_es.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 3000
+    },
+    {
+      "type": "rectangle",
+      "id": "Y4P5EQ",
+      "x": 11446,
+      "y": 16309,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Notifica_es%20_%20vazio.png",
+        "mode": "fill"
+      },
+      "width": 3840,
+      "height": 1860
+    },
+    {
+      "type": "text",
+      "id": "UZmm2",
+      "x": -1209,
+      "y": 21287,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 3840,
+      "content": "6 -Convites",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "zzXpF",
+      "x": -1209,
+      "y": 21943,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Convite%20recebido.png",
+        "mode": "fill"
+      },
+      "width": 2280,
+      "height": 1860
+    },
+    {
+      "type": "rectangle",
+      "id": "uuyju",
+      "x": 1491,
+      "y": 21943,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Convite%20aceito%20(1).png",
+        "mode": "fill"
+      },
+      "width": 2280,
+      "height": 1560
+    },
+    {
+      "type": "rectangle",
+      "id": "OxJKI",
+      "x": 4311,
+      "y": 21943,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Convite%20recusado.png",
+        "mode": "fill"
+      },
+      "width": 2280,
+      "height": 1560
+    },
+    {
+      "type": "text",
+      "id": "I9cxtr",
+      "x": -1209,
+      "y": 25252,
+      "fill": "#ffffff",
+      "textGrowth": "fixed-width",
+      "width": 3840,
+      "content": "7 - design system",
+      "fontFamily": "Inter",
+      "fontSize": 300,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "w1Zf80",
+      "x": -1209,
+      "y": 25998,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Componentes%20_%20tema%20claro.png",
+        "mode": "fill"
+      },
+      "width": 4080,
+      "height": 9120
+    },
+    {
+      "type": "rectangle",
+      "id": "lh1nP",
+      "x": 3411,
+      "y": 25998,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "Componentes%20_%20tema%20escuro.png",
+        "mode": "fill"
+      },
+      "width": 4080,
+      "height": 9120
+    }
+  ]
+}
