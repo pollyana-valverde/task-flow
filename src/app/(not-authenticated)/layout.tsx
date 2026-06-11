@@ -6,13 +6,13 @@ import "@/styles/globals.css";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 
-const hankenGrotesk = Hanken_Grotesk({
-  subsets: ["latin"],
-});
-
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   weight: "400",
+});
+
+const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -28,30 +28,34 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn("flex", hankenGrotesk.className, geistMono.className)}
+        className={cn(
+          "grid grid-cols-[55rem_auto] ",
+          geistMono.className,
+          hankenGrotesk.className,
+        )}
       >
         <aside
           className={`
-          bg-[url('@/assets/images/login-back.svg')] bg-cover bg-center bg-no-repeat w-200 h-screen 
+          bg-[url('@/assets/images/login-back.svg')] bg-cover bg-center bg-no-repeat h-screen 
           p-11 flex flex-col justify-between gap-6`}
         >
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="p-0.5 bg-lime-800 border-b-3 border-r-3 border-lime-400 rounded-tl-lg rounded-xl">
               <div className="p-2 bg-lime-400 rounded-tl-md rounded-lg border-t-3 border-l-3 border-lime-50">
-                <Layers className="h-5 w-5 text-lime-900" />
+                <Layers className="h-5 w-5 text-lime-950" />
               </div>
             </div>
-            <Text variant="heading-1" className="text-lime-800">
+            <Text variant="heading-1" className="text-lime-950">
               Task Flow
             </Text>
           </div>
 
           <div className="space-y-2 flex flex-col max-w-md">
-            <Text variant="display" className="text-lime-800">
+            <Text variant="display" className="text-lime-950">
               Onde estratégia encontra execução.
             </Text>
-            <Text className="text-lime-700">
+            <Text className="text-lime-950/80">
               Organize times, boards e tarefas em um só lugar. Quadros kanban
               colaborativos com controle de papéis, prioridades e prazos.
             </Text>
@@ -59,26 +63,26 @@ export default function RootLayout({
 
           <div className="flex gap-7">
             <div className="flex flex-col">
-              <Text variant="heading-1" className="text-lime-800">
+              <Text variant="heading-1" className="text-lime-950">
                 10k+
               </Text>
-              <Text variant="content" className="text-lime-700">
+              <Text variant="content" className="text-lime-950/80">
                 times ativos
               </Text>
             </div>
             <div className="flex flex-col">
-              <Text variant="heading-1" className="text-lime-800">
+              <Text variant="heading-1" className="text-lime-950">
                 2M+
               </Text>
-              <Text variant="content" className="text-lime-700">
+              <Text variant="content" className="text-lime-950/80">
                 tarefas movidas
               </Text>
             </div>
             <div className="flex flex-col">
-              <Text variant="heading-1" className="text-lime-800">
+              <Text variant="heading-1" className="text-lime-950">
                 99.9%
               </Text>
-              <Text variant="content" className="text-lime-700">
+              <Text variant="content" className="text-lime-950/80">
                 uptime
               </Text>
             </div>
