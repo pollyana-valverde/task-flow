@@ -132,3 +132,13 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .text-stroke-1 {
+    -webkit-text-stroke-width: 1px;
+  }
+
+  .text-stroke-lime-950 {
+    -webkit-text-stroke-color: var(--color-lime-950);
+  }
+}

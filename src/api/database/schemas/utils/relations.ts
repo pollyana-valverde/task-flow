@@ -10,6 +10,7 @@ import {
   workspaces,
 } from "..";
 
+
 // users / auth
 const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
@@ -77,9 +78,9 @@ const boardColumnsRelations = relations(boardColumns, ({ one, many }) => ({
 
 // tasks
 const tasksRelations = relations(tasks, ({ one }) => ({
-  assignee: one(workspaceMembers, {
+  assignee: one(users, {
     fields: [tasks.assigneeId],
-    references: [workspaceMembers.id],
+    references: [users.id],
     relationName: "assignee",
   }),
   column: one(boardColumns, {
@@ -91,9 +92,9 @@ const tasksRelations = relations(tasks, ({ one }) => ({
     references: [users.id],
     relationName: "creator",
   }),
-  updater: one(workspaceMembers, {
+  updater: one(users, {
     fields: [tasks.updatedBy],
-    references: [workspaceMembers.id],
+    references: [users.id],
     relationName: "updater",
   }),
 }));

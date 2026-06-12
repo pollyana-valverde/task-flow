@@ -1,12 +1,35 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function handleSignIn(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: "/",
+    });
+  }
+
   return (
-    <div className="flex flex-col justify-center items-center gap-7 py-11 px-14 h-screen">
+    <form
+      method="POST"
+      className="flex flex-col items-start w-full gap-7"
+      onSubmit={(e) => {
+        handleSignIn(e);
+      }}
+    >
       <div className="flex flex-col items-start w-full gap-1">
         <Text className="text-lime-950" variant="heading-1">
           Bem-vindo de volta
@@ -19,7 +42,14 @@ export default function SignIn() {
       <FieldGroup className="flex flex-col gap-5">
         <Field className="flex flex-col">
           <FieldLabel className="text-lime-950">Email</FieldLabel>
-          <Input placeholder="example@email.com" type="email" />
+          <Input
+            placeholder="example@email.com"
+            type="email"
+            name="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Field>
 
         <Field className="flex flex-col">
@@ -32,9 +62,17 @@ export default function SignIn() {
               Esqueceu a senha?
             </Link>
           </div>
-          <Input placeholder="******" type="password" />
+          <Input
+            placeholder="Digite sua senha..."
+            type="password"
+            name="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </Field>
 
+        {/* Botão */}
         <div
           className={`
           p-0.5 bg-lime-950
@@ -45,7 +83,7 @@ export default function SignIn() {
             className={`
             bg-lime-400 w-full
             rounded-tl-md rounded-lg border-t-2 border-l-2 border-white text-lime-950 
-            group-hover:bg-lime-400 group-hover:border-none hover:border-none hover:bg-lime-400`}
+            group-hover:bg-lime-400 group-hover:border-none`}
           >
             Entrar
           </Button>
@@ -61,6 +99,6 @@ export default function SignIn() {
           Cadastre-se
         </Link>
       </div>
-    </div>
+    </form>
   );
 }
