@@ -13,6 +13,7 @@ const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     password: {
+      minLength: 8,
       hash: async (password) => bHash(password, 12),
       verify: async ({ password, hash }) => compare(password, hash),
     },
