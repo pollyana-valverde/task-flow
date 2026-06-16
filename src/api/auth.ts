@@ -19,9 +19,9 @@ const auth = betterAuth({
     },
   },
   rateLimit: {
-    enabled: true,
-    window: 60 * 15, // 15 minutes
-    max: 5, // Max 5 attempts per window
+    enabled: false,
+    // window: 60 * 15, // 15 minutes
+    // max: 5, // Max 5 attempts per window
   },
   trustedOrigins: [apiEnv.BETTER_AUTH_URL],
   baseURL: apiEnv.BETTER_AUTH_URL,

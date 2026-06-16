@@ -9,10 +9,10 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import GoogleIcon from "@/assets/icons/google.png";
 import { Button } from "@/components/ui/button";
-import { CoreButton } from "@/components/ui/core-button";
+import { CoreButton } from "@/components/ui/form/core-button";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup, FieldLabel } from "@/components/ui/field";
-import { InputField } from "@/components/ui/input-field";
+import { InputField } from "@/components/ui/form/input-field";
 import { authClient } from "@/lib/auth-client";
 import { translateAuthError } from "@/utils/auth-errors";
 
