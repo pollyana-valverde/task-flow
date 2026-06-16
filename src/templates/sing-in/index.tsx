@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Text } from "@/components/ui/text";
 import { SignInForm } from "./components/sign-in-form";

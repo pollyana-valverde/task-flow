@@ -24,6 +24,14 @@ const auth = betterAuth({
     max: 5, // Max 5 attempts per window
   },
   trustedOrigins: [apiEnv.BETTER_AUTH_URL],
+  baseURL: apiEnv.BETTER_AUTH_URL,
+  socialProviders: {
+    google: {
+      clientId: apiEnv.GOOGLE_CLIENT_ID,
+      clientSecret: apiEnv.GOOGLE_CLIENT_SECRET,
+      redirectUri: apiEnv.GOOGLE_REDIRECT_URI,
+    },
+  },
   advanced: {
     database: {
       generateId: false,

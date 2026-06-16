@@ -1,10 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import GoogleIcon from "@/assets/icons/google.png";
+import { Button } from "@/components/ui/button";
 import { CoreButton } from "@/components/ui/core-button";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -23,6 +27,7 @@ const signInSchema = z.object({
 });
 
 function SignInForm() {
+  const [googleError, setGoogleError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -33,6 +38,8 @@ function SignInForm() {
   });
 
   async function handleSignIn(data: SignInFormData) {
+    setGoogleError(null);
+
     await authClient.signIn.email({
       ...data,
       fetchOptions: {
@@ -47,9 +54,28 @@ function SignInForm() {
     });
   }
 
+  async function handleGoogleSignIn() {
+    setGoogleError(null);
+
+    await authClient.signIn.social({
+      provider: "google",
+      fetchOptions: {
+        onSuccess: () => {
+          redirect("/");
+        },
+        onError: () => {
+          setGoogleError(
+            "Ocorreu um erro ao tentar entrar com o Google. Por favor, tente novamente.",
+          );
+        },
+      },
+    });
+  }
+
   return (
     <>
       {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
+      {googleError && <ErrorMessage>{googleError}</ErrorMessage>}
       <form className="w-full " onSubmit={handleSubmit(handleSignIn)}>
         <FieldGroup className="flex flex-col gap-5">
           <InputField
@@ -84,6 +110,23 @@ function SignInForm() {
           </CoreButton>
         </FieldGroup>
       </form>
+
+      <div className="flex items-center gap-3 w-full">
+        <hr className="bg-lime-950 h-0.5 w-full" />
+        <span className="text-lime-950">Ou</span>
+        <hr className="bg-lime-950 h-0.5 w-full" />
+      </div>
+
+      <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
+        <Image
+          className="mr-1"
+          width={17}
+          height={17}
+          src={GoogleIcon}
+          alt="Ícone do Google"
+        />
+        Entrar com Google
+      </Button>
     </>
   );
 }
