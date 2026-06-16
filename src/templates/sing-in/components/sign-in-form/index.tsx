@@ -60,9 +60,6 @@ function SignInForm() {
     await authClient.signIn.social({
       provider: "google",
       fetchOptions: {
-        onSuccess: () => {
-          redirect("/");
-        },
         onError: () => {
           setGoogleError(
             "Ocorreu um erro ao tentar entrar com o Google. Por favor, tente novamente.",
