@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Text } from "@/components/ui/text";
-import { SignInForm } from "./components/sign-in-form";
+import { SignInForm } from "./components/form";
 
 function SignInPage() {
   return (

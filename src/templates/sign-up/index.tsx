@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Text } from "@/components/ui/text";
-import { SignUpForm } from "./components/sign-up-form";
+import { SignUpForm } from "./components/form";
 
 function SignUpPage() {
   return (

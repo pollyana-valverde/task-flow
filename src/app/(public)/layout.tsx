@@ -1,5 +1,3 @@
-import { Layers } from "lucide-react";
-
 import { Text } from "@/components/ui/text";
 import { Logo } from "@/components/ui/header/logo";
 
