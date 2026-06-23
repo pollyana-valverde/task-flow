@@ -9,6 +9,7 @@ const textVariants = cva("", {
       default: "text-base leading-[140%] font-normal font-sans",
       display: "text-4xl leading-[140%] font-extrabold font-sans",
       "heading-1": "text-2xl leading-[140%] font-extrabold font-sans",
+      "heading-2": "text-xl leading-[140%] font-bold font-sans",
       "heading-3": "text-lg leading-[140%] font-bold font-sans",
       content: "text-sm leading-[140%] font-normal font-sans",
       caption: "text-xs leading-[140%] font-normal font-sans",

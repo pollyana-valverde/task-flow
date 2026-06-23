@@ -1,8 +1,13 @@
-import { CoreButton } from "@/components/ui/form/core-button";
 import { Text } from "@/components/ui/text";
-import { Plus } from "lucide-react";
+import { listWorkspacesResultSchema } from "@/http/workspaces/list-workspaces";
+import { NewWorkspaceDialog } from "./new-wokspace-dialog";
+import z from "zod";
 
-function DashboardHeader() {
+interface DashboardHeaderProps {
+  workspace: z.infer<typeof listWorkspacesResultSchema>;
+}
+
+function DashboardHeader({ workspace }: DashboardHeaderProps) {
   return (
     <div className="flex flex-col items-center md:flex-row justify-between gap-2">
       <div className="flex flex-col gap-0.5">
@@ -10,13 +15,11 @@ function DashboardHeader() {
           Meus workspaces
         </Text>
         <Text variant="content" className="text-lime-950/80">
-          3 de 10 workspaces · você é membro de todos abaixo
+          {workspace.length} de 10 workspaces · você é membro de todos abaixo
         </Text>
       </div>
-      <CoreButton>
-        <Plus />
-        Novo workspace
-      </CoreButton>
+
+      <NewWorkspaceDialog />
     </div>
   );
 }

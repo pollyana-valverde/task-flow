@@ -94,8 +94,6 @@ class WorkspaceService implements IWorkspaceService {
       throw new AppError("Failed to add owner to workspace", 500);
     }
 
-    console.log("Owner added to workspace:", workspaceMember);
-
     return createdWorkspace;
   }
 

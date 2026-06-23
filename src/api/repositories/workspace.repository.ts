@@ -1,7 +1,12 @@
-import { and, eq } from "drizzle-orm";
+import { and, count, eq, getTableColumns, inArray } from "drizzle-orm";
 import type { IWorkspaceRepository } from "@/api/contracts/workspace.contract";
 import { database } from "@/api/database";
-import { workspaceMembers, workspaces } from "@/api/database/schemas";
+import {
+  boards,
+  users,
+  workspaceMembers,
+  workspaces,
+} from "@/api/database/schemas";
 import type { User } from "@/api/models/user.model";
 import type { Workspace } from "@/api/models/workspace.model";
 import type {
@@ -13,16 +18,41 @@ import type {
 class WorkspaceRepository implements IWorkspaceRepository {
   // workspace
   async findAll(userId: User["id"]) {
+    //workspaces com contagem
     const result = await database
-      .select()
+      .select({
+        ...getTableColumns(workspaces),
+        membersCount: count(workspaceMembers.id),
+        boardsCount: count(boards.id),
+      })
       .from(workspaces)
       .innerJoin(
         workspaceMembers,
         eq(workspaceMembers.workspaceId, workspaces.id),
       )
-      .where(eq(workspaceMembers.userId, userId));
+      .leftJoin(boards, eq(boards.workspaceId, workspaces.id))
+      .where(eq(workspaceMembers.userId, userId))
+      .groupBy(workspaces.id);
 
-    return result.map((row) => row.workspaces);
+    //membros dos workspaces encontrados
+    const workspaceIds = result.map((workspace) => workspace.id);
+
+    const members = await database
+      .select({
+        workspaceId: workspaceMembers.workspaceId,
+        userId: users.id,
+        name: users.name,
+        image: users.image,
+        role: workspaceMembers.role,
+      })
+      .from(workspaceMembers)
+      .innerJoin(users, eq(users.id, workspaceMembers.userId))
+      .where(inArray(workspaceMembers.workspaceId, workspaceIds));
+
+    return result.map((workspace) => ({
+      ...workspace,
+      members: members.filter((member) => member.workspaceId === workspace.id),
+    }));
   }
 
   async findById(id: Workspace["id"]) {

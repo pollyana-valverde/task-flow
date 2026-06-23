@@ -23,3 +23,5 @@ async function httpClient(
 
   return response.status === 204 ? null : response.json();
 }
+
+export { httpClient };
