@@ -1,10 +1,3 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarGroup,
-  AvatarGroupCount,
-  AvatarImage,
-} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,12 +5,11 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
-import { ArrowRight, Crown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { RoleBadge } from "./role-badge";
+import { MemberAvatar } from "./member-avatar";
 
 interface WorkspaceCardProps {
   workspace: {
@@ -39,14 +31,6 @@ interface WorkspaceCardProps {
 }
 
 function WorkspaceCard({ workspace }: WorkspaceCardProps) {
-  function getInitials(name: string): string {
-    const parts = name.split(" ");
-    const firstLetter = parts[0]?.[0] ?? "";
-    const lastLetter = parts[parts.length - 1]?.[0] ?? "";
-
-    return `${firstLetter}${lastLetter}`.toUpperCase();
-  }
-
   return (
     <Card>
       <div className="flex justify-between items-center px-(--card-spacing)">
@@ -64,7 +48,12 @@ function WorkspaceCard({ workspace }: WorkspaceCardProps) {
             {workspace.title}
           </Text>
           <CardDescription className="text-lime-950/60">
-            Criado em {workspace.createdAt.toDateString()}
+            Criado em{" "}
+            {workspace.createdAt.toLocaleDateString("pt-br", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
           </CardDescription>
         </CardHeader>
 
@@ -81,28 +70,7 @@ function WorkspaceCard({ workspace }: WorkspaceCardProps) {
       </div>
 
       <CardFooter className="justify-between">
-        <AvatarGroup>
-          {workspace.members.map((member) => (
-            <Avatar key={member.userId}>
-              {member.image && (
-                <AvatarImage src={member.image} alt={member.image} />
-              )}
-              <AvatarFallback
-                className={cn(
-                  !member.image && "bg-lime-900 text-white text-xs font-medium",
-                )}
-              >
-                {getInitials(member.name)}
-              </AvatarFallback>
-            </Avatar>
-          ))}
-          {workspace.members.length > 4 && (
-            <AvatarGroupCount className="bg-lime-100 text-lime-950/60 border border-lime-950/10">
-              +{workspace.members.length}
-            </AvatarGroupCount>
-          )}
-        </AvatarGroup>
-
+        <MemberAvatar members={workspace.members} />
         <Button
           variant="ghost"
           size="sm"

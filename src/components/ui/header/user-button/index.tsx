@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { redirect } from "next/navigation";
 import { UserButtonLink } from "./user-button-link";
+import { getNameInitials } from "@/utils/get-name-initials";
 
 const USER_BUTTON_LINKS = [
   {
@@ -40,11 +41,6 @@ function UserButon() {
     );
   }
 
-  const splitUserName: string[] = session.user.name.split(" ");
-  const splitUserFirstNameLetter: string[] = splitUserName[0].split("");
-  const splitUserLastNameLetter: string[] = splitUserName[1].split("");
-  const userNameFirtsLetters: string = `${splitUserFirstNameLetter[0]}${splitUserLastNameLetter[0]}`;
-
   async function handleSignOut() {
     await authClient.signOut({
       fetchOptions: {
@@ -71,11 +67,11 @@ function UserButon() {
         />
       ) : (
         <div className="rounded-full h-7 w-7 flex items-center justify-center text-sm bg-lime-900 text-white">
-          {userNameFirtsLetters}
+          {getNameInitials(session.user.name)}
         </div>
       )}
       <Text variant="content" className="text-lime-950 font-semibold">
-        {splitUserName[0]}
+        {session.user.name.split(" ")[0]}
       </Text>
       <ChevronDown className="w-4 h-4 text-lime-950" />
 

@@ -16,7 +16,7 @@ const listWorkspacesResultSchema = z.array(
         workspaceId: z.uuid(),
         userId: z.uuid(),
         name: z.string(),
-        image: z.url(),
+        image: z.url().nullable(),
         role: z.enum(["owner", "admin", "member"]),
       }),
     ),

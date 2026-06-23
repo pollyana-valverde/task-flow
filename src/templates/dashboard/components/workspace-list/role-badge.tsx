@@ -4,10 +4,7 @@ import { Crown } from "lucide-react";
 
 interface RoleBadgeProps {
   members: {
-    workspaceId: string;
     userId: string;
-    name: string;
-    image: string;
     role: "owner" | "admin" | "member";
   }[];
 }
