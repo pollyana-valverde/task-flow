@@ -27,13 +27,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
-type NewWorkspaceData = z.infer<typeof createWorkspaceSchema>;
+type NewBoardData = z.infer<typeof createWorkspaceSchema>;
 
-const newWorkspaceSchema = z.object({
+const newBoardSchema = z.object({
   title: z.string().min(2, "O Nome do worspace é obrigatório."),
 });
 
-function NewWorkspaceDialog() {
+function NewBoardDialog() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -42,11 +42,11 @@ function NewWorkspaceDialog() {
     formState: { errors, isSubmitting },
     setError,
     reset,
-  } = useForm<NewWorkspaceData>({
-    resolver: zodResolver(newWorkspaceSchema),
+  } = useForm<NewBoardData>({
+    resolver: zodResolver(newBoardSchema),
   });
 
-  async function handleCreateWorkspace(data: NewWorkspaceData) {
+  async function handleCreateBoard(data: NewBoardData) {
     try {
       await createWorkspace(data);
 
@@ -74,20 +74,17 @@ function NewWorkspaceDialog() {
       <DialogTrigger asChild>
         <CoreButton>
           <Plus />
-          Novo workspace
+          Novo board
         </CoreButton>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
-        <form
-          className="grid gap-6"
-          onSubmit={handleSubmit(handleCreateWorkspace)}
-        >
+        <form className="grid gap-6" onSubmit={handleSubmit(handleCreateBoard)}>
           <DialogHeader>
             <DialogTitle asChild>
-              <Text variant="heading-3">Novo workspace</Text>
+              <Text variant="heading-3">Novo board</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text>Workspaces agrupam seus boards e membros.</Text>
+              <Text>Boards organizam tarefas em colunas kanban.</Text>
             </DialogDescription>
           </DialogHeader>
           <FieldGroup>
@@ -97,8 +94,8 @@ function NewWorkspaceDialog() {
               errorInput={errors.title}
               register={register}
               input="title"
-              label="Nome do workspace"
-              placeholder="Digite o nome do workspace..."
+              label="Nome do board"
+              placeholder="Digite o nome do board..."
             />
           </FieldGroup>
           <DialogFooter className="mt-3">
@@ -108,7 +105,7 @@ function NewWorkspaceDialog() {
               </Button>
             </DialogClose>
             <CoreButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Criando workspace..." : "Criar workspace"}
+              {isSubmitting ? "Criando board..." : "Criar board"}
             </CoreButton>
           </DialogFooter>
         </form>
@@ -117,4 +114,4 @@ function NewWorkspaceDialog() {
   );
 }
 
-export { NewWorkspaceDialog };
+export { NewBoardDialog };

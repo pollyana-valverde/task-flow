@@ -22,20 +22,36 @@ class WorkspaceRepository implements IWorkspaceRepository {
     const result = await database
       .select({
         ...getTableColumns(workspaces),
-        membersCount: count(workspaceMembers.id),
-        boardsCount: count(boards.id),
       })
       .from(workspaces)
       .innerJoin(
         workspaceMembers,
         eq(workspaceMembers.workspaceId, workspaces.id),
       )
-      .leftJoin(boards, eq(boards.workspaceId, workspaces.id))
-      .where(eq(workspaceMembers.userId, userId))
-      .groupBy(workspaces.id);
+      .where(eq(workspaceMembers.userId, userId));
+
+    if (!result.length) return [];
 
     //membros dos workspaces encontrados
     const workspaceIds = result.map((workspace) => workspace.id);
+
+    const membersCount = await database
+      .select({
+        workspaceId: workspaceMembers.workspaceId,
+        value: count(workspaceMembers.id),
+      })
+      .from(workspaceMembers)
+      .where(inArray(workspaceMembers.workspaceId, workspaceIds))
+      .groupBy(workspaceMembers.workspaceId);
+
+    const boardsCount = await database
+      .select({
+        workspaceId: boards.workspaceId,
+        value: count(boards.id),
+      })
+      .from(boards)
+      .where(inArray(boards.workspaceId, workspaceIds))
+      .groupBy(boards.workspaceId);
 
     const members = await database
       .select({
@@ -51,18 +67,42 @@ class WorkspaceRepository implements IWorkspaceRepository {
 
     return result.map((workspace) => ({
       ...workspace,
+      membersCount:
+        membersCount.find((member) => member.workspaceId === workspace.id)
+          ?.value ?? 0,
+      boardsCount:
+        boardsCount.find((board) => board.workspaceId === workspace.id)
+          ?.value ?? 0,
       members: members.filter((member) => member.workspaceId === workspace.id),
     }));
   }
 
   async findById(id: Workspace["id"]) {
-    const result = await database
-      .select()
+    const [workspace] = await database
+      .select({
+        ...getTableColumns(workspaces),
+      })
       .from(workspaces)
       .where(eq(workspaces.id, id))
       .limit(1);
 
-    return result[0] ?? null;
+    if (!workspace) return null;
+
+    const [membersCount] = await database
+      .select({ value: count(workspaceMembers.id) })
+      .from(workspaceMembers)
+      .where(eq(workspaceMembers.workspaceId, id));
+
+    const [boardsCount] = await database
+      .select({ value: count(boards.id) })
+      .from(boards)
+      .where(eq(boards.workspaceId, id));
+
+    return {
+      ...workspace,
+      membersCount: membersCount.value,
+      boardsCount: boardsCount.value,
+    };
   }
 
   async findByOwnerId(ownerId: Workspace["ownerId"]) {

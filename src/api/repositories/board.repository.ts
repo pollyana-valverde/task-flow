@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { count, eq, getTableColumns } from "drizzle-orm";
 import type { IBoardRepository } from "@/api/contracts/board.contract";
 import { database } from "@/api/database";
-import { boardColumns, boards } from "@/api/database/schemas";
+import { boardColumns, boards, tasks } from "@/api/database/schemas";
 import type { Board } from "@/api/models/board.model";
 import type { BoardColumn } from "@/api/models/board-column.model";
 
@@ -24,9 +24,14 @@ class BoardRepository implements IBoardRepository {
 
   async findByWorkspaceId(workspaceId: Board["workspaceId"]) {
     const result = await database
-      .select()
+      .select({
+        ...getTableColumns(boards),
+        columnsCount: count(boardColumns.id),
+      })
       .from(boards)
-      .where(eq(boards.workspaceId, workspaceId));
+      .leftJoin(boardColumns, eq(boardColumns.boardId, boards.id))
+      .where(eq(boards.workspaceId, workspaceId))
+      .groupBy(boards.id);
 
     return result;
   }

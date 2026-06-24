@@ -12,7 +12,7 @@ interface MemberAvatarProps {
   members: {
     userId: string;
     name: string;
-    image: string;
+    image: string | null;
   }[];
 }
 

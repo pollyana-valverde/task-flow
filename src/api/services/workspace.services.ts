@@ -27,32 +27,19 @@ class WorkspaceService implements IWorkspaceService {
   }
 
   async findById(id: Workspace["id"], userId: WorkspaceMember["userId"]) {
-    // Fetch the workspace by its ID
     const workspace = await this.workspaceRepository.findById(id);
 
-    // Validate that the workspace exists
     if (!workspace) {
       throw new AppError("Workspace not found", 404);
     }
 
-    // Fetch the member record for the user in the context of the workspace
     const member = await this.workspaceRepository.findMember(id, userId);
 
-    // Validate that the user is a member and active of the workspace
     if (!member || member.status !== "active") {
       throw new AppError("Forbidden", 403);
     }
 
-    // Fetch the members of the workspace
-    const members = await this.workspaceRepository.findMembers(id);
-
-    // Validate that the members were fetched successfully
-    if (!members) {
-      throw new AppError("Failed to fetch workspace members", 500);
-    }
-
-    // Return the workspace along with its members
-    return { ...workspace, members };
+    return workspace;
   }
 
   async findByOwnerId(ownerId: Workspace["ownerId"]) {

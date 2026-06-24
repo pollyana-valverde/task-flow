@@ -10,6 +10,7 @@ import { Text } from "@/components/ui/text";
 import { ArrowRight } from "lucide-react";
 import { RoleBadge } from "./role-badge";
 import { MemberAvatar } from "./member-avatar";
+import Link from "next/link";
 
 interface WorkspaceCardProps {
   workspace: {
@@ -24,7 +25,7 @@ interface WorkspaceCardProps {
       workspaceId: string;
       userId: string;
       name: string;
-      image: string;
+      image: string | null;
       role: "owner" | "admin" | "member";
     }[];
   };
@@ -72,12 +73,15 @@ function WorkspaceCard({ workspace }: WorkspaceCardProps) {
       <CardFooter className="justify-between">
         <MemberAvatar members={workspace.members} />
         <Button
+          asChild
           variant="ghost"
           size="sm"
           className="text-lime-950/60 group hover:bg-lime-950/5 hover:text-lime-950 px-3"
         >
-          Abrir{" "}
-          <ArrowRight className="group-hover:text-lime-950 text-lime-950/60" />
+          <Link href={`/workspaces/${workspace.id}/boards`}>
+            Abrir{" "}
+            <ArrowRight className="group-hover:text-lime-950 text-lime-950/60" />
+          </Link>
         </Button>
       </CardFooter>
     </Card>
