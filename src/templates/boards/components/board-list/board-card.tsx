@@ -18,9 +18,10 @@ interface BoardCardProps {
     columnsCount: number;
     updatedAt: Date;
   };
+  workspaceId: string;
 }
 
-function BoardCard({ board }: BoardCardProps) {
+function BoardCard({ board, workspaceId }: BoardCardProps) {
   return (
     <Card className="gap-4 py-5 hover:border hover:border-foreground dark:hover:border-primary">
       <CardHeader className="flex gap-3 flex-1 items-center">
@@ -51,7 +52,7 @@ function BoardCard({ board }: BoardCardProps) {
           })}
         </Text>
         <Button asChild variant="ghost" size="sm" className="text-sm group">
-          <Link href={`/workspaces/${board.workspaceId}/boards/${board.id}`}>
+          <Link href={`/workspaces/${workspaceId}/boards/${board.id}`}>
             Abrir{" "}
             <ArrowRight className="group-hover:text-foreground text-foreground/70 size-3.5" />
           </Link>

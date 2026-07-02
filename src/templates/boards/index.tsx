@@ -1,7 +1,7 @@
 import { getWorkspace } from "@/http/workspaces/get-workspace";
 import { BoardsHeader } from "./components/header";
 import { BoardList } from "./components/board-list";
-import { NoneCreated } from "./components/board-list/none-created";
+import { NoneCreated } from "./components/none-created";
 import { listBoards } from "@/http/boards/list-boards";
 
 async function BoardsPage({ workspaceId }: { workspaceId: string }) {
@@ -11,11 +11,11 @@ async function BoardsPage({ workspaceId }: { workspaceId: string }) {
   return (
     <div className="space-y-6">
       {boards.length === 0 ? (
-        <NoneCreated />
+        <NoneCreated workspaceId={workspaceId} />
       ) : (
         <>
-          <BoardsHeader workspace={workspace} />
-          <BoardList boards={boards} />
+          <BoardsHeader workspace={workspace} workspaceId={workspaceId} />
+          <BoardList boards={boards} workspaceId={workspaceId} />
         </>
       )}
     </div>

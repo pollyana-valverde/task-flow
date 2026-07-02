@@ -1,6 +1,6 @@
 import { Text } from "@/components/ui/text";
 import { Layers } from "lucide-react";
-import { NewWorkspaceDialog } from "../header/new-wokspace-dialog";
+import { NewWorkspaceDialog } from "../new-wokspace-dialog";
 
 function NoneCreated() {
   return (

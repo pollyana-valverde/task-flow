@@ -1,6 +1,6 @@
 import { Text } from "@/components/ui/text";
 import { listWorkspacesResultSchema } from "@/http/workspaces/list-workspaces";
-import { NewWorkspaceDialog } from "./new-wokspace-dialog";
+import { NewWorkspaceDialog } from "../new-wokspace-dialog";
 import z from "zod";
 
 interface DashboardHeaderProps {
