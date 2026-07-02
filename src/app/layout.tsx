@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Hanken_Grotesk } from "next/font/google";
+import { Hanken_Grotesk, Space_Grotesk, Space_Mono } from "next/font/google";
 
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "next-themes";
 
-const geistMono = Geist_Mono({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: "400",
+  variable: "--font-heading",
+});
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-mono",
 });
 
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -24,9 +31,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={cn(geistMono.className, hankenGrotesk.className)}>
-        {children}
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body
+        className={cn(
+          hankenGrotesk.variable,
+          spaceMono.variable,
+          spaceGrotesk.variable,
+          "font-sans",
+        )}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

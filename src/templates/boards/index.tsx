@@ -10,8 +10,14 @@ async function BoardsPage({ workspaceId }: { workspaceId: string }) {
 
   return (
     <div className="space-y-6">
-      <BoardsHeader workspace={workspace} />
-      {boards.length === 0 ? <NoneCreated /> : <BoardList boards={boards} />}
+      {boards.length === 0 ? (
+        <NoneCreated />
+      ) : (
+        <>
+          <BoardsHeader workspace={workspace} />
+          <BoardList boards={boards} />
+        </>
+      )}
     </div>
   );
 }

@@ -17,20 +17,20 @@ async function RoleBadge({ members }: RoleBadgeProps) {
   return (
     <>
       {member?.role === "owner" && (
-        <div className="px-2.5 py-1 rounded-md bg-lime-400/50 border border-lime-900/50">
+        <div className="px-2.5 py-1 rounded-md bg-secondary border border-foreground/20">
           <Text
-            variant="caption"
-            className="text-lime-800 font-mono font-black flex gap-1 items-center"
+            variant="mono"
+            className="text-foreground/80 font-mono flex gap-1 items-center"
           >
             <Crown className="h-3 w-3" /> Dono
           </Text>
         </div>
       )}
       {member?.role === "admin" && (
-        <div className="px-2.5 py-1 rounded-md bg-lime-950/5 border border-lime-950">
+        <div className="px-2.5 py-1 rounded-md bg-foreground/20 border border-foreground/40">
           <Text
-            variant="caption"
-            className="text-lime-950 font-mono font-black flex gap-1 items-center"
+            variant="mono"
+            className="text-foreground font-mono flex gap-1 items-center"
           >
             Admin
           </Text>
@@ -39,8 +39,8 @@ async function RoleBadge({ members }: RoleBadgeProps) {
       {member?.role === "member" && (
         <div className="px-2.5 py-1 rounded-md bg-lime-950/5 border border-lime-950/30">
           <Text
-            variant="caption"
-            className="text-lime-950/60 font-mono font-black flex gap-1 items-center"
+            variant="mono"
+            className="text-lime-950/60 font-mono flex gap-1 items-center"
           >
             Membro
           </Text>

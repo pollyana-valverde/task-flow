@@ -5,26 +5,30 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-3 focus-visible:ring-lime-500/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  `group/button inline-flex shrink-0 items-center justify-center
+  rounded-lg border border-transparent bg-clip-padding font-semibold whitespace-nowrap text-base
+  transition-all outline-none select-none cursor-pointer
+  focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px
+  disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none
+  [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
   {
     variants: {
       variant: {
-        default: "bg-lime-950 text-white focus-visible:ring-lime-500/50",
+        default:
+          "bg-primary border-2 border-lime-950 text-lime-950 shadow-[3px_3px_0] focus-visible:ring-primary/30 active:shadow-none dark:border-lime-700 dark:shadow-lime-700",
         outline:
-          " border-lime-950 text-lime-950 focus-visible:ring-lime-500/50 dark:bg-input/30 dark:border-lime-950/50 dark:focus-visible:ring-lime-500/20  hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-input/50",
+          "border-muted bg-card focus-visible:ring-secondary/30 hover:bg-muted/40",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+          "border-2 border-lime-950 text-foreground shadow-[3px_3px_0] focus-visible:ring-primary/20 active:shadow-none hover:bg-muted/50 dark:border-lime-700 dark:shadow-lime-700",
+        ghost: "text-foreground/70 hover:bg-muted/50 hover:text-foreground",
         destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+          "text-white bg-destructive border-2 border-red-950 shadow-[3px_3px_0] shadow-red-950",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default:
-          "gap-1.5 h-10.5 px-2.5 in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5",
+        default: "gap-1.5 py-2.5 px-5.5 rounded-[0.75rem]",
+        lg: "gap-1 py-3.5 px-7.5 rounded-[0.875rem]",
+        sm: "gap-1 py-2 px-4 rounded-[0.625rem]",
         icon: "size-9",
         "icon-xs":
           "size-6 rounded-[min(var(--radius-md),8px)] in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3",

@@ -1,17 +1,21 @@
 import { Text } from "@/components/ui/text";
-import { LayersPlus } from "lucide-react";
+import { Layers } from "lucide-react";
+import { NewBoardDialog } from "../header/new-board-dialog";
 
 function NoneCreated() {
   return (
-    <div className="w-full h-full p-10 rounded-xl border border-b-3 border-r-3 border-lime-950 bg-white flex flex-col justify-center items-center gap-2">
-      <div className="flex flex-col gap-2.5 items-center">
-        <Text variant="heading-1" className="text-lime-950">
-          Nenhum board criado ainda
+    <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-6">
+      <div className="bg-secondary dark:bg-secondary/70 border-2 border-dashed border-primary rounded-2xl p-5.5">
+        <Layers className="size-10 text-chart-3/80" />
+      </div>
+      <div className="flex flex-col gap-2 items-center text-center">
+        <Text variant="h1">Crie seu primeiro board</Text>
+        <Text className="text-muted-foreground/75 max-w-sm">
+          Boards são quadros kanban com colunas e tarefas. Comece com um modelo
+          ou em branco.
         </Text>
       </div>
-      <Text className="text-lime-950/60">
-        Crie um board para organizar tarefas em colunas kanban.
-      </Text>
+      <NewBoardDialog />
     </div>
   );
 }

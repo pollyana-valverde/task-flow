@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import GoogleIcon from "@/assets/icons/google.png";
 import { Button } from "@/components/ui/button";
-import { CoreButton } from "@/components/ui/form/core-button";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
@@ -92,26 +91,23 @@ function SignInForm() {
             placeholder="Digite sua senha..."
           >
             <div className="flex justify-between items-center gap-2">
-              <FieldLabel className="text-lime-950">Senha</FieldLabel>
-              <Link
-                href="/"
-                className="text-lime-700 text-sm hover:text-lime-600 transition-colors font-bold"
-              >
+              <FieldLabel>Senha</FieldLabel>
+              <Link href="/" className="text-sm text-chart-3 hover:underline">
                 Esqueceu a senha?
               </Link>
             </div>
           </InputField>
 
-          <CoreButton disabled={isSubmitting}>
+          <Button disabled={isSubmitting} size="lg">
             {isSubmitting ? "Entrando..." : "Entrar"}
-          </CoreButton>
+          </Button>
         </FieldGroup>
       </form>
 
       <div className="flex items-center gap-3 w-full">
-        <hr className="bg-lime-950 h-0.5 w-full" />
-        <span className="text-lime-950">Ou</span>
-        <hr className="bg-lime-950 h-0.5 w-full" />
+        <hr className="bg-muted w-full" />
+        <span className="text-muted-foreground/70">Ou</span>
+        <hr className="bg-muted w-full" />
       </div>
 
       <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>

@@ -11,18 +11,16 @@ import { ArrowRight } from "lucide-react";
 import { RoleBadge } from "./role-badge";
 import { MemberAvatar } from "./member-avatar";
 import Link from "next/link";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 
 interface WorkspaceCardProps {
   workspace: {
     id: string;
     title: string;
-    ownerId: string;
     membersCount: number;
     boardsCount: number;
     createdAt: Date;
-    updatedAt: Date;
     members: {
-      workspaceId: string;
       userId: string;
       name: string;
       image: string | null;
@@ -33,54 +31,53 @@ interface WorkspaceCardProps {
 
 function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   return (
-    <Card>
+    <Card className="shadow-[4px_4px_0] border-2 border-foreground dark:border-lime-700 dark:shadow-lime-700 gap-5">
       <div className="flex justify-between items-center px-(--card-spacing)">
-        <div className="h-12 w-12 flex items-center justify-center rounded-xl bg-lime-800 text-white">
-          <Text variant="heading-1">
-            {workspace.title.split("")[0].toUpperCase()}
-          </Text>
+        <div className="size-12 flex items-center justify-center rounded-xl bg-primary text-lime-950 border-2 border-lime-950 dark:border-lime-700">
+          <Text variant="h2">{workspace.title.charAt(0).toUpperCase()}</Text>
         </div>
         <RoleBadge members={workspace.members} />
       </div>
 
       <div className="flex gap-2 items-center">
-        <CardHeader className="flex-1">
-          <Text variant="heading-2" className="text-lime-950 truncate">
-            {workspace.title}
+        <CardHeader className="flex-1 gap-0">
+          <Text variant="h2" className="truncate">
+            {capitalizeFirtLetter(workspace.title)}
           </Text>
-          <CardDescription className="text-lime-950/60">
-            Criado em{" "}
-            {workspace.createdAt.toLocaleDateString("pt-br", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
+          <CardDescription>
+            <Text variant="mono">
+              Criado em{" "}
+              {workspace.createdAt.toLocaleDateString("pt-br", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </Text>
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="flex flex-col gap-2 items-end">
-          <Text className="text-lime-950/60">
-            <strong className="text-lime-950">{workspace.boardsCount}</strong>{" "}
+        <CardContent className="flex flex-col gap-1 items-end">
+          <Text variant="mono">
+            <strong className="text-foreground">{workspace.boardsCount}</strong>{" "}
             {workspace.boardsCount === 1 ? "board" : "boards"}
           </Text>
-          <Text className="text-lime-950/60">
-            <strong className="text-lime-950">{workspace.membersCount}</strong>{" "}
+          <Text variant="mono">
+            <strong className="text-foreground">
+              {workspace.membersCount}
+            </strong>{" "}
             {workspace.membersCount === 1 ? "membro" : "membros"}
           </Text>
         </CardContent>
       </div>
 
+      <hr className="border-muted mx-(--card-spacing) -mb-1.5" />
+
       <CardFooter className="justify-between">
         <MemberAvatar members={workspace.members} />
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className="text-lime-950/60 group hover:bg-lime-950/5 hover:text-lime-950 px-3"
-        >
+        <Button asChild variant="ghost" size="sm" className=" group">
           <Link href={`/workspaces/${workspace.id}/boards`}>
             Abrir{" "}
-            <ArrowRight className="group-hover:text-lime-950 text-lime-950/60" />
+            <ArrowRight className="group-hover:text-foreground text-foreground/70 " />
           </Link>
         </Button>
       </CardFooter>

@@ -1,18 +1,20 @@
 import { Text } from "@/components/ui/text";
-import { LayersPlus } from "lucide-react";
+import { Layers } from "lucide-react";
+import { NewWorkspaceDialog } from "../header/new-wokspace-dialog";
 
 function NoneCreated() {
   return (
-    <div className="w-full h-full p-10 rounded-xl border border-b-3 border-r-3 border-lime-950 bg-white flex flex-col justify-center items-center gap-2">
-      <div className="flex flex-col gap-2.5 items-center">
-        <Text variant="heading-1" className="text-lime-950">
-          Você ainda não faz parte de nenhum workspace
+    <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-6">
+      <div className="bg-secondary dark:bg-secondary/70 border-2 border-dashed border-primary rounded-2xl p-5.5">
+        <Layers className="size-10 text-chart-3/80" />
+      </div>
+      <div className="flex flex-col gap-2 items-center  text-center">
+        <Text variant="h1">Nenhum workspace ainda</Text>
+        <Text className="text-muted-foreground/75 max-w-sm">
+          Crie seu primeiro workspace para agrupar boards e convidar seu time.
         </Text>
       </div>
-      <Text className="text-lime-950/60">
-        Crie seu primeiro workspace para começar a organizar boards e tarefas
-        com seu time.
-      </Text>
+      <NewWorkspaceDialog />
     </div>
   );
 }

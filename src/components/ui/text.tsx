@@ -6,14 +6,13 @@ import { cn } from "@/lib/utils";
 const textVariants = cva("", {
   variants: {
     variant: {
-      default: "text-base leading-[140%] font-normal font-sans",
-      display: "text-4xl leading-[140%] font-extrabold font-sans",
-      "heading-1": "text-2xl leading-[140%] font-extrabold font-sans",
-      "heading-2": "text-xl leading-[140%] font-bold font-sans",
-      "heading-3": "text-lg leading-[140%] font-bold font-sans",
-      content: "text-sm leading-[140%] font-normal font-sans",
-      caption: "text-xs leading-[140%] font-normal font-sans",
-      label: "text-[.625rem] leading-[140%] font-bold uppercase font-mono",
+      default: "text-base leading-[140%] font-normal text-muted-foreground",
+      display: "text-5xl font-bold font-heading",
+      h1: "text-3xl leading-[140%] font-bold font-heading",
+      h2: "text-xl leading-[140%] font-semibold font-heading",
+      h3: "text-lg leading-[140%] font-semibold font-heading",
+      sm: "text-sm leading-[140%] font-normal text-muted-foreground/75",
+      mono: "text-xs leading-[140%] text-muted-foreground/75 font-normal font-mono",
     },
   },
   defaultVariants: {

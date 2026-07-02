@@ -1,11 +1,6 @@
-import { ThemeSwitch } from "@/components/ui/header/theme-switch";
-import { NotificationBell } from "@/components/ui/header/notification-bell";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/ui/sidebar/index";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { WorkspacesSidebar } from "@/components/layout/workspaces/sidebar";
+import { WorkspacesHeader } from "@/components/layout/workspaces/header";
 
 interface WorkspacesLayoutProps {
   params: Promise<{
@@ -22,17 +17,11 @@ export default async function WorkspacesLayout({
 
   return (
     <SidebarProvider>
-      <AppSidebar workspaceId={workspaceId} />
+      <WorkspacesSidebar workspaceId={workspaceId} />
       <SidebarInset>
-        <header className=" py-3 px-8 flex justify-between items-center gap-3 border-b border-lime-950/20">
-          <SidebarTrigger className="hover:bg-lime-950/5 rounded-lg p-3 group" />
-          <div className="flex justify-end items-center gap-3">
-            <ThemeSwitch />
-            <NotificationBell />
-          </div>
-        </header>
+        <WorkspacesHeader />
 
-        <main className="flex flex-col py-8 px-8 md:px-14 h-screen bg-lime-950/5">
+        <main className="flex flex-col py-8 px-8 md:px-14 min-h-screen bg-background-muted">
           {children}
         </main>
       </SidebarInset>

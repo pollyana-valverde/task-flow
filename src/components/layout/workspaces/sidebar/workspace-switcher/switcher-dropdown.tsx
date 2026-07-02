@@ -11,6 +11,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 
 interface SwitcherDropdownProps {
   workspaces: {
@@ -26,15 +27,13 @@ function SwitcherDropdown({ workspaces }: SwitcherDropdownProps) {
 
   return (
     <DropdownMenuContent
-      className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+      className="w-(--radix-dropdown-menu-trigger-width) min-w-56 max-h-56 overflow-y-scroll rounded-lg"
       align="start"
       side={isMobile ? "bottom" : "right"}
       sideOffset={4}
     >
       <DropdownMenuLabel asChild>
-        <Text variant="label" className="text-lime-950/60 normal-case">
-          Workspaces
-        </Text>
+        <Text variant="mono">Workspaces</Text>
       </DropdownMenuLabel>
       {workspaces.map((workspace) => (
         <DropdownMenuItem
@@ -42,16 +41,19 @@ function SwitcherDropdown({ workspaces }: SwitcherDropdownProps) {
           onClick={() => router.replace(`/workspaces/${workspace.id}/boards`)}
           className="gap-2 p-2"
         >
-          <div className="h-9.5 w-9.5 flex items-center justify-center rounded-lg bg-lime-800 text-white">
-            <Text variant="heading-3">
+          <div className="size-8.5 flex items-center justify-center rounded-md bg-primary border border-foreground">
+            <Text className="text-lime-950 font-bold font-heading">
               {workspace.title.split("")[0].toUpperCase()}
             </Text>
           </div>
           <div className="grid flex-1 text-left">
-            <Text className="truncate font-semibold text-lime-950">
-              {workspace.title}
+            <Text
+              variant="sm"
+              className="truncate text-foreground/90 font-bold"
+            >
+              {capitalizeFirtLetter(workspace.title)}
             </Text>
-            <Text variant="caption" className="truncate text-lime-950/60">
+            <Text variant="mono" className="truncate">
               {workspace.createdAt.toLocaleDateString("pt-br", {
                 day: "numeric",
                 month: "short",
@@ -63,8 +65,8 @@ function SwitcherDropdown({ workspaces }: SwitcherDropdownProps) {
       ))}
       <DropdownMenuSeparator />
       <DropdownMenuItem className="gap-2 p-2">
-        <Home className="size-4 text-lime-950/60" />
-        <Link href={"/"} className="font-medium text-lime-950/60">
+        <Home className="size-4 text-foreground/80" />
+        <Link href={"/"} className="font-medium text-foreground/80">
           Voltar pro dashboard
         </Link>
       </DropdownMenuItem>

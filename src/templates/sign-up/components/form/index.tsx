@@ -4,12 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { CoreButton } from "@/components/ui/form/core-button";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { authClient } from "@/lib/auth-client";
 import { translateAuthError } from "@/utils/auth-errors";
+import { Button } from "@/components/ui/button";
 
 interface SignUpFormData {
   name: string;
@@ -80,9 +80,9 @@ function SignUpForm() {
             placeholder="Digite sua senha..."
           />
 
-          <CoreButton disabled={isSubmitting}>
+          <Button disabled={isSubmitting} size="lg">
             {isSubmitting ? "Criando conta..." : "Criar conta"}
-          </CoreButton>
+          </Button>
         </FieldGroup>
       </form>
     </>

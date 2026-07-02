@@ -43,7 +43,7 @@ function InputField<T extends FieldValues>({
       {label ? (
         <FieldLabel
           htmlFor={input}
-          className={cn("text-lime-950", errorInput && "text-destructive")}
+          className={cn(errorInput && "text-destructive")}
         >
           {label}
         </FieldLabel>

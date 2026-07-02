@@ -34,7 +34,7 @@ function MemberAvatar({ members }: MemberAvatarProps) {
         </Avatar>
       ))}
       {members.length > 4 && (
-        <AvatarGroupCount className="bg-lime-100 text-lime-950/60 border border-lime-950/10">
+        <AvatarGroupCount className="bg-lime-100 text-foreground/60 border border-foreground/10">
           +{members.length}
         </AvatarGroupCount>
       )}

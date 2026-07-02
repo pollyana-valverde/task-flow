@@ -8,7 +8,7 @@ interface WorkspaceListProps {
 
 function WorkspaceList({ workspaces }: WorkspaceListProps) {
   return (
-    <div className="grid md:grid-cols-3 gap-4">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
       {workspaces.map((workspace) => (
         <WorkspaceCard key={workspace.id} workspace={workspace} />
       ))}

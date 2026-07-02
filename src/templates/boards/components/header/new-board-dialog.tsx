@@ -13,13 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup } from "@/components/ui/field";
-import { CoreButton } from "@/components/ui/form/core-button";
 import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
-import {
-  createWorkspace,
-  createWorkspaceSchema,
-} from "@/http/workspaces/create-workspace";
+import { createBoardSchema, createBoard } from "@/http/boards/create-board";
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
@@ -27,13 +23,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
-type NewBoardData = z.infer<typeof createWorkspaceSchema>;
+type NewBoardData = z.infer<typeof createBoardSchema>;
 
 const newBoardSchema = z.object({
-  title: z.string().min(2, "O Nome do worspace é obrigatório."),
+  title: z.string().min(2, "O Nome do board é obrigatório."),
 });
 
-function NewBoardDialog() {
+function NewBoardDialog({ workspaceId }: { workspaceId: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -48,7 +44,7 @@ function NewBoardDialog() {
 
   async function handleCreateBoard(data: NewBoardData) {
     try {
-      await createWorkspace(data);
+      await createBoard({ title: data.title, workspaceId });
 
       reset();
       setIsModalOpen(false);
@@ -72,22 +68,25 @@ function NewBoardDialog() {
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogTrigger asChild>
-        <CoreButton>
-          <Plus />
+        <Button>
+          <Plus className="mr-1" />
           Novo board
-        </CoreButton>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <form className="grid gap-6" onSubmit={handleSubmit(handleCreateBoard)}>
           <DialogHeader>
             <DialogTitle asChild>
-              <Text variant="heading-3">Novo board</Text>
+              <Text variant="h2">Novo board</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text>Boards organizam tarefas em colunas kanban.</Text>
+              <Text variant="sm">
+                Boards organizam tarefas em colunas kanban.
+              </Text>
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
+
+          <FieldGroup className="gap-4">
             {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
 
             <InputField
@@ -98,15 +97,16 @@ function NewBoardDialog() {
               placeholder="Digite o nome do board..."
             />
           </FieldGroup>
+
           <DialogFooter className="mt-3">
             <DialogClose asChild>
-              <Button className="px-6 border-lime-950" variant="outline">
+              <Button className="px-6" variant="secondary">
                 Cancelar
               </Button>
             </DialogClose>
-            <CoreButton type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Criando board..." : "Criar board"}
-            </CoreButton>
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

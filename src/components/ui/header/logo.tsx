@@ -1,17 +1,21 @@
 import { Layers } from "lucide-react";
 import { Text } from "../text";
+import { cn } from "@/lib/utils";
 
-function Logo() {
+interface LogoProps extends React.ComponentProps<"div"> {}
+
+function Logo({ className, ...props }: LogoProps) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="p-0.5 bg-lime-800 border-b-3 border-r-3 border-lime-400 rounded-tl-lg rounded-xl">
-        <div className="p-2 bg-lime-400 rounded-tl-md rounded-lg border-t-3 border-l-3 border-lime-50">
-          <Layers className="h-5 w-5 text-lime-950" />
-        </div>
+    <div className="flex items-center gap-3" {...props}>
+      <div
+        className={cn(
+          "p-2 bg-primary bg-clip-padding border-2 border-lime-950 dark:border-lime-700 rounded-lg shadow-[3px_3px_0]  shadow-primary inset-shadow-[3px_3px_0] inset-shadow-lime-50 dark:inset-shadow-[#181d10]",
+          className,
+        )}
+      >
+        <Layers className="size-5 text-lime-950" />
       </div>
-      <Text variant="heading-1" className="text-lime-950">
-        Task Flow
-      </Text>
+      <Text variant="h2">Task Flow</Text>
     </div>
   );
 }

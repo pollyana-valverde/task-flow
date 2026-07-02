@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup } from "@/components/ui/field";
-import { CoreButton } from "@/components/ui/form/core-button";
 import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
 import {
@@ -72,10 +71,10 @@ function NewWorkspaceDialog() {
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogTrigger asChild>
-        <CoreButton>
-          <Plus />
+        <Button>
+          <Plus className="mr-1" />
           Novo workspace
-        </CoreButton>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <form
@@ -84,12 +83,15 @@ function NewWorkspaceDialog() {
         >
           <DialogHeader>
             <DialogTitle asChild>
-              <Text variant="heading-3">Novo workspace</Text>
+              <Text variant="h2">Novo workspace</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text>Workspaces agrupam seus boards e membros.</Text>
+              <Text variant="sm">
+                Workspaces agrupam seus boards e membros.
+              </Text>
             </DialogDescription>
           </DialogHeader>
+
           <FieldGroup>
             {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
 
@@ -101,15 +103,16 @@ function NewWorkspaceDialog() {
               placeholder="Digite o nome do workspace..."
             />
           </FieldGroup>
+
           <DialogFooter className="mt-3">
             <DialogClose asChild>
-              <Button className="px-6 border-lime-950" variant="outline">
+              <Button className="px-6" variant="secondary">
                 Cancelar
               </Button>
             </DialogClose>
-            <CoreButton type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Criando workspace..." : "Criar workspace"}
-            </CoreButton>
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

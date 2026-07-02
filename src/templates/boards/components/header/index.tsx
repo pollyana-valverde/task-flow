@@ -11,16 +11,19 @@ function BoardsHeader({ workspace }: BoardsHeaderProps) {
   return (
     <div className="flex flex-col items-center md:flex-row justify-between gap-2">
       <div className="flex flex-col gap-0.5">
-        <Text variant="heading-1" className="text-lime-950">
-          Visão geral
-        </Text>
-        <Text variant="content" className="text-lime-950/80">
-          {workspace.boardsCount} boards · {workspace.membersCount} membros
-          ativos
+        <Text variant="h1">Visão geral</Text>
+        <Text variant="mono" className="text-sm">
+          {workspace.boardsCount === 1
+            ? `${workspace.boardsCount} board`
+            : `${workspace.boardsCount} boards`}{" "}
+          ·{" "}
+          {workspace.membersCount === 1
+            ? `${workspace.membersCount} membro ativo`
+            : `${workspace.membersCount} membros ativos`}
         </Text>
       </div>
 
-      <NewBoardDialog />
+      <NewBoardDialog workspaceId={workspace.id} />
     </div>
   );
 }

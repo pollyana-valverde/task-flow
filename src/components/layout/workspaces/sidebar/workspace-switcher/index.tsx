@@ -9,9 +9,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Text } from "../../text";
+import { Text } from "@/components/ui/text";
 import { SwitcherDropdown } from "./switcher-dropdown";
 import { listWorkspaces } from "@/http/workspaces/list-workspaces";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 
 interface WorkspaceSwitcherProps {
   workspace: {
@@ -28,24 +29,27 @@ async function WorkspaceSwitcher({ workspace }: WorkspaceSwitcherProps) {
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger
-            className=" border border-lime-950 hover:bg-lime-950/5 focus-visible:ring-lime-500/50 h-14 rounded-lg gap-2.5"
+            className="shadow-[2px_2px_0] border-2 border-foreground dark:border-lime-700 dark:shadow-lime-700 hover:bg-foreground/5 focus-visible:ring-primary/20 h-14 px-2.5 rounded-xl gap-2.5"
             asChild
           >
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-lime-950/5 data-[state=open]:text-lime-950"
+              className="data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
             >
-              <div className="h-full w-9.5 flex items-center justify-center rounded-lg bg-lime-800 text-white">
-                <Text variant="heading-3">
+              <div className="size-8 flex items-center justify-center rounded-md bg-primary border border-foreground">
+                <Text className="text-lime-950 font-bold font-heading">
                   {workspace.title.split("")[0].toUpperCase()}
                 </Text>
               </div>
 
               <div className="grid flex-1 text-left">
-                <Text className="truncate font-semibold text-lime-950">
-                  {workspace.title}
+                <Text
+                  variant="sm"
+                  className="truncate text-foreground font-bold"
+                >
+                  {capitalizeFirtLetter(workspace.title)}
                 </Text>
-                <Text variant="caption" className="truncate text-lime-950/60">
+                <Text variant="mono" className="truncate">
                   {workspace.createdAt.toLocaleDateString("pt-br", {
                     day: "numeric",
                     month: "short",
@@ -53,7 +57,7 @@ async function WorkspaceSwitcher({ workspace }: WorkspaceSwitcherProps) {
                   })}
                 </Text>
               </div>
-              <ChevronsUpDown className="ml-auto text-lime-950/60" />
+              <ChevronsUpDown className="ml-auto text-foreground" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
 
