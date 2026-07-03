@@ -56,7 +56,6 @@ interface IWorkspaceService {
     id: Workspace["id"],
     userId: WorkspaceMember["userId"],
   ): Promise<Workspace>;
-  findByOwnerId(ownerId: Workspace["ownerId"]): Promise<Workspace[]>;
   create(
     title: Workspace["title"],
     ownerId: Workspace["ownerId"],
@@ -69,9 +68,14 @@ interface IWorkspaceService {
   delete(id: Workspace["id"], ownerId: Workspace["ownerId"]): Promise<void>;
 
   // workspace members
+  findMembers(
+    workspaceId: Workspace["id"],
+    userId: WorkspaceMember["userId"],
+  ): Promise<WorkspaceMember[]>;
   inviteMember(
     workspaceId: Workspace["id"],
     email: User["email"],
+    role: WorkspaceMemberRole,
   ): Promise<WorkspaceMember>;
   acceptInvite(
     workspaceId: Workspace["id"],

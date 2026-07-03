@@ -1,3 +1,5 @@
+import { MembersPage } from "@/templates/members";
+
 interface MembersPageProps {
   params: Promise<{
     workspaceId: string;
@@ -7,5 +9,5 @@ interface MembersPageProps {
 export default async function Members({ params }: MembersPageProps) {
   const { workspaceId } = await params;
 
-  return <div>{workspaceId} members</div>;
+  return <MembersPage workspaceId={workspaceId} />;
 }

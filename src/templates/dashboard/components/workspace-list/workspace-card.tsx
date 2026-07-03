@@ -1,3 +1,6 @@
+import { getSession } from "@/lib/auth/get-session";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,10 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { ArrowRight } from "lucide-react";
-import { RoleBadge } from "./role-badge";
 import { MemberAvatar } from "./member-avatar";
-import Link from "next/link";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
+import { RoleBadge } from "@/components/ui/role-badge";
 
 interface WorkspaceCardProps {
   workspace: {
@@ -29,14 +31,20 @@ interface WorkspaceCardProps {
   };
 }
 
-function WorkspaceCard({ workspace }: WorkspaceCardProps) {
+async function WorkspaceCard({ workspace }: WorkspaceCardProps) {
+  const session = await getSession();
+
+  const member = workspace.members.find(
+    (member) => member.userId === session?.user.id,
+  );
+
   return (
     <Card className="shadow-[4px_4px_0] border-2 border-foreground dark:border-lime-700 dark:shadow-lime-700 gap-5">
       <div className="flex justify-between items-center px-(--card-spacing)">
         <div className="size-12 flex items-center justify-center rounded-xl bg-primary text-lime-950 border-2 border-lime-950 dark:border-lime-700">
           <Text variant="h2">{workspace.title.charAt(0).toUpperCase()}</Text>
         </div>
-        <RoleBadge members={workspace.members} />
+        <RoleBadge role={member?.role} variant={member?.role} />
       </div>
 
       <div className="flex gap-2 items-center">

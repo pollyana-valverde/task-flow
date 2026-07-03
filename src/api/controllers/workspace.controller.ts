@@ -20,6 +20,7 @@ const workspaceSchema = z.object({
 
 const inviteSchema = z.object({
   email: z.email("Invalid email format"),
+  role: z.enum(["admin", "member"]).optional().default("member"),
 });
 
 const updateRoleSchema = z.object({
@@ -49,14 +50,6 @@ class WorkspaceController {
     const workspace = await this.workspaceService.findById(id, userId);
 
     return c.json(workspace, 200);
-  };
-
-  findByOwnerId = async (c: Context) => {
-    const { id: ownerId } = c.get("user");
-
-    const workspaces = await this.workspaceService.findByOwnerId(ownerId);
-
-    return c.json(workspaces, 200);
   };
 
   create = async (c: Context) => {
@@ -92,13 +85,29 @@ class WorkspaceController {
   };
 
   // workspace members
+  findMembers = async (c: Context) => {
+    const { id: workspaceId } = paramsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
+
+    const members = await this.workspaceService.findMembers(
+      workspaceId,
+      userId,
+    );
+
+    return c.json(members, 200);
+  };
+
   inviteMember = async (c: Context) => {
     const { id: workspaceId } = paramsSchema.parse(c.req.param());
 
     const body = await c.req.json();
-    const { email } = inviteSchema.parse(body);
+    const { email, role } = inviteSchema.parse(body);
 
-    await this.workspaceService.inviteMember(workspaceId, email);
+    await this.workspaceService.inviteMember(
+      workspaceId,
+      email,
+      role as WorkspaceMemberRole,
+    );
 
     return c.json({ message: "Invite sent" }, 200);
   };

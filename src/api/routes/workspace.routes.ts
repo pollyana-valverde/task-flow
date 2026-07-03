@@ -16,7 +16,6 @@ const workspaceController = new WorkspaceController(workspaceService);
 
 // workspace
 workspaceRoutes.get("/", workspaceController.findAll);
-workspaceRoutes.get("/owned", workspaceController.findByOwnerId);
 workspaceRoutes.get(
   "/:id",
   verifyAuthorization(
@@ -39,19 +38,34 @@ workspaceRoutes.delete(
 );
 
 // workspace members
+workspaceRoutes.get(
+  "/:id/member",
+  verifyAuthorization(
+    ["owner", "admin", "member"] as WorkspaceMemberRole[],
+    workspaceRepository,
+  ),
+  workspaceController.findMembers,
+);
+
 workspaceRoutes.post(
-  "/:id/invite",
+  "/:id/invite-member",
   verifyAuthorization(
     ["owner", "admin"] as WorkspaceMemberRole[],
     workspaceRepository,
   ),
   workspaceController.inviteMember,
 );
-workspaceRoutes.post("/:id/invite/accept", workspaceController.acceptInvite);
-workspaceRoutes.post("/:id/invite/decline", workspaceController.declineInvite);
+workspaceRoutes.post(
+  "/:id/invite-member/accept",
+  workspaceController.acceptInvite,
+);
+workspaceRoutes.post(
+  "/:id/invite-member/decline",
+  workspaceController.declineInvite,
+);
 
 workspaceRoutes.patch(
-  "/:id/members/:uid/role",
+  "/:id/member/:uid/role",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
   workspaceController.updateRole,
 );
@@ -63,7 +77,7 @@ workspaceRoutes.patch(
 
 workspaceRoutes.delete("/:id/exit", workspaceController.exitWorkspace);
 workspaceRoutes.delete(
-  "/:id/members/:uid",
+  "/:id/member/:uid",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
   workspaceController.removeMember,
 );

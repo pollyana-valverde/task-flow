@@ -135,10 +135,18 @@ class WorkspaceRepository implements IWorkspaceRepository {
 
   // workspace members
   async findMembers(workspaceId: Workspace["id"]) {
-    const result = await database
-      .select()
-      .from(workspaceMembers)
-      .where(eq(workspaceMembers.workspaceId, workspaceId));
+    const result = await database.query.workspaceMembers.findMany({
+      where: eq(workspaceMembers.workspaceId, workspaceId),
+      with: {
+        user: {
+          columns: {
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
+    });
 
     return result as WorkspaceMember[];
   }

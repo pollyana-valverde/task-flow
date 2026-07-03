@@ -39,4 +39,4 @@ function Text({
   );
 }
 
-export { Text, textVariants };
+export { Text, textVariants, type TextProps };

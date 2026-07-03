@@ -42,10 +42,6 @@ class WorkspaceService implements IWorkspaceService {
     return workspace;
   }
 
-  async findByOwnerId(ownerId: Workspace["ownerId"]) {
-    return this.workspaceRepository.findByOwnerId(ownerId);
-  }
-
   async create(title: Workspace["title"], ownerId: Workspace["ownerId"]) {
     // Fetch existing workspaces
     const existingWorkspaces =
@@ -131,7 +127,35 @@ class WorkspaceService implements IWorkspaceService {
   }
 
   // workspace members
-  async inviteMember(workspaceId: Workspace["id"], email: User["email"]) {
+  async findMembers(
+    workspaceId: Workspace["id"],
+    userId: WorkspaceMember["userId"],
+  ) {
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId,
+    );
+
+    // Check if the user is a member of the workspace
+    if (!member || member.status !== "active") {
+      throw new AppError("Forbidden", 403);
+    }
+
+    const members = await this.workspaceRepository.findMembers(workspaceId);
+
+    // Validate that the members were fetched successfully
+    if (!members) {
+      throw new AppError("Failed to fetch workspace members", 500);
+    }
+
+    return members;
+  }
+
+  async inviteMember(
+    workspaceId: Workspace["id"],
+    email: User["email"],
+    role: WorkspaceMemberRole,
+  ) {
     const userId = await getUserIdByEmail(email);
 
     if (!userId) {
@@ -167,7 +191,7 @@ class WorkspaceService implements IWorkspaceService {
       workspaceId,
       userId,
       "pending" as WorkspaceMemberStatus,
-      "member" as WorkspaceMemberRole,
+      role,
     );
 
     // Validate that the member was invited successfully

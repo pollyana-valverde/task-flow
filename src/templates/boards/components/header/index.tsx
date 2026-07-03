@@ -1,7 +1,13 @@
-import { Text } from "@/components/ui/text";
 import z from "zod";
 import { NewBoardDialog } from "../new-board-dialog";
 import { getWorkspaceResultSchema } from "@/http/workspaces/get-workspace";
+import {
+  Header,
+  HeaderAction,
+  HeaderContent,
+  HeaderSubtitle,
+  HeaderTitle,
+} from "@/components/ui/header";
 
 interface BoardsHeaderProps {
   workspace: z.infer<typeof getWorkspaceResultSchema>;
@@ -10,10 +16,10 @@ interface BoardsHeaderProps {
 
 function BoardsHeader({ workspace, workspaceId }: BoardsHeaderProps) {
   return (
-    <div className="flex flex-col items-center md:flex-row justify-between gap-2">
-      <div className="flex flex-col gap-0.5">
-        <Text variant="h1">Visão geral</Text>
-        <Text variant="mono" className="text-sm">
+    <Header>
+      <HeaderContent>
+        <HeaderTitle>Visão geral</HeaderTitle>
+        <HeaderSubtitle>
           {workspace.boardsCount === 1
             ? `${workspace.boardsCount} board`
             : `${workspace.boardsCount} boards`}{" "}
@@ -21,11 +27,13 @@ function BoardsHeader({ workspace, workspaceId }: BoardsHeaderProps) {
           {workspace.membersCount === 1
             ? `${workspace.membersCount} membro ativo`
             : `${workspace.membersCount} membros ativos`}
-        </Text>
-      </div>
+        </HeaderSubtitle>
+      </HeaderContent>
 
-      <NewBoardDialog workspaceId={workspaceId} />
-    </div>
+      <HeaderAction>
+        <NewBoardDialog workspaceId={workspaceId} />
+      </HeaderAction>
+    </Header>
   );
 }
 
