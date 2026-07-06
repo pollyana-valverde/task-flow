@@ -8,7 +8,9 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-interface InputFieldProps<T extends FieldValues> {
+interface InputFieldProps<
+  T extends FieldValues,
+> extends React.ComponentProps<"input"> {
   errorInput:
     | {
         message: string | undefined;

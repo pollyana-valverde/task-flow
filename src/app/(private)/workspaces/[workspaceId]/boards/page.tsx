@@ -1,4 +1,4 @@
-import { BoardsPage } from "@/templates/boards";
+import { BoardsPage } from "@/templates/workspace/boards";
 
 interface BoardsPageProps {
   params: Promise<{

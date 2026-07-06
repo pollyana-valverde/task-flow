@@ -1,4 +1,4 @@
-import { MembersPage } from "@/templates/members";
+import { MembersPage } from "@/templates/workspace/members";
 
 interface MembersPageProps {
   params: Promise<{
