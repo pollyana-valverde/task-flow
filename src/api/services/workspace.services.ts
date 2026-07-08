@@ -318,7 +318,7 @@ class WorkspaceService implements IWorkspaceService {
     const updatedOldOwnerRole = await this.workspaceRepository.updateMemberRole(
       workspaceId,
       oldOwnerId,
-      "member" as WorkspaceMemberRole,
+      "admin" as WorkspaceMemberRole,
     );
 
     if (!updatedOldOwnerRole) {

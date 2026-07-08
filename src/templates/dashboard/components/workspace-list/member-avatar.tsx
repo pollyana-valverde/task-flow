@@ -8,6 +8,8 @@ import {
 import { cn } from "@/lib/utils";
 import { getNameInitials } from "@/utils/get-name-initials";
 
+const MEMBERS_VIEW_LIMIT = 5;
+
 interface MemberAvatarProps {
   members: {
     userId: string;
@@ -19,7 +21,7 @@ interface MemberAvatarProps {
 function MemberAvatar({ members }: MemberAvatarProps) {
   return (
     <AvatarGroup>
-      {members.map((member) => (
+      {members.slice(0, MEMBERS_VIEW_LIMIT).map((member) => (
         <Avatar key={member.userId}>
           {member.image && (
             <AvatarImage src={member.image} alt={member.image} />
@@ -33,9 +35,9 @@ function MemberAvatar({ members }: MemberAvatarProps) {
           </AvatarFallback>
         </Avatar>
       ))}
-      {members.length > 4 && (
+      {members.length > MEMBERS_VIEW_LIMIT && (
         <AvatarGroupCount className="bg-lime-100 text-foreground/60 border border-foreground/10">
-          +{members.length}
+          +{members.length - MEMBERS_VIEW_LIMIT}
         </AvatarGroupCount>
       )}
     </AvatarGroup>

@@ -73,7 +73,7 @@ function NewBoardDialog({ workspaceId }: { workspaceId: string }) {
           Novo board
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm md:max-w-md">
         <form className="grid gap-6" onSubmit={handleSubmit(handleCreateBoard)}>
           <DialogHeader>
             <DialogTitle asChild>

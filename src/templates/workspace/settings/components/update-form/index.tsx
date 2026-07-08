@@ -18,11 +18,11 @@ interface UpdateWorkspaceProps {
   workspaceId: string;
 }
 
-type UpdateWorkspaceData = z.infer<typeof updateWorkspaceSchema>;
-
-const updateWorkspaceInputSchema = z.object({
+const updateWorkspaceInputSchema = updateWorkspaceSchema.extend({
   title: z.string().min(2, "O Nome do workspace é obrigatório."),
 });
+
+type UpdateWorkspaceData = z.infer<typeof updateWorkspaceInputSchema>;
 
 function UpdateForm({ workspaceId }: UpdateWorkspaceProps) {
   const {
@@ -64,7 +64,7 @@ function UpdateForm({ workspaceId }: UpdateWorkspaceProps) {
         onSubmit={handleSubmit(handleUpdateWorkspace)}
         className="flex flex-col gap-4"
       >
-        <FieldGroup className="space-y-4">
+        <FieldGroup>
           {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
 
           <InputField
