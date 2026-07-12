@@ -25,7 +25,7 @@ function BoardCard({ board, workspaceId }: BoardCardProps) {
   return (
     <Card className="gap-4 py-5 hover:border hover:border-foreground dark:hover:border-primary">
       <CardHeader className="flex gap-3 flex-1 items-center">
-        <div className="bg-lime-800 rounded-full w-3 h-3" />
+        <div className="bg-lime-800 rounded-full size-3" />
         <Text variant="h3" className="truncate">
           {capitalizeFirtLetter(board.title)}
         </Text>

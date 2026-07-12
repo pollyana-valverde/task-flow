@@ -26,6 +26,7 @@ boardRoutes.put("/:boardId", boardController.update);
 boardRoutes.delete("/:boardId", boardController.delete);
 
 // board columns
+boardRoutes.get("/:boardId/columns", boardController.findColumnByBoardId);
 boardRoutes.post("/:boardId/column", boardController.createColumn);
 boardColumnsRoutes.put("/:columnId", boardController.updateColumn);
 boardColumnsRoutes.delete("/:columnId", boardController.deleteColumn);

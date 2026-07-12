@@ -28,7 +28,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
         workspaceMembers,
         eq(workspaceMembers.workspaceId, workspaces.id),
       )
-      .where(eq(workspaceMembers.userId, userId));
+      .where(and(eq(workspaceMembers.userId, userId), eq(workspaceMembers.status, "active")));
 
     if (!result.length) return [];
 

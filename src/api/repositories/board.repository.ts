@@ -1,7 +1,7 @@
 import { count, eq, getTableColumns } from "drizzle-orm";
 import type { IBoardRepository } from "@/api/contracts/board.contract";
 import { database } from "@/api/database";
-import { boardColumns, boards, tasks } from "@/api/database/schemas";
+import { boardColumns, boards } from "@/api/database/schemas";
 import type { Board } from "@/api/models/board.model";
 import type { BoardColumn } from "@/api/models/board-column.model";
 
@@ -10,13 +10,6 @@ class BoardRepository implements IBoardRepository {
   async findById(id: Board["id"]) {
     const result = await database.query.boards.findFirst({
       where: eq(boards.id, id),
-      with: {
-        columns: {
-          with: {
-            tasks: true,
-          },
-        },
-      },
     });
 
     return (result as Board) ?? null;
@@ -60,6 +53,26 @@ class BoardRepository implements IBoardRepository {
   }
 
   // board columns
+  async findByBoardId(boardId: Board["id"]) {
+    const result = await database.query.boardColumns.findMany({
+      where: eq(boardColumns.boardId, boardId),
+      with: {
+        tasks: {
+          with: {
+            assignee: {
+              columns: {
+                image: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return (result as BoardColumn[]) ?? [];
+  }
+
   async findColumnWithBoard(columnId: BoardColumn["id"]) {
     const result = await database.query.boardColumns.findFirst({
       where: eq(boardColumns.id, columnId),

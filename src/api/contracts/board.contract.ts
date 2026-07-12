@@ -15,6 +15,7 @@ interface IBoardRepository {
   delete(id: Board["id"]): Promise<void>;
 
   //board columns
+  findByBoardId(boardId: Board["id"]): Promise<BoardColumn[]>;
   findColumnWithBoard(columnId: BoardColumn["id"]): Promise<BoardColumn | null>;
   createColumn(
     boardId: Board["id"],
@@ -44,6 +45,10 @@ interface IBoardService {
   delete(userId: User["id"], id: Board["id"]): Promise<void>;
 
   //board columns
+  findColumnByBoardId(
+    boardId: Board["id"],
+    userId: User["id"],
+  ): Promise<BoardColumn[]>;
   createColumn(
     userId: User["id"],
     boardId: Board["id"],

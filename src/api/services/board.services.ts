@@ -143,6 +143,27 @@ class BoardService implements IBoardService {
   }
 
   // board column
+  async findColumnByBoardId(boardId: Board["id"], userId: User["id"]) {
+    const existingBoard = await this.boardRepository.findById(boardId);
+
+    if (!existingBoard) {
+      throw new AppError("Board not found", 404);
+    }
+
+    const member = await this.workspaceRepository.findMember(
+      existingBoard.workspaceId,
+      userId,
+    );
+
+    if (!member) {
+      throw new AppError("User is not a member of the workspace", 403);
+    }
+
+    const columns = await this.boardRepository.findByBoardId(boardId);
+
+    return columns;
+  }
+
   async createColumn(
     userId: User["id"],
     boardId: Board["id"],

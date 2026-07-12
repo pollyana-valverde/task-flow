@@ -81,6 +81,18 @@ class BoardController {
   };
 
   // board columns
+  findColumnByBoardId = async (c: Context) => {
+    const { boardId } = boardParamsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
+
+    const columns = await this.boardService.findColumnByBoardId(
+      boardId,
+      userId,
+    );
+
+    return c.json(columns, 200);
+  };
+
   createColumn = async (c: Context) => {
     const params = c.req.param();
 
