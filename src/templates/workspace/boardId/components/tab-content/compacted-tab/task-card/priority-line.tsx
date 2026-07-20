@@ -5,7 +5,7 @@ const priorityLineVariants = cva("", {
   variants: {
     variant: {
       low: "bg-muted",
-      medium: " bg-amber-200",
+      medium: "bg-amber-200",
       high: "bg-red-200",
       urgent: "bg-red-600",
     },

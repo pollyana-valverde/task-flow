@@ -48,12 +48,20 @@ class TaskService implements ITasksService {
       throw new AppError("User is not a member of the workspace", 400);
     }
 
-    const assigneeMember = await this.workspaceRepository.findMembers(
-      existingColumn.boards?.workspaceId as string,
-    );
+    if (data.assigneeId != null) {
+      const assigneeMember = await this.workspaceRepository.findMembers(
+        existingColumn.boards?.workspaceId as string,
+      );
 
-    if (!assigneeMember.find((m) => m.userId === data.assigneeId)) {
-      throw new AppError("Assignee user is not a member of the workspace", 400);
+      if (!assigneeMember.find((m) => m.userId === data.assigneeId)) {
+        throw new AppError("Assignee user is not a member of the workspace", 400);
+      }
+    }
+
+    if (data.dueDate != null) {
+      if (data.dueDate < new Date()) {
+        throw new AppError("Due date must be in the future", 400);
+      }
     }
 
     const newTask = await this.taskRepository.create(

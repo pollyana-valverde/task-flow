@@ -7,12 +7,25 @@ import type { Task } from "@/api/models/task.model";
 class TaskRepository implements ITasksRepository {
   async findById(id: Task["id"]) {
     const result = await database
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, id))
-      .limit(1);
+      .query.tasks.findFirst({
+        where: eq(tasks.id, id),
+        with: {
+          assignee: {
+            columns: {
+              image: true,
+              name: true,
+            },
+          },
+          creator: {
+            columns: {
+              image: true,
+              name: true,
+            },
+          }
+        }
+      })
 
-    return (result[0] as Task) ?? null;
+    return (result as Task) ?? null;
   }
 
   async create(

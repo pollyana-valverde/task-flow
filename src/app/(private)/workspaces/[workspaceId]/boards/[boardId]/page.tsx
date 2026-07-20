@@ -8,7 +8,7 @@ interface BoardDetailsPageProps {
 }
 
 export default async function BoardDetails({ params }: BoardDetailsPageProps) {
-  const { boardId } = await params;
+  const { boardId, workspaceId } = await params;
 
-  return <BoardDetailsPage boardId={boardId} />;
+  return <BoardDetailsPage boardId={boardId} workspaceId={workspaceId} />;
 }

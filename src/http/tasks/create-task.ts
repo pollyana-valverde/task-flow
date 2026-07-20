@@ -3,10 +3,10 @@ import z from "zod";
 
 const createTaskSchema = z.object({
   title: z.string(),
-  description: z.string().nullable(),
+  description: z.string().nullable().optional(),
   priority: z.enum(["low", "medium", "high", "urgent"]),
-  assigneeId: z.uuid().nullable(),
-  dueDate: z.coerce.date().nullable(),
+  assigneeId: z.uuid().nullable().optional(),
+  dueDate: z.coerce.date().nullable().optional(),
 });
 
 interface CreateTaskProps {

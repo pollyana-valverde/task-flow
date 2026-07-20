@@ -23,11 +23,8 @@ const taskBodySchema = z.object({
     .default("medium"),
   assigneeId: z.uuid("Invalid assignee ID format").optional(),
   dueDate: z
+    .coerce
     .date()
-    .refine(
-      (date) => new Date(date) > new Date(),
-      "Due date must be in the future",
-    )
     .optional(),
 });
 

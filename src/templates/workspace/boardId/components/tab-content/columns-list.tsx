@@ -1,27 +1,27 @@
 import { Text } from "@/components/ui/text";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
-import { NewColumnDialog } from "../../new-column-dialog";
-import { NewTaskDialog } from "../../new-task-dialog";
+import { NewTaskDialog } from "../new-task-dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { listMembers } from "@/http/members/list-members";
 
 interface ColumnsLIstProps {
-  boardId: string
+  workspaceId: string
   children: React.ReactNode
-  columns: {
+  column: {
     id: string;
     title: string;
     boardId: string;
     createdAt: Date;
     updatedAt: Date;
     tasks: TaskProps[]
-  }[]
+  }
 }
 
-async function ColumnsList({ columns, children, boardId }:ColumnsLIstProps) {
+async function ColumnsList({ column, children, workspaceId }: ColumnsLIstProps) {
+  const members = await listMembers({workspaceId})
+
   return (
-    <>
-      {columns.map((column) => (
         <div key={column.id} className="space-y-3 min-w-67">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -33,24 +33,20 @@ async function ColumnsList({ columns, children, boardId }:ColumnsLIstProps) {
                 <Text variant="mono">{column.tasks.length}</Text>
               </div>
             </div>
-            <NewTaskDialog columnId={column.id}>
+            <NewTaskDialog columnId={column.id} members={members}>
               <div className="p-1 rounded-md hover:bg-muted text-muted-foreground/75 hover:text-muted-foreground mr-1">
                 <Plus className="size-4 "/>
               </div>
             </NewTaskDialog>
           </div>
           {children}
-          <NewTaskDialog columnId={column.id}>
+          <NewTaskDialog columnId={column.id} members={members}>
             <Button variant="outline" className="w-full h-fit">
               <Plus className="mr-1" />
               Adicionar Tarefa
             </Button>
           </NewTaskDialog>
         </div>
-      ))}
-
-      <NewColumnDialog boardId={boardId} />
-    </>
   );
 }
 export { ColumnsList };

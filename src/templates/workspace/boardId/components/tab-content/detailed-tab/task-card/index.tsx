@@ -32,20 +32,22 @@ function TaskCard({ task }: TaskCardProps) {
       </CardContent>
 
       <CardFooter className="justify-between">
-        <Avatar size="sm">
-          {task.assignee?.image && (
-            <AvatarImage src={task.assignee.image} alt={task.assignee.name} />
-          )}
-          <AvatarFallback
-            className={cn(
-              !task.assignee?.image &&
-                "bg-lime-900 text-white font-bold font-heading text-[10px]!",
+        {task.assignee && (
+          <Avatar size="sm">
+            {task.assignee.image && (
+              <AvatarImage src={task.assignee.image} alt={task.assignee.name} />
             )}
-          >
-            {task.assignee?.name && getNameInitials(task.assignee.name)}
-          </AvatarFallback>
-        </Avatar>
-        <Text variant="mono" className="text-muted-foreground">
+            <AvatarFallback
+              className={cn(
+                !task.assignee.image &&
+                  "bg-lime-900 text-white font-bold font-heading text-[10px]!",
+              )}
+            >
+              {task.assignee.name && getNameInitials(task.assignee.name)}
+            </AvatarFallback>
+          </Avatar>
+        )}
+        <Text variant="mono" className="text-muted-foreground text-right w-full">
           {task.dueDate?.toLocaleDateString("pt-br", {
             day: "numeric",
             month: "short",
