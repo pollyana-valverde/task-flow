@@ -2,10 +2,12 @@
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.biome": "explicit"
+    "source.fixAll.biome": "explicit",
   },
   "[drizzle]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "biomejs.biome",
   },
-  "AllAutocomplete.showCurrentDocument": false
+  "AllAutocomplete.showCurrentDocument": false,
+  "editor.suggest.showWords": true,
+  "editor.suggestOnTriggerCharacters": true,
 }

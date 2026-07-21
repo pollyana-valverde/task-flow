@@ -1,5 +1,5 @@
-import { ProfilePage } from "@/templates/profile"
+import { SettingsPage } from "@/templates/account/settings"
 
 export default function Settings() {
-  return <ProfilePage/>
+  return <SettingsPage/>
 }

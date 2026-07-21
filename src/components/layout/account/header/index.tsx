@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  Header,
-  HeaderContent,
-  HeaderSubtitle,
-  HeaderTitle,
+    Header,
+    HeaderContent,
+    HeaderSubtitle,
+    HeaderTitle,
 } from "@/components/ui/header";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const ACCOUNT_HEADER_LINKS = [
   { path: "/profile", label: "Perfil" },

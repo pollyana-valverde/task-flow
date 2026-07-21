@@ -1,0 +1,17 @@
+{
+  "show_edit_predictions": false,
+  "edit_predictions": {
+    "provider": "zed",
+  },
+  "soft_wrap": "editor_width",
+  "formatter": [
+    {
+      "external": {
+        "command": "biomejs.biome",
+      },
+    },
+    { "code_action": "source.fixAll.biome" },
+    { "code_action": "source.organizeImports" },
+  ],
+  "format_on_save": "on",
+}

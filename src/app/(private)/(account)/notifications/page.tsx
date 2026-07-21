@@ -1,5 +1,5 @@
-import { ProfilePage } from "@/templates/profile"
+import { NotificationsPage } from "@/templates/account/notifications"
 
 export default function Notifications() {
-  return <ProfilePage/>
+  return <NotificationsPage/>
 }
