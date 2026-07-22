@@ -2,43 +2,40 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
-import {
-    Field,
-    FieldGroup,
-    FieldLabel
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { createTask, createTaskSchema } from "@/http/tasks/create-task";
+import type { getTaskResultSchema } from "@/http/tasks/get-task";
+import { updateTask, updateTaskSchema } from "@/http/tasks/update-task";
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-interface NewTaskDialogProps {
-  columnId: string;
+interface UpdateTaskDialogProps {
   children: React.ReactNode;
   members: {
     id: string;
@@ -47,9 +44,10 @@ interface NewTaskDialogProps {
       name: string;
     };
   }[];
+  task: z.infer<typeof getTaskResultSchema>;
 }
 
-const newTaskSchema = createTaskSchema.extend({
+const updateTaskInputSchema = updateTaskSchema.extend({
   title: z.string().min(2, "O Nome da tarefa é obrigatório."),
   dueDate: z.preprocess(
     (value) => (value === "" ? undefined : value),
@@ -61,10 +59,11 @@ const newTaskSchema = createTaskSchema.extend({
   ),
 });
 
-type NewTaskDataInput = z.input<typeof newTaskSchema>;
-type NewTaskDataOutput = z.output<typeof newTaskSchema>;
+type UpdateTaskDataInput = z.input<typeof updateTaskInputSchema>;
+type UpdateTaskDataOutput = z.output<typeof updateTaskInputSchema>;
 
-function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
+function UpdateTaskDialog({ children, members, task }: UpdateTaskDialogProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -74,32 +73,35 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
     setError,
     reset,
     control,
-  } = useForm<NewTaskDataInput, any, NewTaskDataOutput>({
-    defaultValues: {
-      priority: "medium",
-      assigneeId: "",
+  } = useForm<UpdateTaskDataInput, any, UpdateTaskDataOutput>({
+    values: {
+      title: task.title,
+      description: task.description,
+      dueDate: task.dueDate ?? "",
+      priority: task.priority,
+      assigneeId: task.assigneeId ?? "",
     },
-    resolver: zodResolver(newTaskSchema),
+    resolver: zodResolver(updateTaskInputSchema),
   });
 
-  async function handleCreateTask(data: NewTaskDataOutput) {
-    console.log("dados validados:", data.dueDate, typeof data.dueDate);
+  async function handleCreateTask(data: UpdateTaskDataOutput) {
     try {
-      await createTask({ createData: { ...data }, columnId });
+      await updateTask({ updateData: { ...data }, taskId: task.id });
 
       reset();
       setIsModalOpen(false);
+
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         if (error.issues) {
           setError("root", {
             message: error.issues?.map((err) => err.message)[0],
           });
-        }
-
-        if (error.message) {
+        } else if (error.message) {
           setError("root", { message: error.message });
         }
+
         return;
       }
 
@@ -121,10 +123,10 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
         <form className="grid gap-6" onSubmit={handleSubmit(handleCreateTask)}>
           <DialogHeader>
             <DialogTitle asChild>
-              <Text variant="h2">Nova tarefa</Text>
+              <Text variant="h2">Atualizar tarefa</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text variant="sm">Crie um novo estágio no seu board.</Text>
+              <Text variant="sm">Atualize os detalhes da tarefa.</Text>
             </DialogDescription>
           </DialogHeader>
 
@@ -253,7 +255,7 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
               </Button>
             </DialogClose>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Criando tarefa..." : "Criar tarefa"}
+              {isSubmitting ? "Atualizando tarefa..." : "Atulizar"}
             </Button>
           </DialogFooter>
         </form>
@@ -262,4 +264,4 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
   );
 }
 
-export { NewTaskDialog };
+export { UpdateTaskDialog };

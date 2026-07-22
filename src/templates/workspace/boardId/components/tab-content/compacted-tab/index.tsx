@@ -2,6 +2,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { listColumns } from "@/http/columns/list-columns";
 import { NewColumnDialog } from "../../column-actions/new-column-dialog";
 import { ColumnsList } from "../columns-list";
+import { TaskDialog } from "../task-dialog";
 import { TaskList } from "../tasks-list";
 import { TaskCard } from "./task-card";
 
@@ -19,7 +20,15 @@ async function CompactedTab({ boardId, workspaceId }: CompactedTabProps) {
         <ColumnsList key={column.id} column={column} workspaceId={workspaceId}>
           <TaskList tasks={column.tasks}>
             {column.tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskDialog
+                key={task.id}
+                taskId={task.id}
+                workspaceId={workspaceId}
+                boardId={boardId}
+                column={column}
+              >
+                <TaskCard task={task} />
+              </TaskDialog>
             ))}
           </TaskList>
         </ColumnsList>

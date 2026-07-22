@@ -11,7 +11,7 @@ import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 import { MoreHorizontalIcon, Plus } from "lucide-react";
 import { DeleteColumnDialog } from "../column-actions/delete-column-dialog";
 import { UpdateColumnDialog } from "../column-actions/update-column-dialog";
-import { NewTaskDialog } from "../new-task-dialog";
+import { NewTaskDialog } from "../task-actions/new-task-dialog";
 import type { TaskProps } from "./type";
 
 interface ColumnsLIstProps {

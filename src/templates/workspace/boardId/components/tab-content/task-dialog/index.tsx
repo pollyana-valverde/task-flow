@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,22 +12,38 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
+import { listColumns } from "@/http/columns/list-columns";
+import { listMembers } from "@/http/members/list-members";
 import { getTask } from "@/http/tasks/get-task";
-
 import { cn } from "@/lib/utils";
-import { getNameInitials } from "@/utils/get-name-initials";
-import { PriorityBadge } from "../detailed-tab/task-card/priority-badge";
-import { Badge } from "@/components/ui/badge";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
+import { getNameInitials } from "@/utils/get-name-initials";
+import { DeleteTaskDialog } from "../../task-actions/delete-task-dialog";
+import { MoveToColumnDialog } from "../../task-actions/move-to-column-dialog";
+import { UpdateTaskDialog } from "../../task-actions/update-task-dialog";
+import { PriorityBadge } from "../detailed-tab/task-card/priority-badge";
 
 interface TaskDialogProps {
-  columnName: string;
+  column: {
+    id: string
+    title: string
+    }
+  workspaceId: string;
+  boardId: string;
   taskId: string;
   children: React.ReactNode;
 }
 
-async function TaskDialog({ taskId, children, columnName }: TaskDialogProps) {
+async function TaskDialog({
+  taskId,
+  workspaceId,
+  boardId,
+  children,
+  column,
+}: TaskDialogProps) {
   const task = await getTask({ taskId });
+  const members = await listMembers({ workspaceId });
+  const columns = await listColumns({boardId})
 
   return (
     <Dialog>
@@ -34,11 +51,16 @@ async function TaskDialog({ taskId, children, columnName }: TaskDialogProps) {
       <DialogContent className="sm:max-w-sm md:max-w-xl">
         <DialogHeader>
           <DialogTitle asChild className="font-bold">
-            <div className="flex items-center gap-3">
-              <PriorityBadge variant={task.priority} priority={task.priority} />
-              <Badge className="text-foreground/75 bg-muted normal-case">
-                {capitalizeFirtLetter(columnName)}
-              </Badge>
+            <div className="flex items-center gap-2 justify-between mr-6">
+              <div className="flex items-center gap-3">
+                <PriorityBadge variant={task.priority} priority={task.priority} />
+                <Badge className="text-foreground/75 bg-muted normal-case">
+                  {capitalizeFirtLetter(column.title)}
+                </Badge>
+              </div>
+              <MoveToColumnDialog task={task} columns={columns} currentColumn={column.title}>
+                <Button type="submit" variant="ghost" size="sm" className="py-0.5 text-sm">Mover tarefa</Button>
+              </MoveToColumnDialog>
             </div>
           </DialogTitle>
 
@@ -66,7 +88,7 @@ async function TaskDialog({ taskId, children, columnName }: TaskDialogProps) {
                   <AvatarFallback
                     className={cn(
                       !task.assignee.image &&
-                        "bg-lime-900 text-white font-bold font-heading text-[10px]!",
+                        "bg-lime-900 text-white font-bold font-heading text-[10px]!"
                     )}
                   >
                     {getNameInitials(task.assignee.name)}
@@ -93,7 +115,7 @@ async function TaskDialog({ taskId, children, columnName }: TaskDialogProps) {
               variant="mono"
               className={cn(
                 "text-sm text-foreground",
-                task.dueDate && task.dueDate < new Date() && "text-destructive",
+                task.dueDate && task.dueDate < new Date() && "text-destructive"
               )}
             >
               {task.dueDate ? (
@@ -127,7 +149,7 @@ async function TaskDialog({ taskId, children, columnName }: TaskDialogProps) {
                 <AvatarFallback
                   className={cn(
                     !task.creator.image &&
-                      "bg-lime-900 text-white font-bold font-heading text-[10px]!",
+                      "bg-lime-900 text-white font-bold font-heading text-[10px]!"
                   )}
                 >
                   {getNameInitials(task.creator.name)}
@@ -159,14 +181,18 @@ async function TaskDialog({ taskId, children, columnName }: TaskDialogProps) {
 
         <DialogFooter className="mt-3">
           <div className="flex-1">
-            <Button variant="destructive">Excluir tarefa</Button>
+            <DeleteTaskDialog taskId={task.id}>
+              <Button variant="destructive">Excluir tarefa</Button>
+            </DeleteTaskDialog>
           </div>
           <DialogClose asChild>
             <Button className="px-6" variant="secondary">
               Cancelar
             </Button>
           </DialogClose>
-          <Button type="submit">Editar tarefa</Button>
+          <UpdateTaskDialog task={task} members={members}>
+            <Button type="submit">Editar tarefa</Button>
+          </UpdateTaskDialog>
         </DialogFooter>
       </DialogContent>
     </Dialog>

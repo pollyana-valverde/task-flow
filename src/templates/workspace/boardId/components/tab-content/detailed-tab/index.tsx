@@ -23,7 +23,9 @@ async function DetailedTab({ boardId, workspaceId }: DetailedTabProps) {
               <TaskDialog
                 key={task.id}
                 taskId={task.id}
-                columnName={column.title}
+                workspaceId={workspaceId}
+                boardId={boardId}
+                column={column}
               >
                 <TaskCard task={task} />
               </TaskDialog>
