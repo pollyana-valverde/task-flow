@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { Text } from "@/components/ui/text";
-import { deleteTask } from "@/http/tasks/datele-task";
+import { deleteTask } from "@/http/tasks/delete-task";
 import { ApiError } from "@/lib/http/api-error";
 import { AlertOctagon } from "lucide-react";
 import { useRouter } from "next/navigation";
