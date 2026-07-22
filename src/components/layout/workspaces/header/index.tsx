@@ -1,5 +1,3 @@
-import { NotificationBell } from "@/components/ui/header/notification-bell";
-import { ThemeSwitcher } from "@/components/ui/header/theme-switcher";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 

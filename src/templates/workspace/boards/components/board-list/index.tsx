@@ -1,6 +1,5 @@
-import { listBoardsResultSchema } from "@/http/boards/list-boards";
-import { getWorkspaceResultSchema } from "@/http/workspaces/get-workspace";
-import z from "zod";
+import type { listBoardsResultSchema } from "@/http/boards/list-boards";
+import type z from "zod";
 import { BoardCard } from "./board-card";
 
 interface BoardListProps {

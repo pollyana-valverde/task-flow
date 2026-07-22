@@ -25,6 +25,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { cn } from "@/lib/utils";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -37,6 +38,7 @@ const updateRoleSchema = updateRoleInputSchema.extend({
 type UpdateRoleData = z.infer<typeof updateRoleSchema>;
 
 function UpdateRoleDialog({ workspaceId, children, member }: ActionCellProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -58,6 +60,8 @@ function UpdateRoleDialog({ workspaceId, children, member }: ActionCellProps) {
 
       reset();
       setIsModalOpen(false);
+
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         if (error.issues) {

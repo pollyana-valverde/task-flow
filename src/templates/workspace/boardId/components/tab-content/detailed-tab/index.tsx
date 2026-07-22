@@ -1,14 +1,14 @@
-import { listColumns } from "@/http/columns/list-columns";
-import { TaskCard } from "./task-card";
 import { TabsContent } from "@/components/ui/tabs";
+import { listColumns } from "@/http/columns/list-columns";
+import { NewColumnDialog } from "../../column-actions/new-column-dialog";
 import { ColumnsList } from "../columns-list";
-import { TaskList } from "../tasks-list";
-import { NewColumnDialog } from "../../new-column-dialog";
 import { TaskDialog } from "../task-dialog";
+import { TaskList } from "../tasks-list";
+import { TaskCard } from "./task-card";
 
 interface DetailedTabProps {
-  boardId: string
-  workspaceId: string
+  boardId: string;
+  workspaceId: string;
 }
 
 async function DetailedTab({ boardId, workspaceId }: DetailedTabProps) {
@@ -19,17 +19,20 @@ async function DetailedTab({ boardId, workspaceId }: DetailedTabProps) {
       {columns.map((column) => (
         <ColumnsList key={column.id} column={column} workspaceId={workspaceId}>
           <TaskList tasks={column.tasks}>
-              {column.tasks.map((task) => (
-                <TaskDialog key={task.id} taskId={task.id} columnName={column.title}>
-                  <TaskCard task={task} />
-                </TaskDialog>
-              ))}
+            {column.tasks.map((task) => (
+              <TaskDialog
+                key={task.id}
+                taskId={task.id}
+                columnName={column.title}
+              >
+                <TaskCard task={task} />
+              </TaskDialog>
+            ))}
           </TaskList>
         </ColumnsList>
       ))}
       <NewColumnDialog boardId={boardId} />
     </TabsContent>
-
   );
 }
 export { DetailedTab };

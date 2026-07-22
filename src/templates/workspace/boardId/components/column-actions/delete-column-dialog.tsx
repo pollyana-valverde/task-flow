@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -12,18 +13,21 @@ import {
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { Text } from "@/components/ui/text";
-import { removeMember } from "@/http/members/remove-member";
+import { deleteColumn } from "@/http/columns/delete-column";
 import { ApiError } from "@/lib/http/api-error";
 import { AlertOctagon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { ActionCellProps } from "./type";
 
-function RemoveMemberDialog({
-  workspaceId,
-  children,
-  member,
-}: ActionCellProps) {
+interface DeleteColumnDialogProps {
+  children: React.ReactNode;
+  column: {
+    id: string;
+    title: string;
+  };
+}
+
+function DeleteColumnDialog({ column, children }: DeleteColumnDialogProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -34,11 +38,11 @@ function RemoveMemberDialog({
     setIsModalOpen(isModalOpen);
   }
 
-  async function handleRemoveMember() {
+  async function handleDeleteColumn() {
     setError(null);
     try {
       setLoading(true);
-      await removeMember({ workspaceId, memberId: member.userId });
+      await deleteColumn({ columnId: column.id });
       setIsModalOpen(false);
 
       router.refresh();
@@ -63,10 +67,15 @@ function RemoveMemberDialog({
               <AlertOctagon className="text-destructive size-5.5" />
             </div>
             <Text className="text-foreground" variant="h2">
-              Remover <span className="font-bold">{member.user.name}</span> do
-              workspace?
+              Excluir coluna <span className="font-bold">{column.title}</span>?
             </Text>
           </DialogTitle>
+          <DialogDescription asChild>
+            <Text variant="mono">
+              Todas as tarefas dessa coluna serão excluídas. Esta ação é
+              permanente e não pode ser desfeita.
+            </Text>
+          </DialogDescription>
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </DialogHeader>
@@ -79,9 +88,9 @@ function RemoveMemberDialog({
           <Button
             disabled={loading}
             variant="destructive"
-            onClick={handleRemoveMember}
+            onClick={handleDeleteColumn}
           >
-            {loading ? "Removendo membro..." : "Remover"}
+            {loading ? "Excluindo coluna..." : "Excluir"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -89,4 +98,4 @@ function RemoveMemberDialog({
   );
 }
 
-export { RemoveMemberDialog };
+export { DeleteColumnDialog };

@@ -1,13 +1,13 @@
-import { listColumns } from "@/http/columns/list-columns";
-import { TaskCard } from "./task-card";
 import { TabsContent } from "@/components/ui/tabs";
+import { listColumns } from "@/http/columns/list-columns";
+import { NewColumnDialog } from "../../column-actions/new-column-dialog";
 import { ColumnsList } from "../columns-list";
 import { TaskList } from "../tasks-list";
-import { NewColumnDialog } from "../../new-column-dialog";
+import { TaskCard } from "./task-card";
 
 interface CompactedTabProps {
-  boardId: string
-  workspaceId: string
+  boardId: string;
+  workspaceId: string;
 }
 
 async function CompactedTab({ boardId, workspaceId }: CompactedTabProps) {
@@ -18,15 +18,14 @@ async function CompactedTab({ boardId, workspaceId }: CompactedTabProps) {
       {columns.map((column) => (
         <ColumnsList key={column.id} column={column} workspaceId={workspaceId}>
           <TaskList tasks={column.tasks}>
-              {column.tasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
-              ))}
+            {column.tasks.map((task) => (
+              <TaskCard key={task.id} task={task} />
+            ))}
           </TaskList>
         </ColumnsList>
       ))}
       <NewColumnDialog boardId={boardId} />
     </TabsContent>
-
   );
 }
 export { CompactedTab };
