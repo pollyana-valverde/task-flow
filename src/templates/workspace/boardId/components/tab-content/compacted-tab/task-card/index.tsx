@@ -1,15 +1,14 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
+    Card,
+    CardHeader
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
-import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
-import { PriorityLine } from "./priority-line";
-import { getNameInitials } from "@/utils/get-name-initials";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
+import { getNameInitials } from "@/utils/get-name-initials";
+import type { TaskProps } from "../../type";
+import { PriorityLine } from "./priority-line";
 
 interface TaskCardProps {
   task: TaskProps;
@@ -37,7 +36,7 @@ function TaskCard({ task }: TaskCardProps) {
             <AvatarFallback
               className={cn(
                 !task.assignee.image &&
-                  "bg-lime-900 text-white font-bold font-heading text-[10px]!",
+                  "bg-lime-900 text-white font-bold font-heading text-[10px]!"
               )}
             >
               {task.assignee.name && getNameInitials(task.assignee.name)}

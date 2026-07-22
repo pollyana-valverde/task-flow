@@ -2,67 +2,73 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
 } from "@/components/ui/field";
-import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-    inviteMember,
-    type inviteMemberInputSchema,
-} from "@/http/members/invite-member";
+import { updateRole, updateRoleInputSchema } from "@/http/members/update-role";
 import { ApiError } from "@/lib/http/api-error";
 import { cn } from "@/lib/utils";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
+import type { ActionCellProps } from "./type";
 
-type InviteMemberData = z.infer<typeof inviteMemberInputSchema>;
-
-const inviteMemberSchema = z.object({
-  email: z.email("Email inválido"),
+const updateRoleSchema = updateRoleInputSchema.extend({
   role: z.enum(["admin", "member"], "Opção inválida"),
 });
 
-function InviteMemberDialog({ workspaceId }: { workspaceId: string }) {
+type UpdateRoleData = z.infer<typeof updateRoleSchema>;
+
+function UpdateRoleDialog({ workspaceId, children, member }: ActionCellProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
-    register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
     reset,
     control,
-  } = useForm<InviteMemberData>({
-    resolver: zodResolver(inviteMemberSchema),
+  } = useForm<UpdateRoleData>({
+    defaultValues: {
+      role: member.role,
+    },
+    resolver: zodResolver(updateRoleSchema),
   });
 
-  async function handleInviteMember(data: InviteMemberData) {
+  async function handleUpdateRole(data: UpdateRoleData) {
     try {
-      await inviteMember({ email: data.email, role: data.role, workspaceId });
+      await updateRole({ ...data, workspaceId, memberId: member.userId });
 
       reset();
       setIsModalOpen(false);
     } catch (error) {
       if (error instanceof ApiError) {
-        setError("root", { message: error.message });
+        if (error.issues) {
+          setError("root", {
+            message: error.issues?.map((err) => err.message)[0],
+          });
+        }
+
+        if (error.message) {
+          setError("root", { message: error.message });
+        }
         return;
       }
 
@@ -79,36 +85,27 @@ function InviteMemberDialog({ workspaceId }: { workspaceId: string }) {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-1" />
-          Convidar
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
-        <form
-          className="grid gap-6"
-          onSubmit={handleSubmit(handleInviteMember)}
-        >
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-sm md:max-w-md">
+        <form className="grid gap-6" onSubmit={handleSubmit(handleUpdateRole)}>
           <DialogHeader>
             <DialogTitle asChild>
-              <Text variant="h2">Convidar membro</Text>
+              <Text variant="h2">
+                Atualizar papel do membro{" "}
+                <span className="font-bold">
+                  {capitalizeFirtLetter(member.user.name)}
+                </span>
+              </Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text variant="sm">Enviaremos um convite por email.</Text>
+              <Text variant="sm">
+                Atualize o papel desse membro no workspace para membro ou admin.
+              </Text>
             </DialogDescription>
           </DialogHeader>
 
           <FieldGroup className="gap-4">
             {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
-
-            <InputField
-              errorInput={errors.email}
-              register={register}
-              input="email"
-              label="Email"
-              placeholder="example@email.com"
-            />
 
             <Field className="flex flex-col gap-1">
               <FieldLabel
@@ -157,7 +154,7 @@ function InviteMemberDialog({ workspaceId }: { workspaceId: string }) {
               </Button>
             </DialogClose>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Enviando convite..." : "Enviar convite"}
+              {isSubmitting ? "Atualizando papel..." : "Atualizar papel"}
             </Button>
           </DialogFooter>
         </form>
@@ -166,4 +163,4 @@ function InviteMemberDialog({ workspaceId }: { workspaceId: string }) {
   );
 }
 
-export { InviteMemberDialog };
+export { UpdateRoleDialog };

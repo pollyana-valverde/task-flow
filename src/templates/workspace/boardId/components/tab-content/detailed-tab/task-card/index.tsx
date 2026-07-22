@@ -1,15 +1,16 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
-import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
-import { PriorityBadge } from "./priority-badge";
-import { getNameInitials } from "@/utils/get-name-initials";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
+import { getNameInitials } from "@/utils/get-name-initials";
+import type { TaskProps } from "../../type";
+import { PriorityBadge } from "./priority-badge";
 
 interface TaskCardProps {
   task: TaskProps;
@@ -40,14 +41,17 @@ function TaskCard({ task }: TaskCardProps) {
             <AvatarFallback
               className={cn(
                 !task.assignee.image &&
-                  "bg-lime-900 text-white font-bold font-heading text-[10px]!",
+                  "bg-lime-900 text-white font-bold font-heading text-[10px]!"
               )}
             >
               {task.assignee.name && getNameInitials(task.assignee.name)}
             </AvatarFallback>
           </Avatar>
         )}
-        <Text variant="mono" className="text-muted-foreground text-right w-full">
+        <Text
+          variant="mono"
+          className="text-muted-foreground text-right w-full"
+        >
           {task.dueDate?.toLocaleDateString("pt-br", {
             day: "numeric",
             month: "short",

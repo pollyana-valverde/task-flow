@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 const priorityLineVariants = cva("", {
   variants: {

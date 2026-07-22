@@ -2,25 +2,35 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+    Field,
+    FieldGroup,
+    FieldLabel
+} from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { createTask, createTaskSchema } from "@/http/tasks/create-task";
-
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -28,15 +38,15 @@ import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
 interface NewTaskDialogProps {
-  columnId: string
-  children: React.ReactNode
+  columnId: string;
+  children: React.ReactNode;
   members: {
-    id: string
-    userId: string
+    id: string;
+    userId: string;
     user: {
-      name:string
-    }
-  }[]
+      name: string;
+    };
+  }[];
 }
 
 const newTaskSchema = createTaskSchema.extend({
@@ -63,11 +73,11 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
     formState: { errors, isSubmitting },
     setError,
     reset,
-    control
+    control,
   } = useForm<NewTaskDataInput, any, NewTaskDataOutput>({
     defaultValues: {
       priority: "medium",
-      assigneeId: ""
+      assigneeId: "",
     },
     resolver: zodResolver(newTaskSchema),
   });
@@ -75,18 +85,20 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
   async function handleCreateTask(data: NewTaskDataOutput) {
     console.log("dados validados:", data.dueDate, typeof data.dueDate);
     try {
-      await createTask({ createData: {...data}, columnId });
+      await createTask({ createData: { ...data }, columnId });
 
       reset();
       setIsModalOpen(false);
     } catch (error) {
       if (error instanceof ApiError) {
         if (error.issues) {
-        setError("root", { message: error.issues?.map((err) => err.message)[0] } );
+          setError("root", {
+            message: error.issues?.map((err) => err.message)[0],
+          });
         }
 
         if (error.message) {
-          setError("root", { message: error.message } );
+          setError("root", { message: error.message });
         }
         return;
       }
@@ -104,9 +116,7 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-       <DialogTrigger asChild>
-        { children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-sm md:max-w-lg">
         <form className="grid gap-6" onSubmit={handleSubmit(handleCreateTask)}>
           <DialogHeader>
@@ -114,9 +124,7 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
               <Text variant="h2">Nova tarefa</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text variant="sm">
-                Crie um novo estágio no seu board.
-              </Text>
+              <Text variant="sm">Crie um novo estágio no seu board.</Text>
             </DialogDescription>
           </DialogHeader>
 
@@ -132,22 +140,17 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
             />
 
             <Field className="flex flex-col gap-1">
-              <FieldLabel
-                htmlFor="description"
-              >
-                Descrição
-              </FieldLabel>
-              <Textarea id="description" {...register("description")} placeholder="Digite a descrição da tarefa..." />
-              <span>{errors.description?.message }</span>
-
+              <FieldLabel htmlFor="description">Descrição</FieldLabel>
+              <Textarea
+                id="description"
+                {...register("description")}
+                placeholder="Digite a descrição da tarefa..."
+              />
+              <span>{errors.description?.message}</span>
             </Field>
 
             <Field className="flex flex-col gap-1">
-              <FieldLabel
-                htmlFor="priority"
-              >
-                Papel
-              </FieldLabel>
+              <FieldLabel htmlFor="priority">Papel</FieldLabel>
               <Controller
                 name="priority"
                 control={control}
@@ -162,32 +165,43 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
                       if (value) field.onChange(value);
                     }}
                   >
-                    <ToggleGroupItem value="urgent" aria-label="Toggle urgent" className="text-red-600 hover:text-red-600 data-[state=on]:bg-red-600 data-[state=on]:text-white data-[state=on]:border-red-600 dark:data-[state=on]:border-red-600 data-[state=on]:shadow-none uppercase font-mono font-semibold">
+                    <ToggleGroupItem
+                      value="urgent"
+                      aria-label="Toggle urgent"
+                      className="text-red-600 hover:text-red-600 data-[state=on]:bg-red-600 data-[state=on]:text-white data-[state=on]:border-red-600 dark:data-[state=on]:border-red-600 data-[state=on]:shadow-none uppercase font-mono font-semibold"
+                    >
                       Urgente
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="high" aria-label="Toggle high" className="text-red-700 hover:text-red-700 data-[state=on]:bg-red-200 data-[state=on]:text-red-700 data-[state=on]:border-red-500 dark:data-[state=on]:border-red-700 dark:data-[state=on]:bg-red-800/10 data-[state=on]:shadow-none uppercase font-mono font-semibold">
+                    <ToggleGroupItem
+                      value="high"
+                      aria-label="Toggle high"
+                      className="text-red-700 hover:text-red-700 data-[state=on]:bg-red-200 data-[state=on]:text-red-700 data-[state=on]:border-red-500 dark:data-[state=on]:border-red-700 dark:data-[state=on]:bg-red-800/10 data-[state=on]:shadow-none uppercase font-mono font-semibold"
+                    >
                       Alta
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="medium" aria-label="Toggle medium" className="text-amber-700 hover:text-amber-700 data-[state=on]:bg-amber-200 data-[state=on]:text-amber-700 data-[state=on]:border-amber-500 dark:data-[state=on]:border-amber-700 dark:data-[state=on]:bg-amber-800/10 data-[state=on]:shadow-none uppercase font-mono font-semibold">
+                    <ToggleGroupItem
+                      value="medium"
+                      aria-label="Toggle medium"
+                      className="text-amber-700 hover:text-amber-700 data-[state=on]:bg-amber-200 data-[state=on]:text-amber-700 data-[state=on]:border-amber-500 dark:data-[state=on]:border-amber-700 dark:data-[state=on]:bg-amber-800/10 data-[state=on]:shadow-none uppercase font-mono font-semibold"
+                    >
                       Média
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="low" aria-label="Toggle low" className="text-foreground hover:text-foreground data-[state=on]:bg-muted data-[state=on]:text-foreground data-[state=on]:border-foreground dark:data-[state=on]:border-foreground dark:data-[state=on]:bg-muted data-[state=on]:shadow-none uppercase font-mono font-semibold">
+                    <ToggleGroupItem
+                      value="low"
+                      aria-label="Toggle low"
+                      className="text-foreground hover:text-foreground data-[state=on]:bg-muted data-[state=on]:text-foreground data-[state=on]:border-foreground dark:data-[state=on]:border-foreground dark:data-[state=on]:bg-muted data-[state=on]:shadow-none uppercase font-mono font-semibold"
+                    >
                       Baixa
                     </ToggleGroupItem>
                   </ToggleGroup>
                 )}
               />
-              <span>{errors.priority?.message }</span>
-
+              <span>{errors.priority?.message}</span>
             </Field>
 
             <div className="flex gap-4">
               <Field className="flex flex-col gap-1">
-                <FieldLabel
-                  htmlFor="description"
-                >
-                  Responsável
-                </FieldLabel>
+                <FieldLabel htmlFor="description">Responsável</FieldLabel>
 
                 <Controller
                   name="assigneeId"
@@ -214,17 +228,20 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
                     </Select>
                   )}
                 />
-                <span>{errors.assigneeId?.message }</span>
+                <span>{errors.assigneeId?.message}</span>
               </Field>
 
               <Field className="flex flex-col gap-1">
-                <FieldLabel
-                  htmlFor="dueDate"
-                >
-                  Vencimento
-                </FieldLabel>
-                <Input id="dueDate" type="date" {...register("dueDate")} placeholder="Digite a data de vencimento da tarefa..." aria-required={false} required={false} />
-                <span>{errors.dueDate?.message }</span>
+                <FieldLabel htmlFor="dueDate">Vencimento</FieldLabel>
+                <Input
+                  id="dueDate"
+                  type="date"
+                  {...register("dueDate")}
+                  placeholder="Digite a data de vencimento da tarefa..."
+                  aria-required={false}
+                  required={false}
+                />
+                <span>{errors.dueDate?.message}</span>
               </Field>
             </div>
           </FieldGroup>

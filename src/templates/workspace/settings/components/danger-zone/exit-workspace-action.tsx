@@ -2,24 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { Text } from "@/components/ui/text";
-import { deleteWorkspace } from "@/http/workspaces/delete-workspace";
+import { exitWorkspace } from "@/http/workspaces/exit-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { AlertOctagon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-function DeleteWorkspaceAction({ workspaceId }: { workspaceId: string }) {
+function ExitWorkspaceAction({ workspaceId }: { workspaceId: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,11 +30,11 @@ function DeleteWorkspaceAction({ workspaceId }: { workspaceId: string }) {
     setIsModalOpen(isModalOpen);
   }
 
-  async function handleDeleteWorkspace() {
+  async function handleExitWorkspace() {
     setError(null);
     try {
       setLoading(true);
-      await deleteWorkspace({ workspaceId });
+      await exitWorkspace({ workspaceId });
       setIsModalOpen(false);
 
       router.replace("/");
@@ -53,15 +53,16 @@ function DeleteWorkspaceAction({ workspaceId }: { workspaceId: string }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-1">
-        <Text className="text-foreground">Excluir workspace</Text>
+        <Text className="text-foreground">Sair do workspace</Text>
         <Text variant="mono">
-          Excluir o workspace remove todos os boards, tarefas e convites. Esta
-          ação é permanente.
+          Sair do workspace removerá completamente seu acesso a todos os boards
+          e tarefas desse workspace. Esta ação só pode ser revertida se for
+          convidado novamente para ser membro.
         </Text>
       </div>
       <Dialog open={isModalOpen} onOpenChange={handleClose}>
         <DialogTrigger asChild>
-          <Button variant="destructive">Excluir workspace</Button>
+          <Button variant="destructive">Sair do workspace</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-sm md:max-w-md shadow-red-950 ring-red-950 dark:ring-red-950 dark:shadow-red-950">
           <DialogHeader className="space-y-4">
@@ -70,13 +71,13 @@ function DeleteWorkspaceAction({ workspaceId }: { workspaceId: string }) {
                 <AlertOctagon className="text-destructive size-5.5" />
               </div>
               <Text className="text-foreground" variant="h2">
-                Excluir workspace?
+                Sair do workspace?
               </Text>
             </DialogTitle>
             <DialogDescription asChild>
               <Text variant="mono">
-                Todos os boards e suas tarefas serão excluídos. Esta ação é
-                permanente e não pode ser desfeita.
+                Esta ação só pode ser revertida se for convidado novamente para
+                ser membro. Deseja mesmo sair deste workspace?
               </Text>
             </DialogDescription>
 
@@ -91,9 +92,9 @@ function DeleteWorkspaceAction({ workspaceId }: { workspaceId: string }) {
             <Button
               disabled={loading}
               variant="destructive"
-              onClick={handleDeleteWorkspace}
+              onClick={handleExitWorkspace}
             >
-              {loading ? "Excluindo workspace..." : "Excluir"}
+              {loading ? "Saindo do workspace..." : "Sair"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -102,4 +103,4 @@ function DeleteWorkspaceAction({ workspaceId }: { workspaceId: string }) {
   );
 }
 
-export { DeleteWorkspaceAction };
+export { ExitWorkspaceAction };

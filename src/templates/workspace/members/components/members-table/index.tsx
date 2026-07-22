@@ -1,28 +1,22 @@
-import { MoreHorizontalIcon } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { RoleBadge } from "@/components/ui/role-badge";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  TableRoot,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
+  TableRoot,
   TableRow,
 } from "@/components/ui/table";
+import { ActionCell } from "./action-cell";
 import { MemberCell } from "./member-cell";
 import { StatusCell } from "./status-cell";
-import { RoleBadge } from "@/components/ui/role-badge";
 
 interface MembersTableProps {
+  sessionUserId: string | undefined
+  workspaceId:string
   members: {
     id: string;
+    userId: string;
     role: "member" | "admin" | "owner";
     status: "active" | "pending" | "declined";
     joinedAt: Date;
@@ -34,7 +28,9 @@ interface MembersTableProps {
   }[];
 }
 
-function MembersTable({ members }: MembersTableProps) {
+function MembersTable({ members, workspaceId, sessionUserId }: MembersTableProps) {
+const sessionUserCurrentWorkspaceRole = members.find((member) => sessionUserId === member.userId)
+
   return (
     <TableRoot className="bg-popover">
       <TableHeader className="bg-muted/20">
@@ -42,7 +38,7 @@ function MembersTable({ members }: MembersTableProps) {
           <TableHead>Membro</TableHead>
           <TableHead>Papel</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead className="text-right">Ações</TableHead>
+          {sessionUserCurrentWorkspaceRole?.role === "owner" && <TableHead />}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -57,23 +53,9 @@ function MembersTable({ members }: MembersTableProps) {
               <RoleBadge role={member.role} variant={member.role} />
             </TableCell>
             <StatusCell status={member.status} variant={member.status} />
-            <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="size-8">
-                    <MoreHorizontalIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Editar</DropdownMenuItem>
-                  <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive">
-                    Deletar
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
+            {sessionUserCurrentWorkspaceRole?.role === "owner" && member.role !== "owner" && (
+              <ActionCell member={{ ...member, role: member.role as "member" | "admin" }} workspaceId={workspaceId} />
+            )}
           </TableRow>
         ))}
       </TableBody>

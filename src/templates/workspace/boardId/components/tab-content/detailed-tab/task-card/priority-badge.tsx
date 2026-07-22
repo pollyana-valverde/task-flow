@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 const priorityBadgeVariants = cva("", {
   variants: {
@@ -12,9 +12,8 @@ const priorityBadgeVariants = cva("", {
   },
 });
 
-interface PriorityBadgeProps extends VariantProps<
-  typeof priorityBadgeVariants
-> {
+interface PriorityBadgeProps
+  extends VariantProps<typeof priorityBadgeVariants> {
   priority: "low" | "medium" | "high" | "urgent";
 }
 
