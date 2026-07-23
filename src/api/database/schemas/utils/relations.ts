@@ -3,6 +3,7 @@ import {
   accounts,
   boardColumns,
   boards,
+  notifications,
   sessions,
   tasks,
   users,
@@ -20,6 +21,8 @@ const usersRelations = relations(users, ({ many }) => ({
   assignedTasks: many(tasks, { relationName: "assignee" }),
   createdTasks: many(tasks, { relationName: "creator" }),
   updatedTasks: many(tasks, { relationName: "updater" }),
+  receivedNotifications: many(notifications, { relationName: "recipient" }),
+  triggeredNotifications: many(notifications, { relationName: "actor" }),
 }));
 
 const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -44,6 +47,7 @@ const workspacesRelations = relations(workspaces, ({ one, many }) => ({
   }),
   members: many(workspaceMembers),
   boards: many(boards),
+   notifications: many(notifications),
 }));
 
 // workspaces members
@@ -65,6 +69,7 @@ const boardsRelations = relations(boards, ({ one, many }) => ({
     references: [workspaces.id],
   }),
   columns: many(boardColumns),
+   notifications: many(notifications),
 }));
 
 // board columns
@@ -77,7 +82,7 @@ const boardColumnsRelations = relations(boardColumns, ({ one, many }) => ({
 }));
 
 // tasks
-const tasksRelations = relations(tasks, ({ one }) => ({
+const tasksRelations = relations(tasks, ({ one, many }) => ({
   assignee: one(users, {
     fields: [tasks.assigneeId],
     references: [users.id],
@@ -97,15 +102,36 @@ const tasksRelations = relations(tasks, ({ one }) => ({
     references: [users.id],
     relationName: "updater",
   }),
+  notifications: many(notifications),
+}));
+
+// notifications
+const notificationsRelations = relations(notifications, ({ one }) => ({
+  recipient: one(users, {
+    fields: [notifications.recipientId],
+    references: [users.id],
+    relationName: "recipient",
+  }),
+  actor: one(users, {
+    fields: [notifications.actorId],
+    references: [users.id],
+    relationName: "actor",
+  }),
+  task: one(tasks, {
+    fields: [notifications.taskId],
+    references: [tasks.id],
+  }),
+  board: one(boards, {
+    fields: [notifications.boardId],
+    references: [boards.id],
+  }),
+  workspace: one(workspaces, {
+    fields: [notifications.workspaceId],
+    references: [workspaces.id],
+  }),
 }));
 
 export {
-  usersRelations,
-  sessionsRelations,
-  accountsRelations,
-  workspacesRelations,
-  workspaceMembersRelations,
-  boardsRelations,
-  boardColumnsRelations,
-  tasksRelations,
+  accountsRelations, boardColumnsRelations, boardsRelations, notificationsRelations, sessionsRelations, tasksRelations, usersRelations, workspaceMembersRelations, workspacesRelations
 };
+

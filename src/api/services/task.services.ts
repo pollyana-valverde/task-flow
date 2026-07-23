@@ -1,4 +1,5 @@
 import type { IBoardRepository } from "../contracts/board.contract";
+import { INotificationsService } from "../contracts/notification.contract";
 import type {
   ITasksRepository,
   ITasksService,
@@ -12,6 +13,7 @@ class TaskService implements ITasksService {
     private taskRepository: ITasksRepository,
     private columnRepository: IBoardRepository,
     private workspaceRepository: IWorkspaceRepository,
+    private notificationService: INotificationsService,
   ) {}
 
   async findById(id: Task["id"]): Promise<Task | null> {
@@ -178,7 +180,6 @@ class TaskService implements ITasksService {
 
   async delete(id: Task["id"], userId: Task["updatedBy"]): Promise<void> {
     const existingTask = await this.taskRepository.findById(id);
-
     if (!existingTask) {
       throw new AppError("Task not found", 404);
     }
@@ -186,16 +187,15 @@ class TaskService implements ITasksService {
     const existingColumn = await this.columnRepository.findColumnWithBoard(
       existingTask.columnId,
     );
-
     if (!existingColumn) {
       throw new AppError("Task does not belong to the specified column", 404);
     }
 
+    const workspaceId = existingColumn.boards?.workspaceId as string
     const member = await this.workspaceRepository.findMember(
-      existingColumn.boards?.workspaceId as string,
+      workspaceId,
       userId,
     );
-
     if (!member) {
       throw new AppError("User is not a member of the workspace", 400);
     }
@@ -208,6 +208,23 @@ class TaskService implements ITasksService {
     }
 
     await this.taskRepository.delete(id);
+
+    const members = await this.workspaceRepository.findMembers(workspaceId);
+    try {
+      await this.notificationService.notifyMany(
+        members.filter((m) => m.userId !== userId).map((m) => m.userId),
+          {
+            actorId: userId as string,
+            type: "task_deleted",
+            message: `Uma tarefa foi excluída: ${existingTask.title}`,
+            taskId: null,
+            boardId: null,
+            workspaceId,
+          },
+      );
+    } catch (error) {
+      console.error("Failed to notify workspace members of task deletion", error);
+   }
   }
 }
 
