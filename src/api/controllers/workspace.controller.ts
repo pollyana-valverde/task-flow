@@ -1,7 +1,7 @@
-import type { Context } from "hono";
-import { z } from "zod";
 import type { IWorkspaceService } from "@/api/contracts/workspace.contract";
 import type { WorkspaceMemberRole } from "@/api/models/workspace-member.model";
+import type { Context } from "hono";
+import { z } from "zod";
 
 const paramsSchema = z.object({
   id: z.uuid("Invalid workspace ID format"),
@@ -99,6 +99,7 @@ class WorkspaceController {
 
   inviteMember = async (c: Context) => {
     const { id: workspaceId } = paramsSchema.parse(c.req.param());
+    const { id: inviterId } = c.get("user");
 
     const body = await c.req.json();
     const { email, role } = inviteSchema.parse(body);
@@ -107,6 +108,7 @@ class WorkspaceController {
       workspaceId,
       email,
       role as WorkspaceMemberRole,
+      inviterId
     );
 
     return c.json({ message: "Invite sent" }, 200);
@@ -134,6 +136,7 @@ class WorkspaceController {
     const { id: workspaceId, uid: memberId } = memberParamsSchema.parse(
       c.req.param(),
     );
+    const { id: actorId } = c.get("user");
 
     const body = await c.req.json();
     const { role } = updateRoleSchema.parse(body);
@@ -142,6 +145,7 @@ class WorkspaceController {
       workspaceId,
       memberId,
       role as WorkspaceMemberRole,
+      actorId
     );
 
     return c.json({ message: "Member role updated" }, 200);

@@ -71,6 +71,28 @@ class TaskService implements ITasksService {
       columnId,
       userId,
     );
+
+    if (newTask.assigneeId && newTask.assigneeId !== userId) {
+      try {
+        const members = await this.workspaceRepository.findMembers(
+          existingColumn.boards?.workspaceId as string,
+        );
+        const actor = members.find((m) => m.userId === userId);
+
+        await this.notificationService.notify({
+          recipientId: newTask.assigneeId,
+          actorId: userId as string,
+          type: "task_assigned",
+          message: `${actor?.user?.name ?? "Alguém"} atribuiu uma tarefa a você: ${newTask.title}`,
+          taskId: newTask.id,
+          boardId: null,
+          workspaceId: existingColumn.boards?.workspaceId as string,
+        });
+      } catch (error) {
+        console.error("Failed to notify assignee of task assignment", error);
+      }
+    }
+
     return newTask;
   }
 
@@ -173,6 +195,26 @@ class TaskService implements ITasksService {
 
     if (!updatedTask) {
       throw new AppError("Failed to move task to new column", 500);
+    }
+
+    if (updatedTask.assigneeId && updatedTask.assigneeId !== userId) {
+      try {
+        const workspaceId = existingNewColumn.boards?.workspaceId as string;
+        const members = await this.workspaceRepository.findMembers(workspaceId);
+        const actor = members.find((m) => m.userId === userId);
+
+        await this.notificationService.notify({
+          recipientId: updatedTask.assigneeId,
+          actorId: userId as string,
+          type: "task_moved",
+          message: `${actor?.user?.name ?? "Alguém"} moveu uma tarefa: ${updatedTask.title}`,
+          taskId: updatedTask.id,
+          boardId: null,
+          workspaceId,
+        });
+      } catch (error) {
+        console.error("Failed to notify assignee of task move", error);
+      }
     }
 
     return updatedTask;

@@ -3,17 +3,20 @@ import type {
   IWorkspaceService,
 } from "@/api/contracts/workspace.contract";
 import type { User } from "@/api/models/user.model";
-import type { Workspace } from "@/api/models/workspace.model";
 import type {
   WorkspaceMember,
   WorkspaceMemberRole,
   WorkspaceMemberStatus,
 } from "@/api/models/workspace-member.model";
+import type { Workspace } from "@/api/models/workspace.model";
 import { AppError } from "@/api/utils/app-error";
 import { getUserIdByEmail } from "@/api/utils/get-user-email";
+import { INotificationsService } from "../contracts/notification.contract";
 
 class WorkspaceService implements IWorkspaceService {
-  constructor(private workspaceRepository: IWorkspaceRepository) {}
+  constructor(
+    private workspaceRepository: IWorkspaceRepository,
+    private notificationService: INotificationsService) { }
 
   // workspace
   async findAll(userId: User["id"]) {
@@ -112,7 +115,6 @@ class WorkspaceService implements IWorkspaceService {
   async delete(id: Workspace["id"], ownerId: Workspace["ownerId"]) {
     // Fetch the existing workspace
     const existingWorkspace = await this.workspaceRepository.findById(id);
-
     // Validate that the workspace exists
     if (!existingWorkspace) {
       throw new AppError("Workspace not found", 404);
@@ -123,7 +125,26 @@ class WorkspaceService implements IWorkspaceService {
       throw new AppError("You're not the owner of this workspace", 403);
     }
 
-    return await this.workspaceRepository.delete(id);
+    const members = await this.workspaceRepository.findMembers(id);
+      const actor = members.find((m) => m.userId === ownerId);
+
+    await this.workspaceRepository.delete(id);
+
+    try {
+        await this.notificationService.notifyMany(
+          members.filter((m) => m.userId !== ownerId).map((m) => m.userId),
+          {
+            actorId: ownerId,
+            type: "workspace_deleted",
+            message: `${actor?.user?.name ?? "Alguém"} excluiu o workspace: ${existingWorkspace.title}`,
+            taskId: null,
+            boardId: null,
+            workspaceId: null,
+          },
+        );
+      } catch (error) {
+        console.error("Failed to notify members of workspace deletion", error);
+      }
   }
 
   // workspace members
@@ -155,6 +176,7 @@ class WorkspaceService implements IWorkspaceService {
     workspaceId: Workspace["id"],
     email: User["email"],
     role: WorkspaceMemberRole,
+    inviterId: User["id"],
   ) {
     const userId = await getUserIdByEmail(email);
 
@@ -198,6 +220,24 @@ class WorkspaceService implements IWorkspaceService {
     if (!workspaceMember) {
       throw new AppError("Failed to invite member to workspace", 500);
     }
+
+    try {
+        const members = await this.workspaceRepository.findMembers(workspaceId);
+        const inviter = members.find((m) => m.userId === inviterId);
+        const workspace = await this.workspaceRepository.findById(workspaceId);
+
+        await this.notificationService.notify({
+          recipientId: userId,
+          actorId: inviterId,
+          type: "workspace_invite",
+          message: `${inviter?.user?.name ?? "Alguém"} convidou você para um workspace: ${workspace?.title}`,
+          taskId: null,
+          boardId: null,
+          workspaceId,
+        });
+      } catch (error) {
+        console.error("Failed to notify invited user", error);
+      }
 
     return workspaceMember;
   }
@@ -251,6 +291,7 @@ class WorkspaceService implements IWorkspaceService {
     workspaceId: Workspace["id"],
     userId: User["id"],
     role: WorkspaceMemberRole,
+    actorId: User["id"],
   ) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
@@ -272,6 +313,46 @@ class WorkspaceService implements IWorkspaceService {
     if (!updatedRole) {
       throw new AppError("Failed to update member role", 500);
     }
+
+    if (role === "admin") {
+       try {
+         const members = await this.workspaceRepository.findMembers(workspaceId);
+         const actor = members.find((m) => m.userId === actorId);
+         const workspace = await this.workspaceRepository.findById(workspaceId);
+
+         await this.notificationService.notify({
+           recipientId: userId,
+           actorId,
+           type: "member_promoted",
+           message: `${actor?.user?.name ?? "Alguém"} promoveu você a admin em ${workspace?.title}`,
+           taskId: null,
+           boardId: null,
+           workspaceId,
+         });
+       } catch (error) {
+         console.error("Failed to notify promoted member", error);
+       }
+    }
+
+    if (role === "member") {
+       try {
+         const members = await this.workspaceRepository.findMembers(workspaceId);
+         const actor = members.find((m) => m.userId === actorId);
+         const workspace = await this.workspaceRepository.findById(workspaceId);
+
+         await this.notificationService.notify({
+           recipientId: userId,
+           actorId,
+           type: "member_promoted",
+           message: `${actor?.user?.name ?? "Alguém"} rebaixou você a membro em ${workspace?.title}`,
+           taskId: null,
+           boardId: null,
+           workspaceId,
+         });
+       } catch (error) {
+         console.error("Failed to notify promoted member", error);
+       }
+     }
 
     return updatedRole;
   }

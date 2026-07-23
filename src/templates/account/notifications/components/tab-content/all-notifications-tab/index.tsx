@@ -1,8 +1,11 @@
 import { TabsContent } from "@/components/ui/tabs";
+import { listNotifications } from "@/http/notifications/list-notifications";
 import { NOTIFICATIONS_LIST } from "../../mock-data";
 import { NotificationsCard } from "../../notifications-card";
 
-function AllNotificationsTab() {
+async function AllNotificationsTab() {
+  const notifications = await listNotifications()
+
   return (
     <TabsContent
       value="all"
@@ -11,7 +14,7 @@ function AllNotificationsTab() {
       {NOTIFICATIONS_LIST.length === 0 ? (
         <div>Nenhum notificação</div>
       ) : (
-        NOTIFICATIONS_LIST.map((noti) => (
+        notifications.map((noti) => (
           <NotificationsCard key={noti.id} notification={noti} />
         ))
       )}

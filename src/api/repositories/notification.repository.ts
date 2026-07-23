@@ -5,7 +5,7 @@ import type {
 import { database } from "@/api/database";
 import { notifications } from "@/api/database/schemas";
 import type { Notification } from "@/api/models/notification.model";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 class NotificationRepository implements INotificationsRepository {
   async create(data: CreateNotificationInput) {
@@ -27,7 +27,7 @@ class NotificationRepository implements INotificationsRepository {
       .select()
       .from(notifications)
       .where(and(...conditions))
-      .orderBy(notifications.createdAt)) as Notification[];
+      .orderBy(desc(notifications.createdAt))) as Notification[];
   }
 
   async markAsRead(id: string, recipientId: string) {

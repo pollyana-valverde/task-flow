@@ -1,10 +1,12 @@
 import { TabsContent } from "@/components/ui/tabs";
-import { NOTIFICATIONS_LIST } from "../../mock-data";
+import { listNotifications } from "@/http/notifications/list-notifications";
 import { NotificationsCard } from "../../notifications-card";
 
-function NonReadedNotificationsTab() {
-  const nonReadedNotifications = NOTIFICATIONS_LIST.filter(
-    (noti) => noti.readed === false
+async function NonReadedNotificationsTab() {
+  const notifications = await listNotifications()
+
+  const nonReadedNotifications = notifications.filter(
+    (noti) => noti.read === false
   );
 
   return (

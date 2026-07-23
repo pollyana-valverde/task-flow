@@ -17,6 +17,11 @@ interface WorkspaceMember {
   role: WorkspaceMemberRole;
   status: WorkspaceMemberStatus;
   joinedAt: Date;
+  user: {
+    image: string | null;
+    name: string;
+    email: string;
+  };
 }
 
 export type { WorkspaceMember, WorkspaceMemberRole, WorkspaceMemberStatus };

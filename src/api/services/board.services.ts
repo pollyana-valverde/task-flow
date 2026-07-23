@@ -3,15 +3,17 @@ import type {
   IBoardService,
 } from "@/api/contracts/board.contract";
 import type { IWorkspaceRepository } from "@/api/contracts/workspace.contract";
-import type { Board } from "@/api/models/board.model";
 import type { BoardColumn } from "@/api/models/board-column.model";
+import type { Board } from "@/api/models/board.model";
 import { AppError } from "@/api/utils/app-error";
+import { INotificationsService } from "../contracts/notification.contract";
 import type { User } from "../models/user.model";
 
 class BoardService implements IBoardService {
   constructor(
     private boardRepository: IBoardRepository,
     private workspaceRepository: IWorkspaceRepository,
+    private notificationService: INotificationsService
   ) {}
   // board
   async findById(id: Board["id"], userId: User["id"]) {
@@ -76,9 +78,27 @@ class BoardService implements IBoardService {
     }
 
     const createdBoard = await this.boardRepository.create(title, workspaceId);
-
     if (!createdBoard) {
       throw new AppError("Failed to create board", 500);
+    }
+
+    try {
+      const members = await this.workspaceRepository.findMembers(workspaceId);
+      const actor = members.find((m) => m.userId === userId);
+
+      await this.notificationService.notifyMany(
+        members.filter((m) => m.userId !== userId).map((m) => m.userId),
+        {
+          actorId: userId,
+          type: "board_created",
+          message: `${actor?.user?.name ?? "Alguém"} criou um novo board: ${createdBoard.title}`,
+          taskId: null,
+          boardId: createdBoard.id,
+          workspaceId,
+        },
+      );
+    } catch (error) {
+      console.error("Failed to notify workspace members of board creation", error);
     }
 
     return createdBoard;
@@ -139,7 +159,26 @@ class BoardService implements IBoardService {
       );
     }
 
-    return await this.boardRepository.delete(id);
+    await this.boardRepository.delete(id);
+
+    try {
+      const members = await this.workspaceRepository.findMembers(existingBoard.workspaceId);
+      const actor = members.find((m) => m.userId === userId);
+
+      await this.notificationService.notifyMany(
+        members.filter((m) => m.userId !== userId).map((m) => m.userId),
+        {
+          actorId: userId,
+          type: "board_deleted",
+          message: `${actor?.user?.name ?? "Alguém"} excluiu um board: ${existingBoard.title}`,
+          taskId: null,
+          boardId: null, // já não existe mais
+          workspaceId: existingBoard.workspaceId,
+        },
+      );
+    } catch (error) {
+      console.error("Failed to notify workspace members of board deletion", error);
+    }
   }
 
   // board column

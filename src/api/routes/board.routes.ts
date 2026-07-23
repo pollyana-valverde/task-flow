@@ -1,9 +1,11 @@
-import { Hono } from "hono";
 import { BoardController } from "@/api/controllers/board.controller";
 import { ensureAuthenticated } from "@/api/middlewares/ensure-authenticated";
 import { BoardRepository } from "@/api/repositories/board.repository";
 import { WorkspaceRepository } from "@/api/repositories/workspace.repository";
 import { BoardService } from "@/api/services/board.services";
+import { Hono } from "hono";
+import { NotificationRepository } from "../repositories/notification.repository";
+import { NotificationService } from "../services/notification.services";
 
 const workspaceBoardRoutes = new Hono();
 const boardRoutes = new Hono();
@@ -15,7 +17,11 @@ boardColumnsRoutes.use("*", ensureAuthenticated);
 
 const boardRepository = new BoardRepository();
 const workspaceRepository = new WorkspaceRepository();
-const boardService = new BoardService(boardRepository, workspaceRepository);
+
+const notificationRepository = new NotificationRepository();
+const notificationService = new NotificationService(notificationRepository);
+
+const boardService = new BoardService(boardRepository, workspaceRepository, notificationService);
 const boardController = new BoardController(boardService);
 
 workspaceBoardRoutes.get("/", boardController.findByWorkspaceId);
@@ -31,4 +37,5 @@ boardRoutes.post("/:boardId/column", boardController.createColumn);
 boardColumnsRoutes.put("/:columnId", boardController.updateColumn);
 boardColumnsRoutes.delete("/:columnId", boardController.deleteColumn);
 
-export { boardRoutes, workspaceBoardRoutes, boardColumnsRoutes };
+export { boardColumnsRoutes, boardRoutes, workspaceBoardRoutes };
+

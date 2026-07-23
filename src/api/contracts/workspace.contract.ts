@@ -1,10 +1,10 @@
 import type { User } from "@/api/models/user.model";
-import type { Workspace } from "@/api/models/workspace.model";
 import type {
   WorkspaceMember,
   WorkspaceMemberRole,
   WorkspaceMemberStatus,
 } from "@/api/models/workspace-member.model";
+import type { Workspace } from "@/api/models/workspace.model";
 
 interface IWorkspaceRepository {
   // workspace
@@ -76,6 +76,7 @@ interface IWorkspaceService {
     workspaceId: Workspace["id"],
     email: User["email"],
     role: WorkspaceMemberRole,
+    inviterId: User["id"],
   ): Promise<WorkspaceMember>;
   acceptInvite(
     workspaceId: Workspace["id"],
@@ -89,6 +90,7 @@ interface IWorkspaceService {
     workspaceId: Workspace["id"],
     userId: User["id"],
     role: WorkspaceMemberRole,
+    actorId: User["id"],
   ): Promise<WorkspaceMemberRole>;
   transferOwnership(
     workspaceId: Workspace["id"],

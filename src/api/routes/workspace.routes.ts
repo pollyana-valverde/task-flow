@@ -1,17 +1,23 @@
-import { Hono } from "hono";
 import { WorkspaceController } from "@/api/controllers/workspace.controller";
 import { ensureAuthenticated } from "@/api/middlewares/ensure-authenticated";
 import { verifyAuthorization } from "@/api/middlewares/verify-authorization";
 import type { WorkspaceMemberRole } from "@/api/models/workspace-member.model";
 import { WorkspaceRepository } from "@/api/repositories/workspace.repository";
 import { WorkspaceService } from "@/api/services/workspace.services";
+import { Hono } from "hono";
+import { NotificationRepository } from "../repositories/notification.repository";
+import { NotificationService } from "../services/notification.services";
 
 const workspaceRoutes = new Hono();
 
 workspaceRoutes.use("*", ensureAuthenticated);
 
 const workspaceRepository = new WorkspaceRepository();
-const workspaceService = new WorkspaceService(workspaceRepository);
+
+const notificationRepository = new NotificationRepository();
+const notificationService = new NotificationService(notificationRepository);
+
+const workspaceService = new WorkspaceService(workspaceRepository, notificationService);
 const workspaceController = new WorkspaceController(workspaceService);
 
 // workspace
