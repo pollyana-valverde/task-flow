@@ -7,7 +7,10 @@ type NotificationType =
   | "board_created"
   | "board_deleted"
   | "workspace_deleted"
-  | "member_promoted";
+  | "member_promoted"
+  | "workspace_member_left"
+  | "workspace_member_removed"
+  | "workspace_ownership_transferred";
 
 interface Notification {
   id: string;

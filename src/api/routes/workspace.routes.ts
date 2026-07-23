@@ -17,7 +17,10 @@ const workspaceRepository = new WorkspaceRepository();
 const notificationRepository = new NotificationRepository();
 const notificationService = new NotificationService(notificationRepository);
 
-const workspaceService = new WorkspaceService(workspaceRepository, notificationService);
+const workspaceService = new WorkspaceService(
+  workspaceRepository,
+  notificationService
+);
 const workspaceController = new WorkspaceController(workspaceService);
 
 // workspace
@@ -26,21 +29,21 @@ workspaceRoutes.get(
   "/:id",
   verifyAuthorization(
     ["owner", "admin", "member"] as WorkspaceMemberRole[],
-    workspaceRepository,
+    workspaceRepository
   ),
-  workspaceController.findById,
+  workspaceController.findById
 );
 
 workspaceRoutes.post("/", workspaceController.create);
 workspaceRoutes.patch(
   "/:id",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
-  workspaceController.update,
+  workspaceController.update
 );
 workspaceRoutes.delete(
   "/:id",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
-  workspaceController.delete,
+  workspaceController.delete
 );
 
 // workspace members
@@ -48,44 +51,44 @@ workspaceRoutes.get(
   "/:id/member",
   verifyAuthorization(
     ["owner", "admin", "member"] as WorkspaceMemberRole[],
-    workspaceRepository,
+    workspaceRepository
   ),
-  workspaceController.findMembers,
+  workspaceController.findMembers
 );
 
 workspaceRoutes.post(
   "/:id/invite-member",
   verifyAuthorization(
     ["owner", "admin"] as WorkspaceMemberRole[],
-    workspaceRepository,
+    workspaceRepository
   ),
-  workspaceController.inviteMember,
+  workspaceController.inviteMember
 );
-workspaceRoutes.post(
+workspaceRoutes.patch(
   "/:id/invite-member/accept",
-  workspaceController.acceptInvite,
+  workspaceController.acceptInvite
 );
-workspaceRoutes.post(
+workspaceRoutes.patch(
   "/:id/invite-member/decline",
-  workspaceController.declineInvite,
+  workspaceController.declineInvite
 );
 
 workspaceRoutes.patch(
   "/:id/member/:uid/role",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
-  workspaceController.updateRole,
+  workspaceController.updateRole
 );
 workspaceRoutes.patch(
   "/:id/transfer-ownership",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
-  workspaceController.transferOwnership,
+  workspaceController.transferOwnership
 );
 
 workspaceRoutes.delete("/:id/exit", workspaceController.exitWorkspace);
 workspaceRoutes.delete(
   "/:id/member/:uid",
   verifyAuthorization(["owner"] as WorkspaceMemberRole[], workspaceRepository),
-  workspaceController.removeMember,
+  workspaceController.removeMember
 );
 
 export { workspaceRoutes };

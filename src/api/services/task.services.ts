@@ -1,5 +1,5 @@
 import type { IBoardRepository } from "../contracts/board.contract";
-import { INotificationsService } from "../contracts/notification.contract";
+import type { INotificationsService } from "../contracts/notification.contract";
 import type {
   ITasksRepository,
   ITasksService,
@@ -13,7 +13,7 @@ class TaskService implements ITasksService {
     private taskRepository: ITasksRepository,
     private columnRepository: IBoardRepository,
     private workspaceRepository: IWorkspaceRepository,
-    private notificationService: INotificationsService,
+    private notificationService: INotificationsService
   ) {}
 
   async findById(id: Task["id"]): Promise<Task | null> {
@@ -32,7 +32,7 @@ class TaskService implements ITasksService {
       "id" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy" | "columnId"
     >,
     columnId: Task["columnId"],
-    userId: Task["createdBy"],
+    userId: Task["createdBy"]
   ) {
     const existingColumn =
       await this.columnRepository.findColumnWithBoard(columnId);
@@ -43,7 +43,7 @@ class TaskService implements ITasksService {
 
     const member = await this.workspaceRepository.findMember(
       existingColumn.boards?.workspaceId as string,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -52,11 +52,14 @@ class TaskService implements ITasksService {
 
     if (data.assigneeId != null) {
       const assigneeMember = await this.workspaceRepository.findMembers(
-        existingColumn.boards?.workspaceId as string,
+        existingColumn.boards?.workspaceId as string
       );
 
       if (!assigneeMember.find((m) => m.userId === data.assigneeId)) {
-        throw new AppError("Assignee user is not a member of the workspace", 400);
+        throw new AppError(
+          "Assignee user is not a member of the workspace",
+          400
+        );
       }
     }
 
@@ -69,13 +72,13 @@ class TaskService implements ITasksService {
     const newTask = await this.taskRepository.create(
       { ...data },
       columnId,
-      userId,
+      userId
     );
 
     if (newTask.assigneeId && newTask.assigneeId !== userId) {
       try {
         const members = await this.workspaceRepository.findMembers(
-          existingColumn.boards?.workspaceId as string,
+          existingColumn.boards?.workspaceId as string
         );
         const actor = members.find((m) => m.userId === userId);
 
@@ -99,7 +102,7 @@ class TaskService implements ITasksService {
   async update(
     id: Task["id"],
     data: Partial<Omit<Task, "id" | "createdAt" | "updatedAt">>,
-    userId: Task["updatedBy"],
+    userId: Task["updatedBy"]
   ): Promise<Task | null> {
     const existingTask = await this.taskRepository.findById(id);
 
@@ -108,7 +111,7 @@ class TaskService implements ITasksService {
     }
 
     const existingColumn = await this.columnRepository.findColumnWithBoard(
-      existingTask.columnId,
+      existingTask.columnId
     );
 
     if (!existingColumn) {
@@ -117,7 +120,7 @@ class TaskService implements ITasksService {
 
     const member = await this.workspaceRepository.findMember(
       existingColumn.boards?.workspaceId as string,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -126,11 +129,14 @@ class TaskService implements ITasksService {
 
     if (data.assigneeId != null) {
       const assigneeMember = await this.workspaceRepository.findMembers(
-        existingColumn.boards?.workspaceId as string,
+        existingColumn.boards?.workspaceId as string
       );
 
       if (!assigneeMember.find((m) => m.userId === data.assigneeId)) {
-        throw new AppError("Assignee user is not a member of the workspace", 400);
+        throw new AppError(
+          "Assignee user is not a member of the workspace",
+          400
+        );
       }
     }
 
@@ -156,7 +162,7 @@ class TaskService implements ITasksService {
     id: Task["id"],
     oldColumnId: Task["columnId"],
     newColumnId: Task["columnId"],
-    userId: Task["updatedBy"],
+    userId: Task["updatedBy"]
   ): Promise<Task | null> {
     const existingTask = await this.taskRepository.findById(id);
 
@@ -167,7 +173,7 @@ class TaskService implements ITasksService {
     if (existingTask.columnId !== oldColumnId) {
       throw new AppError(
         "Task does not belong to the specified old column",
-        400,
+        400
       );
     }
 
@@ -180,7 +186,7 @@ class TaskService implements ITasksService {
 
     const member = await this.workspaceRepository.findMember(
       existingNewColumn.boards?.workspaceId as string,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -190,7 +196,7 @@ class TaskService implements ITasksService {
     const updatedTask = await this.taskRepository.moveToColumn(
       id,
       newColumnId,
-      userId,
+      userId
     );
 
     if (!updatedTask) {
@@ -227,16 +233,16 @@ class TaskService implements ITasksService {
     }
 
     const existingColumn = await this.columnRepository.findColumnWithBoard(
-      existingTask.columnId,
+      existingTask.columnId
     );
     if (!existingColumn) {
       throw new AppError("Task does not belong to the specified column", 404);
     }
 
-    const workspaceId = existingColumn.boards?.workspaceId as string
+    const workspaceId = existingColumn.boards?.workspaceId as string;
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
     if (!member) {
       throw new AppError("User is not a member of the workspace", 400);
@@ -245,7 +251,7 @@ class TaskService implements ITasksService {
     if (member.role === "member" && existingTask.createdBy !== userId) {
       throw new AppError(
         "User does not have permission to delete this task",
-        403,
+        403
       );
     }
 
@@ -255,18 +261,21 @@ class TaskService implements ITasksService {
     try {
       await this.notificationService.notifyMany(
         members.filter((m) => m.userId !== userId).map((m) => m.userId),
-          {
-            actorId: userId as string,
-            type: "task_deleted",
-            message: `Uma tarefa foi excluída: ${existingTask.title}`,
-            taskId: null,
-            boardId: null,
-            workspaceId,
-          },
+        {
+          actorId: userId as string,
+          type: "task_deleted",
+          message: `Uma tarefa foi excluída: ${existingTask.title}`,
+          taskId: null,
+          boardId: null,
+          workspaceId,
+        }
       );
     } catch (error) {
-      console.error("Failed to notify workspace members of task deletion", error);
-   }
+      console.error(
+        "Failed to notify workspace members of task deletion",
+        error
+      );
+    }
   }
 }
 

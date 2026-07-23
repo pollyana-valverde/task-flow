@@ -23,6 +23,10 @@ const inviteSchema = z.object({
   role: z.enum(["admin", "member"]).optional().default("member"),
 });
 
+const notificationIdSchema = z.object({
+  notificationId: z.uuid("Invalid notification ID format"),
+});
+
 const updateRoleSchema = z.object({
   role: z.enum(["admin", "member"]),
 });
@@ -91,7 +95,7 @@ class WorkspaceController {
 
     const members = await this.workspaceService.findMembers(
       workspaceId,
-      userId,
+      userId
     );
 
     return c.json(members, 200);
@@ -118,7 +122,14 @@ class WorkspaceController {
     const { id: workspaceId } = paramsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
-    await this.workspaceService.acceptInvite(workspaceId, userId);
+    const body = await c.req.json();
+    const { notificationId } = notificationIdSchema.parse(body);
+
+    await this.workspaceService.acceptInvite(
+      workspaceId,
+      userId,
+      notificationId
+    );
 
     return c.json({ message: "Invite accepted" }, 200);
   };
@@ -127,14 +138,21 @@ class WorkspaceController {
     const { id: workspaceId } = paramsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
 
-    await this.workspaceService.declineInvite(workspaceId, userId);
+    const body = await c.req.json();
+    const { notificationId } = notificationIdSchema.parse(body);
+
+    await this.workspaceService.declineInvite(
+      workspaceId,
+      userId,
+      notificationId
+    );
 
     return c.json({ message: "Invite declined" }, 200);
   };
 
   updateRole = async (c: Context) => {
     const { id: workspaceId, uid: memberId } = memberParamsSchema.parse(
-      c.req.param(),
+      c.req.param()
     );
     const { id: actorId } = c.get("user");
 
@@ -161,7 +179,7 @@ class WorkspaceController {
     await this.workspaceService.transferOwnership(
       workspaceId,
       oldOwnerId,
-      newOwnerId,
+      newOwnerId
     );
 
     return c.json({ message: "Ownership transferred" }, 200);
@@ -178,10 +196,11 @@ class WorkspaceController {
 
   removeMember = async (c: Context) => {
     const { id: workspaceId, uid: memberId } = memberParamsSchema.parse(
-      c.req.param(),
+      c.req.param()
     );
+    const { id: actorId } = c.get("user");
 
-    await this.workspaceService.removeMember(workspaceId, memberId);
+    await this.workspaceService.removeMember(workspaceId, memberId, actorId);
 
     return c.json({ message: "Member removed from workspace" }, 200);
   };

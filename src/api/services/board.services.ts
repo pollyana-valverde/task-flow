@@ -1,12 +1,12 @@
 import type {
-  IBoardRepository,
-  IBoardService,
+    IBoardRepository,
+    IBoardService,
 } from "@/api/contracts/board.contract";
 import type { IWorkspaceRepository } from "@/api/contracts/workspace.contract";
 import type { BoardColumn } from "@/api/models/board-column.model";
 import type { Board } from "@/api/models/board.model";
 import { AppError } from "@/api/utils/app-error";
-import { INotificationsService } from "../contracts/notification.contract";
+import type { INotificationsService } from "../contracts/notification.contract";
 import type { User } from "../models/user.model";
 
 class BoardService implements IBoardService {
@@ -25,7 +25,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       existingBoard.workspaceId,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -52,7 +52,7 @@ class BoardService implements IBoardService {
   async create(
     title: Board["title"],
     workspaceId: Board["workspaceId"],
-    userId: User["id"],
+    userId: User["id"]
   ) {
     const existingWorkspace =
       await this.workspaceRepository.findById(workspaceId);
@@ -63,7 +63,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -73,7 +73,7 @@ class BoardService implements IBoardService {
     if (member.role === "member") {
       throw new AppError(
         "User does not have permission to create a board",
-        403,
+        403
       );
     }
 
@@ -95,10 +95,13 @@ class BoardService implements IBoardService {
           taskId: null,
           boardId: createdBoard.id,
           workspaceId,
-        },
+        }
       );
     } catch (error) {
-      console.error("Failed to notify workspace members of board creation", error);
+      console.error(
+        "Failed to notify workspace members of board creation",
+        error
+      );
     }
 
     return createdBoard;
@@ -113,7 +116,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       existingBoard.workspaceId,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -123,7 +126,7 @@ class BoardService implements IBoardService {
     if (member.role === "member") {
       throw new AppError(
         "User does not have permission to update a board",
-        403,
+        403
       );
     }
 
@@ -145,7 +148,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       existingBoard.workspaceId,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -155,14 +158,16 @@ class BoardService implements IBoardService {
     if (member.role === "member") {
       throw new AppError(
         "User does not have permission to delete a board",
-        403,
+        403
       );
     }
 
     await this.boardRepository.delete(id);
 
     try {
-      const members = await this.workspaceRepository.findMembers(existingBoard.workspaceId);
+      const members = await this.workspaceRepository.findMembers(
+        existingBoard.workspaceId
+      );
       const actor = members.find((m) => m.userId === userId);
 
       await this.notificationService.notifyMany(
@@ -174,10 +179,13 @@ class BoardService implements IBoardService {
           taskId: null,
           boardId: null, // já não existe mais
           workspaceId: existingBoard.workspaceId,
-        },
+        }
       );
     } catch (error) {
-      console.error("Failed to notify workspace members of board deletion", error);
+      console.error(
+        "Failed to notify workspace members of board deletion",
+        error
+      );
     }
   }
 
@@ -191,7 +199,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       existingBoard.workspaceId,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -206,7 +214,7 @@ class BoardService implements IBoardService {
   async createColumn(
     userId: User["id"],
     boardId: Board["id"],
-    title: BoardColumn["title"],
+    title: BoardColumn["title"]
   ) {
     const existingBoard = await this.boardRepository.findById(boardId);
 
@@ -216,7 +224,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       existingBoard.workspaceId,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -226,13 +234,13 @@ class BoardService implements IBoardService {
     if (member.role === "member") {
       throw new AppError(
         "User does not have permission to create a column in this board",
-        403,
+        403
       );
     }
 
     const createdColumn = await this.boardRepository.createColumn(
       boardId,
-      title,
+      title
     );
 
     if (!createdColumn) {
@@ -245,7 +253,7 @@ class BoardService implements IBoardService {
   async updateColumn(
     userId: User["id"],
     columnId: BoardColumn["id"],
-    title: BoardColumn["title"],
+    title: BoardColumn["title"]
   ) {
     const board_columns =
       await this.boardRepository.findColumnWithBoard(columnId);
@@ -256,7 +264,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       board_columns.boards?.workspaceId as string,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -266,13 +274,13 @@ class BoardService implements IBoardService {
     if (member.role === "member") {
       throw new AppError(
         "User does not have permission to update a column in this board",
-        403,
+        403
       );
     }
 
     const updatedColumn = await this.boardRepository.updateColumn(
       columnId,
-      title,
+      title
     );
 
     if (!updatedColumn) {
@@ -292,7 +300,7 @@ class BoardService implements IBoardService {
 
     const member = await this.workspaceRepository.findMember(
       board_columns.boards?.workspaceId as string,
-      userId,
+      userId
     );
 
     if (!member) {
@@ -302,7 +310,7 @@ class BoardService implements IBoardService {
     if (member.role === "member") {
       throw new AppError(
         "User does not have permission to delete a column in this board",
-        403,
+        403
       );
     }
 

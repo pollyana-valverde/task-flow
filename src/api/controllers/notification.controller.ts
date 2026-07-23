@@ -20,9 +20,21 @@ class NotificationController {
     const { id: userId } = c.get("user");
     const { read } = querySchema.parse(c.req.query());
 
-    const notifications = await this.notificationService.findByRecipient(userId, read);
+    const notifications = await this.notificationService.findByRecipient(
+      userId,
+      read
+    );
 
     return c.json(notifications, 200);
+  };
+
+  findById = async (c: Context) => {
+    const { id } = paramsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
+
+    const notification = await this.notificationService.findById(id, userId);
+
+    return c.json(notification, 200);
   };
 
   markAsRead = async (c: Context) => {
@@ -40,6 +52,15 @@ class NotificationController {
     await this.notificationService.markAllAsRead(userId);
 
     return c.json({ message: "All notifications marked as read" }, 200);
+  };
+
+  delete = async (c: Context) => {
+    const { id } = paramsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
+
+    await this.notificationService.delete(id, userId);
+
+    return c.json({ message: "Notification deleted" }, 200);
   };
 }
 

@@ -13,7 +13,9 @@ const notificationService = new NotificationService(notificationRepository);
 const notificationController = new NotificationController(notificationService);
 
 notificationRoutes.get("/", notificationController.findByRecipient);
+notificationRoutes.get("/:id", notificationController.findById);
 notificationRoutes.patch("/read-all", notificationController.markAllAsRead);
 notificationRoutes.patch("/:id/read", notificationController.markAsRead);
+notificationRoutes.delete("/:id", notificationController.delete);
 
 export { notificationRoutes };

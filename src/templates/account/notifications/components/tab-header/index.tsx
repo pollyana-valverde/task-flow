@@ -1,15 +1,16 @@
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { NOTIFICATIONS_LIST } from "../mock-data";
+import { listNotifications } from "@/http/notifications/list-notifications";
 
-function TabHeader() {
-  const nonReadedNotifications = NOTIFICATIONS_LIST.filter(
-    (noti) => noti.readed === false
+async function TabHeader() {
+  const notifications = await listNotifications()
+  const nonReadedNotifications = notifications.filter(
+    (noti) => noti.read === false
   );
 
   return (
     <TabsList>
       <TabsTrigger value="all">
-        Todas <span className="opacity-50">{ NOTIFICATIONS_LIST.length}</span>
+        Todas <span className="opacity-50">{ notifications.length}</span>
       </TabsTrigger>
       <TabsTrigger value="non-readed">
         Não lidas <span className="opacity-50">{nonReadedNotifications.length}</span>

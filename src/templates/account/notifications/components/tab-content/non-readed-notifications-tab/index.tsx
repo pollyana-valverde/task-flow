@@ -1,9 +1,10 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { listNotifications } from "@/http/notifications/list-notifications";
+import { NoneNotificationListed } from "../../none-listed";
 import { NotificationsCard } from "../../notifications-card";
 
 async function NonReadedNotificationsTab() {
-  const notifications = await listNotifications()
+  const notifications = await listNotifications();
 
   const nonReadedNotifications = notifications.filter(
     (noti) => noti.read === false
@@ -15,7 +16,7 @@ async function NonReadedNotificationsTab() {
       className="rounded-2xl bg-popover border overflow-hidden"
     >
       {nonReadedNotifications.length === 0 ? (
-        <div>Nenhum notificação</div>
+        <NoneNotificationListed />
       ) : (
         nonReadedNotifications.map((noti) => (
           <NotificationsCard key={noti.id} notification={noti} />

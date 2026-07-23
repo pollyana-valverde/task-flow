@@ -1,8 +1,7 @@
-// src/api/services/notification.services.ts
 import type {
-    CreateNotificationInput,
-    INotificationsRepository,
-    INotificationsService,
+  CreateNotificationInput,
+  INotificationsRepository,
+  INotificationsService,
 } from "@/api/contracts/notification.contract";
 import type { Notification } from "@/api/models/notification.model";
 import { AppError } from "../utils/app-error";
@@ -12,6 +11,12 @@ class NotificationService implements INotificationsService {
 
   async findByRecipient(recipientId: string, read?: boolean): Promise<Notification[]> {
     return this.notificationRepository.findByRecipient(recipientId, read);
+  }
+
+  async findById(id: string, userId: string): Promise<Notification> {
+    const notification = await this.notificationRepository.findById(id, userId);
+    if (!notification) throw new AppError("Notification not found", 404);
+    return notification;
   }
 
   async markAsRead(id: string, userId: string): Promise<Notification> {
@@ -41,6 +46,11 @@ class NotificationService implements INotificationsService {
     return this.notificationRepository.createMany(
       recipientIds.map((recipientId) => ({ ...data, recipientId })),
     );
+  }
+
+  async delete(id: string, userId: string): Promise<void> {
+    const deleted = await this.notificationRepository.delete(id, userId);
+    if (!deleted) throw new AppError("Notification not found", 404);
   }
 }
 

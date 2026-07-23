@@ -13,6 +13,9 @@ const notificationTypeEnum = Enum("notification_type", [
   "board_deleted",
   "workspace_deleted",
   "member_promoted",
+  "workspace_member_left",
+  "workspace_member_removed",
+  "workspace_ownership_transferred",
 ]);
 
 const notifications = table(

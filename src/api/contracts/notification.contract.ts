@@ -11,11 +11,13 @@ interface INotificationsRepository {
     recipientId: Notification["recipientId"],
     read?: Notification["read"],
   ): Promise<Notification[]>;
+  findById(id: Notification["id"], recipientId: Notification["recipientId"]): Promise<Notification | null>;
   markAsRead(
     id: Notification["id"],
     recipientId: Notification["recipientId"],
   ): Promise<Notification | null>;
   markAllAsRead(recipientId: Notification["recipientId"]): Promise<void>;
+  delete(id: Notification["id"], recipientId: Notification["recipientId"]): Promise<Notification | null>;
 }
 
 interface INotificationsService {
@@ -23,6 +25,7 @@ interface INotificationsService {
     recipientId: Notification["recipientId"],
     read?: Notification["read"],
   ): Promise<Notification[]>;
+  findById(id: Notification["id"], userId: Notification["recipientId"]): Promise<Notification>;
   markAsRead(
     id: Notification["id"],
     userId: Notification["recipientId"],
@@ -33,6 +36,7 @@ interface INotificationsService {
     recipientIds: Notification["recipientId"][],
     data: Omit<CreateNotificationInput, "recipientId">,
   ): Promise<Notification[]>;
+  delete(id: Notification["id"], userId: Notification["recipientId"]): Promise<void>;
 }
 
 export type { CreateNotificationInput, INotificationsRepository, INotificationsService };

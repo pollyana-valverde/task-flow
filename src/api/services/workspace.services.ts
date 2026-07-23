@@ -11,12 +11,14 @@ import type {
 import type { Workspace } from "@/api/models/workspace.model";
 import { AppError } from "@/api/utils/app-error";
 import { getUserIdByEmail } from "@/api/utils/get-user-email";
-import { INotificationsService } from "../contracts/notification.contract";
+import type { INotificationsService } from "../contracts/notification.contract";
+import type { Notification } from "../models/notification.model";
 
 class WorkspaceService implements IWorkspaceService {
   constructor(
     private workspaceRepository: IWorkspaceRepository,
-    private notificationService: INotificationsService) { }
+    private notificationService: INotificationsService
+  ) {}
 
   // workspace
   async findAll(userId: User["id"]) {
@@ -54,7 +56,7 @@ class WorkspaceService implements IWorkspaceService {
     if (existingWorkspaces.length >= 10) {
       throw new AppError(
         "You have reached the maximum number of workspaces (10)",
-        403,
+        403
       );
     }
 
@@ -73,7 +75,7 @@ class WorkspaceService implements IWorkspaceService {
       createdWorkspace.id,
       ownerId,
       "active" as WorkspaceMemberStatus,
-      "owner" as WorkspaceMemberRole,
+      "owner" as WorkspaceMemberRole
     );
 
     if (!workspaceMember) {
@@ -86,7 +88,7 @@ class WorkspaceService implements IWorkspaceService {
   async update(
     id: Workspace["id"],
     title: Workspace["title"],
-    ownerId: Workspace["ownerId"],
+    ownerId: Workspace["ownerId"]
   ) {
     // Fetch the existing workspace
     const existingWorkspace = await this.workspaceRepository.findById(id);
@@ -126,35 +128,35 @@ class WorkspaceService implements IWorkspaceService {
     }
 
     const members = await this.workspaceRepository.findMembers(id);
-      const actor = members.find((m) => m.userId === ownerId);
+    const actor = members.find((m) => m.userId === ownerId);
 
     await this.workspaceRepository.delete(id);
 
     try {
-        await this.notificationService.notifyMany(
-          members.filter((m) => m.userId !== ownerId).map((m) => m.userId),
-          {
-            actorId: ownerId,
-            type: "workspace_deleted",
-            message: `${actor?.user?.name ?? "Alguém"} excluiu o workspace: ${existingWorkspace.title}`,
-            taskId: null,
-            boardId: null,
-            workspaceId: null,
-          },
-        );
-      } catch (error) {
-        console.error("Failed to notify members of workspace deletion", error);
-      }
+      await this.notificationService.notifyMany(
+        members.filter((m) => m.userId !== ownerId).map((m) => m.userId),
+        {
+          actorId: ownerId,
+          type: "workspace_deleted",
+          message: `${actor?.user?.name ?? "Alguém"} excluiu o workspace: ${existingWorkspace.title}`,
+          taskId: null,
+          boardId: null,
+          workspaceId: null,
+        }
+      );
+    } catch (error) {
+      console.error("Failed to notify members of workspace deletion", error);
+    }
   }
 
   // workspace members
   async findMembers(
     workspaceId: Workspace["id"],
-    userId: WorkspaceMember["userId"],
+    userId: WorkspaceMember["userId"]
   ) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     // Check if the user is a member of the workspace
@@ -176,7 +178,7 @@ class WorkspaceService implements IWorkspaceService {
     workspaceId: Workspace["id"],
     email: User["email"],
     role: WorkspaceMemberRole,
-    inviterId: User["id"],
+    inviterId: User["id"]
   ) {
     const userId = await getUserIdByEmail(email);
 
@@ -186,7 +188,7 @@ class WorkspaceService implements IWorkspaceService {
 
     const existingMember = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     // Check if the user is already an active member of the workspace
@@ -198,7 +200,7 @@ class WorkspaceService implements IWorkspaceService {
     if (existingMember?.status === "pending") {
       throw new AppError(
         "User already has a pending invitation of this workspace",
-        400,
+        400
       );
     }
 
@@ -213,7 +215,7 @@ class WorkspaceService implements IWorkspaceService {
       workspaceId,
       userId,
       "pending" as WorkspaceMemberStatus,
-      role,
+      role
     );
 
     // Validate that the member was invited successfully
@@ -222,22 +224,22 @@ class WorkspaceService implements IWorkspaceService {
     }
 
     try {
-        const members = await this.workspaceRepository.findMembers(workspaceId);
-        const inviter = members.find((m) => m.userId === inviterId);
-        const workspace = await this.workspaceRepository.findById(workspaceId);
+      const members = await this.workspaceRepository.findMembers(workspaceId);
+      const inviter = members.find((m) => m.userId === inviterId);
+      const workspace = await this.workspaceRepository.findById(workspaceId);
 
-        await this.notificationService.notify({
-          recipientId: userId,
-          actorId: inviterId,
-          type: "workspace_invite",
-          message: `${inviter?.user?.name ?? "Alguém"} convidou você para um workspace: ${workspace?.title}`,
-          taskId: null,
-          boardId: null,
-          workspaceId,
-        });
-      } catch (error) {
-        console.error("Failed to notify invited user", error);
-      }
+      await this.notificationService.notify({
+        recipientId: userId,
+        actorId: inviterId,
+        type: "workspace_invite",
+        message: `${inviter?.user?.name ?? "Alguém"} convidou você para um workspace: ${workspace?.title}`,
+        taskId: null,
+        boardId: null,
+        workspaceId,
+      });
+    } catch (error) {
+      console.error("Failed to notify invited user", error);
+    }
 
     return workspaceMember;
   }
@@ -246,10 +248,11 @@ class WorkspaceService implements IWorkspaceService {
     workspaceId: Workspace["id"],
     userId: User["id"],
     newStatus: WorkspaceMemberStatus,
+    notificationId: Notification["id"]
   ) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     // Check if the user has a pending invitation for the workspace
@@ -260,7 +263,7 @@ class WorkspaceService implements IWorkspaceService {
     const updatedStatus = await this.workspaceRepository.updateMemberStatus(
       workspaceId,
       userId,
-      newStatus,
+      newStatus
     );
 
     // Validate that the invitation was updated successfully
@@ -268,22 +271,38 @@ class WorkspaceService implements IWorkspaceService {
       throw new AppError("Failed to update workspace invitation", 500);
     }
 
+    try {
+      await this.notificationService.delete(notificationId, userId);
+    } catch (error) {
+      console.error("Failed to delete invite notification", error);
+    }
+
     return updatedStatus;
   }
 
-  async acceptInvite(workspaceId: Workspace["id"], userId: User["id"]) {
+  async acceptInvite(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    notificationId: Notification["id"]
+  ) {
     return await this.handleInviteResponse(
       workspaceId,
       userId,
       "active" as WorkspaceMemberStatus,
+      notificationId
     );
   }
 
-  async declineInvite(workspaceId: Workspace["id"], userId: User["id"]) {
+  async declineInvite(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    notificationId: Notification["id"]
+  ) {
     return await this.handleInviteResponse(
       workspaceId,
       userId,
       "declined" as WorkspaceMemberStatus,
+      notificationId
     );
   }
 
@@ -291,11 +310,11 @@ class WorkspaceService implements IWorkspaceService {
     workspaceId: Workspace["id"],
     userId: User["id"],
     role: WorkspaceMemberRole,
-    actorId: User["id"],
+    actorId: User["id"]
   ) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     // Check if the user is a member of the workspace
@@ -306,7 +325,7 @@ class WorkspaceService implements IWorkspaceService {
     const updatedRole = await this.workspaceRepository.updateMemberRole(
       workspaceId,
       userId,
-      role,
+      role
     );
 
     // Validate that the role was updated successfully
@@ -315,44 +334,44 @@ class WorkspaceService implements IWorkspaceService {
     }
 
     if (role === "admin") {
-       try {
-         const members = await this.workspaceRepository.findMembers(workspaceId);
-         const actor = members.find((m) => m.userId === actorId);
-         const workspace = await this.workspaceRepository.findById(workspaceId);
+      try {
+        const members = await this.workspaceRepository.findMembers(workspaceId);
+        const actor = members.find((m) => m.userId === actorId);
+        const workspace = await this.workspaceRepository.findById(workspaceId);
 
-         await this.notificationService.notify({
-           recipientId: userId,
-           actorId,
-           type: "member_promoted",
-           message: `${actor?.user?.name ?? "Alguém"} promoveu você a admin em ${workspace?.title}`,
-           taskId: null,
-           boardId: null,
-           workspaceId,
-         });
-       } catch (error) {
-         console.error("Failed to notify promoted member", error);
-       }
+        await this.notificationService.notify({
+          recipientId: userId,
+          actorId,
+          type: "member_promoted",
+          message: `${actor?.user?.name ?? "Alguém"} promoveu você a admin em ${workspace?.title}`,
+          taskId: null,
+          boardId: null,
+          workspaceId,
+        });
+      } catch (error) {
+        console.error("Failed to notify promoted member", error);
+      }
     }
 
     if (role === "member") {
-       try {
-         const members = await this.workspaceRepository.findMembers(workspaceId);
-         const actor = members.find((m) => m.userId === actorId);
-         const workspace = await this.workspaceRepository.findById(workspaceId);
+      try {
+        const members = await this.workspaceRepository.findMembers(workspaceId);
+        const actor = members.find((m) => m.userId === actorId);
+        const workspace = await this.workspaceRepository.findById(workspaceId);
 
-         await this.notificationService.notify({
-           recipientId: userId,
-           actorId,
-           type: "member_promoted",
-           message: `${actor?.user?.name ?? "Alguém"} rebaixou você a membro em ${workspace?.title}`,
-           taskId: null,
-           boardId: null,
-           workspaceId,
-         });
-       } catch (error) {
-         console.error("Failed to notify promoted member", error);
-       }
-     }
+        await this.notificationService.notify({
+          recipientId: userId,
+          actorId,
+          type: "member_promoted",
+          message: `${actor?.user?.name ?? "Alguém"} rebaixou você a membro em ${workspace?.title}`,
+          taskId: null,
+          boardId: null,
+          workspaceId,
+        });
+      } catch (error) {
+        console.error("Failed to notify promoted member", error);
+      }
+    }
 
     return updatedRole;
   }
@@ -360,7 +379,7 @@ class WorkspaceService implements IWorkspaceService {
   async transferOwnership(
     workspaceId: Workspace["id"],
     oldOwnerId: User["id"],
-    newOwnerId: User["id"],
+    newOwnerId: User["id"]
   ) {
     const workspace = await this.workspaceRepository.findById(workspaceId);
 
@@ -376,14 +395,14 @@ class WorkspaceService implements IWorkspaceService {
 
     const newOwnerMember = await this.workspaceRepository.findMember(
       workspaceId,
-      newOwnerId,
+      newOwnerId
     );
 
     // Validate that the new owner is a member of the workspace
     if (!newOwnerMember || newOwnerMember.status !== "active") {
       throw new AppError(
         "New owner must be an active member of the workspace",
-        400,
+        400
       );
     }
 
@@ -399,7 +418,7 @@ class WorkspaceService implements IWorkspaceService {
     const updatedOldOwnerRole = await this.workspaceRepository.updateMemberRole(
       workspaceId,
       oldOwnerId,
-      "admin" as WorkspaceMemberRole,
+      "admin" as WorkspaceMemberRole
     );
 
     if (!updatedOldOwnerRole) {
@@ -409,11 +428,25 @@ class WorkspaceService implements IWorkspaceService {
     const updatedNewOwnerRole = await this.workspaceRepository.updateMemberRole(
       workspaceId,
       newOwnerId,
-      "owner" as WorkspaceMemberRole,
+      "owner" as WorkspaceMemberRole
     );
 
     if (!updatedNewOwnerRole) {
       throw new AppError("Failed to update new owner role", 500);
+    }
+
+    try {
+      await this.notificationService.notify({
+        recipientId: newOwnerId,
+        actorId: oldOwnerId,
+        type: "workspace_ownership_transferred",
+        message: `Você agora é o dono do workspace: ${workspace.title}`,
+        taskId: null,
+        boardId: null,
+        workspaceId,
+      });
+    } catch (error) {
+      console.error("Failed to notify new owner of ownership transfer", error);
     }
 
     return updatedWorkspaceOwner;
@@ -422,7 +455,7 @@ class WorkspaceService implements IWorkspaceService {
   async exitWorkspace(workspaceId: Workspace["id"], userId: User["id"]) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     // Check if the user is a member of the workspace
@@ -434,17 +467,48 @@ class WorkspaceService implements IWorkspaceService {
     if (member.role === "owner") {
       throw new AppError(
         "You need to transfer ownership before exiting the workspace",
-        403,
+        403
       );
     }
 
-    return await this.workspaceRepository.removeMember(workspaceId, userId);
+    const members = await this.workspaceRepository.findMembers(workspaceId);
+    const leavingMember = members.find((m) => m.userId === userId);
+
+    const result = await this.workspaceRepository.removeMember(
+      workspaceId,
+      userId
+    );
+
+    try {
+      await this.notificationService.notifyMany(
+        members.filter((m) => m.userId !== userId).map((m) => m.userId),
+        {
+          actorId: userId,
+          type: "workspace_member_left",
+          message: `${leavingMember?.user?.name ?? "Alguém"} saiu do workspace`,
+          taskId: null,
+          boardId: null,
+          workspaceId,
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Failed to notify members of user leaving workspace",
+        error
+      );
+    }
+
+    return result;
   }
 
-  async removeMember(workspaceId: Workspace["id"], userId: User["id"]) {
+  async removeMember(
+    workspaceId: Workspace["id"],
+    userId: User["id"],
+    actorId: User["id"]
+  ) {
     const member = await this.workspaceRepository.findMember(
       workspaceId,
-      userId,
+      userId
     );
 
     // Check if the user is a member of the workspace
@@ -452,7 +516,27 @@ class WorkspaceService implements IWorkspaceService {
       throw new AppError("User is not a member of this workspace", 404);
     }
 
-    return await this.workspaceRepository.removeMember(workspaceId, userId);
+    const workspace = await this.workspaceRepository.findById(workspaceId);
+    const result = await this.workspaceRepository.removeMember(
+      workspaceId,
+      userId
+    );
+
+    try {
+      await this.notificationService.notify({
+        recipientId: userId,
+        actorId,
+        type: "workspace_member_removed",
+        message: `Você foi removido do workspace: ${workspace?.title}`,
+        taskId: null,
+        boardId: null,
+        workspaceId: null,
+      });
+    } catch (error) {
+      console.error("Failed to notify removed member", error);
+    }
+
+    return result;
   }
 }
 

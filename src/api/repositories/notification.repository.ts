@@ -1,6 +1,6 @@
 import type {
-    CreateNotificationInput,
-    INotificationsRepository,
+  CreateNotificationInput,
+  INotificationsRepository,
 } from "@/api/contracts/notification.contract";
 import { database } from "@/api/database";
 import { notifications } from "@/api/database/schemas";
@@ -9,13 +9,19 @@ import { and, desc, eq } from "drizzle-orm";
 
 class NotificationRepository implements INotificationsRepository {
   async create(data: CreateNotificationInput) {
-    const result = await database.insert(notifications).values(data).returning();
+    const result = await database
+      .insert(notifications)
+      .values(data)
+      .returning();
     return result[0] as Notification;
   }
 
   async createMany(data: CreateNotificationInput[]) {
     if (data.length === 0) return [];
-    const result = await database.insert(notifications).values(data).returning();
+    const result = await database
+      .insert(notifications)
+      .values(data)
+      .returning();
     return result as Notification[];
   }
 
@@ -30,11 +36,31 @@ class NotificationRepository implements INotificationsRepository {
       .orderBy(desc(notifications.createdAt))) as Notification[];
   }
 
+  async findById(id: string, recipientId: string) {
+    const result = await database
+      .select()
+      .from(notifications)
+      .where(
+        and(
+          eq(notifications.id, id),
+          eq(notifications.recipientId, recipientId)
+        )
+      )
+      .limit(1);
+
+    return (result[0] as Notification) ?? null;
+  }
+
   async markAsRead(id: string, recipientId: string) {
     const result = await database
       .update(notifications)
       .set({ read: true, updatedAt: new Date() })
-      .where(and(eq(notifications.id, id), eq(notifications.recipientId, recipientId)))
+      .where(
+        and(
+          eq(notifications.id, id),
+          eq(notifications.recipientId, recipientId)
+        )
+      )
       .returning();
 
     return (result[0] as Notification) ?? null;
@@ -44,7 +70,26 @@ class NotificationRepository implements INotificationsRepository {
     await database
       .update(notifications)
       .set({ read: true, updatedAt: new Date() })
-      .where(and(eq(notifications.recipientId, recipientId), eq(notifications.read, false)));
+      .where(
+        and(
+          eq(notifications.recipientId, recipientId),
+          eq(notifications.read, false)
+        )
+      );
+  }
+
+  async delete(id: string, recipientId: string) {
+    const result = await database
+      .delete(notifications)
+      .where(
+        and(
+          eq(notifications.id, id),
+          eq(notifications.recipientId, recipientId)
+        )
+      )
+      .returning();
+
+    return (result[0] as Notification) ?? null;
   }
 }
 
