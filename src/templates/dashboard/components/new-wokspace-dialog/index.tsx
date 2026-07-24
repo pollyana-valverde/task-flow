@@ -17,11 +17,12 @@ import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
 import {
   createWorkspace,
-  createWorkspaceSchema,
+  type createWorkspaceSchema,
 } from "@/http/workspaces/create-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -33,6 +34,7 @@ const newWorkspaceSchema = z.object({
 });
 
 function NewWorkspaceDialog() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -51,6 +53,7 @@ function NewWorkspaceDialog() {
 
       reset();
       setIsModalOpen(false);
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         setError("root", { message: error.message });
