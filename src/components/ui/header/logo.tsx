@@ -17,7 +17,9 @@ function Logo({ className, ...props }: LogoProps) {
         >
           <Layers className="size-5 text-lime-950" />
         </div>
-        <Text variant="h2">Task Flow</Text>
+        <Text variant="h2" className="hidden sm:flex">
+          Task Flow
+        </Text>
       </div>
     </Link>
   );

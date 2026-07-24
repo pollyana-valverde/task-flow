@@ -10,7 +10,7 @@ function SwitchThemeCard() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <Card className="hover:translate-y-0 gap-3">
+    <Card className="hover:translate-y-0 gap-3 min-h-43.5">
       <CardHeader>
         <CardTitle>Aparência</CardTitle>
       </CardHeader>

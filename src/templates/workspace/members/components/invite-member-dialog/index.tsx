@@ -2,33 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ErrorMessage } from "@/components/ui/error-message";
 import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
 } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
-    inviteMember,
-    type inviteMemberInputSchema,
+  inviteMember,
+  type inviteMemberInputSchema,
 } from "@/http/members/invite-member";
 import { ApiError } from "@/lib/http/api-error";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -41,6 +42,7 @@ const inviteMemberSchema = z.object({
 });
 
 function InviteMemberDialog({ workspaceId }: { workspaceId: string }) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -60,6 +62,7 @@ function InviteMemberDialog({ workspaceId }: { workspaceId: string }) {
 
       reset();
       setIsModalOpen(false);
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         setError("root", { message: error.message });

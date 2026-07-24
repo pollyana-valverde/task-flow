@@ -11,11 +11,15 @@ import {
 } from "@/http/workspaces/update-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 interface UpdateWorkspaceProps {
-  workspaceId: string;
+  workspace: {
+    id: string;
+    title: string;
+  };
 }
 
 const updateWorkspaceInputSchema = updateWorkspaceSchema.extend({
@@ -24,22 +28,25 @@ const updateWorkspaceInputSchema = updateWorkspaceSchema.extend({
 
 type UpdateWorkspaceData = z.infer<typeof updateWorkspaceInputSchema>;
 
-function UpdateForm({ workspaceId }: UpdateWorkspaceProps) {
+function UpdateForm({ workspace }: UpdateWorkspaceProps) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-    reset,
   } = useForm<UpdateWorkspaceData>({
+    values: {
+      title: workspace.title,
+    },
     resolver: zodResolver(updateWorkspaceInputSchema),
   });
 
   async function handleUpdateWorkspace(data: UpdateWorkspaceData) {
     try {
-      await updateWorkspace({ title: data.title, workspaceId });
+      await updateWorkspace({ title: data.title, workspaceId: workspace.id });
 
-      reset();
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         setError("root", { message: error.message });
@@ -68,6 +75,7 @@ function UpdateForm({ workspaceId }: UpdateWorkspaceProps) {
           {errors.root && <ErrorMessage>{errors.root.message}</ErrorMessage>}
 
           <InputField
+            disabled={isSubmitting}
             errorInput={errors.title}
             register={register}
             input="title"

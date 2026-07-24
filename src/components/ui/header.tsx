@@ -7,7 +7,7 @@ function Header({ className, children, ...props }: HeaderProps) {
   return (
     <div
       className={cn(
-        "flex flex-col items-center md:flex-row justify-between gap-2",
+        "flex flex-col md:items-center md:flex-row justify-between gap-4",
         className,
       )}
       {...props}
@@ -51,4 +51,4 @@ function HeaderAction({ children }: HeaderActionProps) {
   return <>{children}</>;
 }
 
-export { Header, HeaderContent, HeaderTitle, HeaderSubtitle, HeaderAction };
+export { Header, HeaderAction, HeaderContent, HeaderSubtitle, HeaderTitle };

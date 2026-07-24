@@ -11,7 +11,7 @@ export default function AccountLayout({
       <DashboardNavbar />
 
       <main className="py-8 px-8 md:px-14 min-h-screen bg-background-muted flex justify-center w-full">
-        <div className="flex flex-col gap-6 min-w-3xl">
+        <div className="flex flex-col gap-6 md:min-w-3xl">
           <AccountHeader />
           {children}
         </div>

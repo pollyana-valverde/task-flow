@@ -9,7 +9,7 @@ import { Bell } from "lucide-react";
 
 function NoneNotificationListed() {
   return (
-    <NoneCreated className="h-84.5">
+    <NoneCreated className="h-84.5 px-8">
       <NoneCreatedIcon Icon={Bell} />
       <NoneCreatedContent>
         <NoneCreatedTitle>Tudo em dia!</NoneCreatedTitle>

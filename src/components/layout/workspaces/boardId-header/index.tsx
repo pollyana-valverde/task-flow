@@ -72,7 +72,7 @@ function BoardIdHeader({ board, boardId }: BoardIdHeaderProps) {
       {isEditing ? (
         <form
           onSubmit={handleSubmit(handleUpdateWorkspace)}
-          className="flex w-1/2 gap-4 items-center"
+          className="flex w-full md:w-1/2 gap-4 items-center"
         >
           <FieldGroup>
             <Input
@@ -94,7 +94,7 @@ function BoardIdHeader({ board, boardId }: BoardIdHeaderProps) {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="self-end shadow-[2px_2px_0]"
+            className="self-end shadow-[2px_2px_0] md:inline-flex hidden"
             size="sm"
           >
             {isSubmitting ? "Salvando alterações..." : "Salvar alterações"}
@@ -105,7 +105,9 @@ function BoardIdHeader({ board, boardId }: BoardIdHeaderProps) {
         </form>
       ) : (
         <>
-          <Text variant="h2">{board.title}</Text>
+          <Text variant="h2" className="line-clamp-1">
+            {board.title}
+          </Text>
           <Button
             variant="ghost"
             className="p-3"

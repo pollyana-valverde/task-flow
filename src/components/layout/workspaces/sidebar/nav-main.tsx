@@ -1,18 +1,17 @@
 "use client";
 
-import { LayoutDashboard, Settings, Users } from "lucide-react";
-
 import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
+import { cn } from "@/lib/utils";
+import { LayoutDashboard, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 
 export function NavMain({ workspaceId }: { workspaceId: string }) {
   const pathname = usePathname();
@@ -51,25 +50,22 @@ export function NavMain({ workspaceId }: { workspaceId: string }) {
               className={cn(
                 "hover:bg-primary border-2 border-transparent hover:border-foreground dark:hover:border-lime-700 gap-2.5 rounded-lg h-10 px-2.5",
                 pathname === link.path &&
-                  "bg-primary border-2 border-foreground dark:border-lime-700",
+                  "bg-primary border-2 border-foreground dark:border-lime-700"
               )}
             >
               <Link href={link.path}>
-                {link.icon && (
-                  <link.icon
-                    className={cn(
-                      "text-muted-foreground/75 group-hover/menu-button:text-sidebar-primary-foreground",
-                      pathname === link.path &&
-                        "text-sidebar-primary-foreground",
-                    )}
-                  />
-                )}
+                <link.icon
+                  className={cn(
+                    "text-muted-foreground/75 group-hover/menu-button:text-sidebar-primary-foreground",
+                    pathname === link.path && "text-sidebar-primary-foreground"
+                  )}
+                />
                 <Text
                   variant="sm"
                   className={cn(
                     "group-hover/menu-button:font-semibold group-hover/menu-button:text-sidebar-primary-foreground",
                     pathname === link.path &&
-                      "font-semibold text-sidebar-primary-foreground",
+                      "font-semibold text-sidebar-primary-foreground"
                   )}
                 >
                   {link.title}

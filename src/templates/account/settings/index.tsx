@@ -5,7 +5,7 @@ import { UpdateProfileInfo } from "./components/update-profile-info"
 
 function SettingsPage() {
   return (
-    <div className="grid grid-cols-2 grid-rows-[auto_174px] gap-4">
+    <div className="grid md:grid-cols-2 md:grid-rows-[auto_174px] gap-4">
       <UpdateProfileInfo/>
       <UpdatePassword />
       <SwitchThemeCard />

@@ -1,26 +1,26 @@
 "use client";
 
-import { Bell, ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    useSidebar,
+} from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
 import { getNameInitials } from "@/utils/get-name-initials";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Bell, ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { redirect } from "next/navigation";
 
 const NAV_USER_DROPDOWN_LINKS = [
   {
@@ -82,7 +82,7 @@ function NavUserDropdown({ user }: NavUserDropdownProps) {
                 {user.image && (
                   <AvatarImage src={user.image} alt={user.image} />
                 )}
-                <AvatarFallback className="rounded-full bg-lime-700 border border-foreground dark:border-lime-800 text-sidebar-primary-foreground">
+                <AvatarFallback className="rounded-full bg-lime-700 border border-foreground dark:border-lime-800 text-white">
                   {getNameInitials(user.name)}
                 </AvatarFallback>
               </Avatar>
@@ -110,7 +110,7 @@ function NavUserDropdown({ user }: NavUserDropdownProps) {
                   {user.image && (
                     <AvatarImage src={user.image} alt={user.image} />
                   )}
-                  <AvatarFallback className="rounded-full bg-lime-700 border border-foreground dark:border-lime-800 text-sidebar-primary-foreground">
+                  <AvatarFallback className="rounded-full bg-lime-700 border border-foreground dark:border-lime-800 text-white">
                     {getNameInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
@@ -125,8 +125,8 @@ function NavUserDropdown({ user }: NavUserDropdownProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {NAV_USER_DROPDOWN_LINKS.map((link, index) => (
-              <DropdownMenuItem key={`link-${index}`} asChild>
+            {NAV_USER_DROPDOWN_LINKS.map((link) => (
+              <DropdownMenuItem key={`link-${Math.random()}`} asChild>
                 <Link href={link.path}>
                   <link.icon />
                   {link.label}

@@ -116,7 +116,10 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-sm md:max-w-lg">
-        <form className="grid gap-6" onSubmit={handleSubmit(handleCreateTask)}>
+        <form
+          className="grid gap-2 md:gap-6"
+          onSubmit={handleSubmit(handleCreateTask)}
+        >
           <DialogHeader>
             <DialogTitle asChild>
               <Text variant="h2">Nova tarefa</Text>
@@ -148,12 +151,13 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
             </Field>
 
             <Field className="flex flex-col gap-1">
-              <FieldLabel htmlFor="priority">Papel</FieldLabel>
+              <FieldLabel htmlFor="priority">Prioridade</FieldLabel>
               <Controller
                 name="priority"
                 control={control}
                 render={({ field }) => (
                   <ToggleGroup
+                    className="flex-wrap"
                     id="priority"
                     type="single"
                     variant="outline"
@@ -197,7 +201,7 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
               <span>{errors.priority?.message}</span>
             </Field>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
               <Field className="flex flex-col gap-1">
                 <FieldLabel htmlFor="description">Responsável</FieldLabel>
 

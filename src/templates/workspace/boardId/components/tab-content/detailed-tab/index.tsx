@@ -15,7 +15,7 @@ async function DetailedTab({ boardId, workspaceId }: DetailedTabProps) {
   const columns = await listColumns({ boardId });
 
   return (
-    <TabsContent value="detailed" className="flex gap-4">
+    <TabsContent value="detailed" className="flex gap-4 overflow-x-auto md:max-w-[calc(100%-255px)]">
       {columns.map((column) => (
         <ColumnsList key={column.id} column={column} workspaceId={workspaceId}>
           <TaskList tasks={column.tasks}>

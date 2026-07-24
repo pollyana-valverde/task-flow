@@ -1,6 +1,6 @@
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { WorkspacesSidebar } from "@/components/layout/workspaces/sidebar";
 import { WorkspacesHeader } from "@/components/layout/workspaces/header";
+import { WorkspacesSidebar } from "@/components/layout/workspaces/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 interface WorkspacesLayoutProps {
   params: Promise<{

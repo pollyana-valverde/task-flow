@@ -2,14 +2,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
 import { listColumns } from "@/http/columns/list-columns";
@@ -48,7 +48,7 @@ async function TaskDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-sm md:max-w-xl">
+      <DialogContent className="max-w-sm sm:max-w-xl">
         <DialogHeader>
           <DialogTitle asChild className="font-bold">
             <div className="flex items-center gap-2 justify-between mr-6">
@@ -71,7 +71,7 @@ async function TaskDialog({
 
         <hr />
 
-        <div className="flex gap-7.5">
+        <div className="flex flex-wrap gap-7.5">
           <div className="flex flex-col gap-1">
             <Text variant="mono" className="uppercase">
               Responsável
@@ -179,10 +179,10 @@ async function TaskDialog({
           </Text>
         </div>
 
-        <DialogFooter className="mt-3">
+        <DialogFooter className="mt-3 flex">
           <div className="flex-1">
             <DeleteTaskDialog taskId={task.id}>
-              <Button variant="destructive">Excluir tarefa</Button>
+              <Button variant="destructive" className="w-full md:w-fit">Excluir tarefa</Button>
             </DeleteTaskDialog>
           </div>
           <DialogClose asChild>

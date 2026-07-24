@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardAction,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Text } from "@/components/ui/text";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
@@ -35,7 +35,7 @@ function BoardCard({ board, workspaceId }: BoardCardProps) {
       <CardHeader className="flex gap-3 flex-1 items-center">
         <div className="bg-lime-800 rounded-full size-3" />
         <CardTitle className="flex-1">
-          <Text variant="h3" className="truncate">
+          <Text variant="h3" className="line-clamp-1">
             {capitalizeFirtLetter(board.title)}
           </Text>
         </CardTitle>

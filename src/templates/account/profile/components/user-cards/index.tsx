@@ -39,7 +39,7 @@ function UserCards({ user }: UserCardsProps) {
 
 
   return (
-    <div className="grid grid-cols-3 items-center gap-4">
+    <div className="grid md:grid-cols-3 items-center gap-4">
       {USER_CARDS_LIST.map((card) => (
         <div key={card.id} className="flex flex-col gap-2 p-4.5 rounded-2xl bg-popover border">
           <Text variant="mono" className="uppercase font-semibold">{ card.label}</Text>

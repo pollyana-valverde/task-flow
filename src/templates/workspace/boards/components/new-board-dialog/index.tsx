@@ -15,10 +15,14 @@ import { ErrorMessage } from "@/components/ui/error-message";
 import { FieldGroup } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
-import { createBoardSchema, createBoard } from "@/http/boards/create-board";
+import {
+  createBoard,
+  type createBoardSchema,
+} from "@/http/boards/create-board";
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -30,6 +34,7 @@ const newBoardSchema = z.object({
 });
 
 function NewBoardDialog({ workspaceId }: { workspaceId: string }) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -48,6 +53,7 @@ function NewBoardDialog({ workspaceId }: { workspaceId: string }) {
 
       reset();
       setIsModalOpen(false);
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         setError("root", { message: error.message });

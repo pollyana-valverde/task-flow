@@ -1,19 +1,18 @@
-import * as React from "react";
-
-import { NavMain } from "./nav-main";
-import { NavBoards } from "./nav-boards";
-import { WorkspaceSwitcher } from "./workspace-switcher";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarRail,
 } from "@/components/ui/sidebar";
 import { listBoards } from "@/http/boards/list-boards";
 import { getWorkspace } from "@/http/workspaces/get-workspace";
 import { getSession } from "@/lib/auth/get-session";
+import type * as React from "react";
+import { NavBoards } from "./nav-boards";
+import { NavMain } from "./nav-main";
 import { NavUserDropdown } from "./nav-user-dropdown";
+import { WorkspaceSwitcher } from "./workspace-switcher";
 
 interface WorkspacesSidebarProps extends React.ComponentProps<typeof Sidebar> {
   workspaceId: string;

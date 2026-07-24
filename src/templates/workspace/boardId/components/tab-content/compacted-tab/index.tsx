@@ -15,7 +15,7 @@ async function CompactedTab({ boardId, workspaceId }: CompactedTabProps) {
   const columns = await listColumns({ boardId });
 
   return (
-    <TabsContent value="compacted" className="flex gap-4">
+    <TabsContent value="compacted" className="flex gap-4 overflow-x-auto md:max-w-[calc(100%-255px)]">
       {columns.map((column) => (
         <ColumnsList key={column.id} column={column} workspaceId={workspaceId}>
           <TaskList tasks={column.tasks}>

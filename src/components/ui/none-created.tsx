@@ -1,6 +1,6 @@
-import { Text, TextProps } from "@/components/ui/text";
+import { Text, type TextProps } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
-import { Layers, LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface NoneCreatedProps extends React.ComponentProps<"div"> {}
 
@@ -9,7 +9,7 @@ function NoneCreated({ className, children, ...props }: NoneCreatedProps) {
     <div
       className={cn(
         "w-full h-[80vh] flex flex-col justify-center items-center gap-6",
-        className,
+        className
       )}
       {...props}
     >
@@ -33,11 +33,13 @@ function NoneCreatedIcon({
     <div
       {...props}
       className={cn(
-        "bg-secondary dark:bg-secondary/70 border-2 border-dashed border-primary rounded-2xl p-5.5",
-        className,
+        "bg-secondary dark:bg-secondary/70 border-2 border-dashed border-primary rounded-2xl p-4 md:p-5.5",
+        className
       )}
     >
-      <Icon className={cn("size-10 text-chart-3/80", iconClassname)} />
+      <Icon
+        className={cn("size-7 md:size-10 text-chart-3/80", iconClassname)}
+      />
     </div>
   );
 }
@@ -65,7 +67,11 @@ function NoneCreatedTitle({
   ...props
 }: NoneCreatedTextProps) {
   return (
-    <Text variant="h1" className={className} {...props}>
+    <Text
+      variant="h1"
+      className={cn(className, "md:text-3xl text-2xl")}
+      {...props}
+    >
       {children}
     </Text>
   );
@@ -95,10 +101,11 @@ function NoneCreatedAction({ children }: NoneCreatedActionProps) {
 }
 
 export {
-  NoneCreated,
-  NoneCreatedIcon,
-  NoneCreatedContent,
-  NoneCreatedTitle,
-  NoneCreatedSubtitle,
-  NoneCreatedAction,
+    NoneCreated,
+    NoneCreatedAction,
+    NoneCreatedContent,
+    NoneCreatedIcon,
+    NoneCreatedSubtitle,
+    NoneCreatedTitle
 };
+

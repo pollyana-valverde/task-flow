@@ -16,14 +16,13 @@ import { FieldGroup } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { Text } from "@/components/ui/text";
 import { createColumn, createColumnSchema } from "@/http/columns/create-column";
-
 import { ApiError } from "@/lib/http/api-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-
 
 const newColumnSchema = createColumnSchema.extend({
   title: z.string().min(2, "O Nome da coluna é obrigatório."),
@@ -32,6 +31,7 @@ const newColumnSchema = createColumnSchema.extend({
 type NewColumnData = z.infer<typeof newColumnSchema>;
 
 function NewColumnDialog({ boardId }: { boardId: string }) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -50,6 +50,7 @@ function NewColumnDialog({ boardId }: { boardId: string }) {
 
       reset();
       setIsModalOpen(false);
+      router.refresh();
     } catch (error) {
       if (error instanceof ApiError) {
         setError("root", { message: error.message });
@@ -76,15 +77,16 @@ function NewColumnDialog({ boardId }: { boardId: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm md:max-w-md">
-        <form className="grid gap-6" onSubmit={handleSubmit(handleCreateColumn)}>
+        <form
+          className="grid gap-6"
+          onSubmit={handleSubmit(handleCreateColumn)}
+        >
           <DialogHeader>
             <DialogTitle asChild>
               <Text variant="h2">Nova coluna</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text variant="sm">
-                Crie um novo estágio no seu board.
-              </Text>
+              <Text variant="sm">Crie um novo estágio no seu board.</Text>
             </DialogDescription>
           </DialogHeader>
 

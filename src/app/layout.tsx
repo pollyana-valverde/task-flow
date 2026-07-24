@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Space_Grotesk, Space_Mono } from "next/font/google";
 
-import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
+import "@/styles/globals.css";
 import { ThemeProvider } from "next-themes";
 
 const spaceGrotesk = Space_Grotesk({
@@ -31,13 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning={true} >
       <body
         className={cn(
           hankenGrotesk.variable,
           spaceMono.variable,
           spaceGrotesk.variable,
           "font-sans",
+          "overflow-x-hidden"
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

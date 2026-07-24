@@ -1,17 +1,17 @@
 "use client";
 
-import { Home } from "lucide-react";
 import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
+import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
+import { Home } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 
 interface SwitcherDropdownProps {
   workspaces: {
@@ -64,12 +64,12 @@ function SwitcherDropdown({ workspaces }: SwitcherDropdownProps) {
         </DropdownMenuItem>
       ))}
       <DropdownMenuSeparator />
-      <DropdownMenuItem className="gap-2 p-2">
-        <Home className="size-4 text-foreground/80" />
-        <Link href={"/"} className="font-medium text-foreground/80">
+      <Link href={"/"} className="font-medium text-foreground/80">
+        <DropdownMenuItem className="gap-2 p-2">
+          <Home className="size-4 text-foreground/80" />
           Voltar pro dashboard
-        </Link>
-      </DropdownMenuItem>
+        </DropdownMenuItem>
+      </Link>
     </DropdownMenuContent>
   );
 }

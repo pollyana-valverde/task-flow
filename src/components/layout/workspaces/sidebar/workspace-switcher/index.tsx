@@ -1,18 +1,18 @@
 import { ChevronsUpDown } from "lucide-react";
 
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
-import { SwitcherDropdown } from "./switcher-dropdown";
 import { listWorkspaces } from "@/http/workspaces/list-workspaces";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
+import { SwitcherDropdown } from "./switcher-dropdown";
 
 interface WorkspaceSwitcherProps {
   workspace: {
@@ -36,7 +36,7 @@ async function WorkspaceSwitcher({ workspace }: WorkspaceSwitcherProps) {
               size="lg"
               className="data-[state=open]:bg-foreground/5 data-[state=open]:text-foreground"
             >
-              <div className="size-8 flex items-center justify-center rounded-md bg-primary border border-foreground">
+              <div className="size-8 flex items-center justify-center rounded-md bg-primary border border-foreground group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:rounded-full group-data-[collapsible=icon]:border-none">
                 <Text className="text-lime-950 font-bold font-heading">
                   {workspace.title.split("")[0].toUpperCase()}
                 </Text>

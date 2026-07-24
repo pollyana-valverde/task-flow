@@ -25,7 +25,7 @@ async function UserInfo({ user }: UserInfoProps) {
     <div className="border-2 border-lime-950 dark:border-lime-700 rounded-2xl shadow-[4px_4px_0] dark:shadow-lime-700 bg-popover px-7 py-6 relative overflow-hidden">
       <div className="bg-primary w-full h-1/3 absolute top-0 left-0" />
       <div className="flex flex-col gap-5.5">
-        <div className="flex justify-between items-end">
+        <div className="flex flex-wrap gap-5 justify-between items-end">
           <div className="flex items-end gap-4">
             <Avatar className="size-20 outline-3 outline-popover rounded-2xl shadow-[0_2px_8px_0] shadow-primary-foreground/20">
               {user.image && (
@@ -48,7 +48,7 @@ async function UserInfo({ user }: UserInfoProps) {
             <div className="flex flex-col z-1 mb-0.5">
               <Text
                 variant="h2"
-                className="leading-tight text-foreground text-2xl"
+                className="leading-tight text-foreground md:text-2xl"
               >
                 {user.name}
               </Text>
