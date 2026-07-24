@@ -1,14 +1,15 @@
-import { Hono } from "hono";
-import { cors } from "hono/cors";
+import { apiEnv } from "@/api-env";
 import { errorHandler } from "@/api/middlewares/error-handler";
 import { routes } from "@/api/routes";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
 
 const app = new Hono().basePath("/api");
 
 app.use(
   "*",
   cors({
-    origin: "http://localhost:3000",
+    origin: apiEnv.BETTER_AUTH_URL,
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     credentials: true,
