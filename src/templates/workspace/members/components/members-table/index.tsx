@@ -12,7 +12,9 @@ import { MemberCell } from "./member-cell";
 import { StatusCell } from "./status-cell";
 
 interface MembersTableProps {
-  sessionUserId: string | undefined
+  sessionUserMemberRole: {
+     role: "member" | "admin" | "owner";
+ }
   workspaceId:string
   members: {
     id: string;
@@ -28,8 +30,7 @@ interface MembersTableProps {
   }[];
 }
 
-function MembersTable({ members, workspaceId, sessionUserId }: MembersTableProps) {
-const sessionUserCurrentWorkspaceRole = members.find((member) => sessionUserId === member.userId)
+function MembersTable({ members, workspaceId, sessionUserMemberRole }: MembersTableProps) {
 
   return (
     <TableRoot className="bg-popover">
@@ -38,7 +39,7 @@ const sessionUserCurrentWorkspaceRole = members.find((member) => sessionUserId =
           <TableHead>Membro</TableHead>
           <TableHead>Papel</TableHead>
           <TableHead>Status</TableHead>
-          {sessionUserCurrentWorkspaceRole?.role === "owner" && <TableHead />}
+          {sessionUserMemberRole?.role === "owner" && <TableHead />}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -53,7 +54,7 @@ const sessionUserCurrentWorkspaceRole = members.find((member) => sessionUserId =
               <RoleBadge role={member.role} variant={member.role} />
             </TableCell>
             <StatusCell status={member.status} variant={member.status} />
-            {sessionUserCurrentWorkspaceRole?.role === "owner" && member.role !== "owner" && (
+            {sessionUserMemberRole?.role === "owner" && member.role !== "owner" && (
               <ActionCell member={{ ...member, role: member.role as "member" | "admin" }} workspaceId={workspaceId} />
             )}
           </TableRow>

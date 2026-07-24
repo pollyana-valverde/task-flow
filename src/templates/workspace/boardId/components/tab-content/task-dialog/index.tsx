@@ -2,19 +2,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
 import { listColumns } from "@/http/columns/list-columns";
+import { getMyMembership } from "@/http/members/get-my-membership";
 import { listMembers } from "@/http/members/list-members";
 import { getTask } from "@/http/tasks/get-task";
+import { getSession } from "@/lib/auth/get-session";
 import { cn } from "@/lib/utils";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 import { getNameInitials } from "@/utils/get-name-initials";
@@ -25,9 +27,9 @@ import { PriorityBadge } from "../detailed-tab/task-card/priority-badge";
 
 interface TaskDialogProps {
   column: {
-    id: string
-    title: string
-    }
+    id: string;
+    title: string;
+  };
   workspaceId: string;
   boardId: string;
   taskId: string;
@@ -41,9 +43,13 @@ async function TaskDialog({
   children,
   column,
 }: TaskDialogProps) {
+  const session = await getSession();
   const task = await getTask({ taskId });
   const members = await listMembers({ workspaceId });
-  const columns = await listColumns({boardId})
+  const columns = await listColumns({ boardId });
+  const sessionUserMemberRole = await getMyMembership({ workspaceId });
+
+  const sessionUserTaskCreator = task.createdBy === session?.user.id;
 
   return (
     <Dialog>
@@ -53,13 +59,27 @@ async function TaskDialog({
           <DialogTitle asChild className="font-bold">
             <div className="flex items-center gap-2 justify-between mr-6">
               <div className="flex items-center gap-3">
-                <PriorityBadge variant={task.priority} priority={task.priority} />
+                <PriorityBadge
+                  variant={task.priority}
+                  priority={task.priority}
+                />
                 <Badge className="text-foreground/75 bg-muted normal-case">
                   {capitalizeFirtLetter(column.title)}
                 </Badge>
               </div>
-              <MoveToColumnDialog task={task} columns={columns} currentColumn={column.title}>
-                <Button type="submit" variant="ghost" size="sm" className="py-0.5 text-sm">Mover tarefa</Button>
+              <MoveToColumnDialog
+                task={task}
+                columns={columns}
+                currentColumn={column.title}
+              >
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  size="sm"
+                  className="py-0.5 text-sm"
+                >
+                  Mover tarefa
+                </Button>
               </MoveToColumnDialog>
             </div>
           </DialogTitle>
@@ -180,11 +200,15 @@ async function TaskDialog({
         </div>
 
         <DialogFooter className="mt-3 flex">
+          {(sessionUserMemberRole.role !== "member" || sessionUserTaskCreator) && (
           <div className="flex-1">
             <DeleteTaskDialog taskId={task.id}>
-              <Button variant="destructive" className="w-full md:w-fit">Excluir tarefa</Button>
+              <Button variant="destructive" className="w-full md:w-fit">
+                Excluir tarefa
+              </Button>
             </DeleteTaskDialog>
           </div>
+          )}
           <DialogClose asChild>
             <Button className="px-6" variant="secondary">
               Cancelar

@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Text } from "@/components/ui/text";
+import { getMyMembership } from "@/http/members/get-my-membership";
 import { listMembers } from "@/http/members/list-members";
 import { capitalizeFirtLetter } from "@/utils/captalize-first-letter";
 import { MoreHorizontalIcon, Plus } from "lucide-react";
@@ -33,6 +34,7 @@ async function ColumnsList({
   workspaceId,
 }: ColumnsLIstProps) {
   const members = await listMembers({ workspaceId });
+  const sessionUserMemberRole = await getMyMembership({ workspaceId });
 
   return (
     <div key={column.id} className="space-y-3 min-w-67">
@@ -51,26 +53,28 @@ async function ColumnsList({
             <Plus className="size-4 " />
           </div>
         </NewTaskDialog>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-8">
-              <MoreHorizontalIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <UpdateColumnDialog column={column}>
-              <div className="cursor-default items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden select-none focus:bg-muted focus:text-accent-foreground hover:bg-accent">
-                Editar
-              </div>
-            </UpdateColumnDialog>
-            <DropdownMenuSeparator />
-            <DeleteColumnDialog column={column}>
-              <div className="cursor-default text-destructive items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden select-none hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive dark:focus:bg-destructive/20 dark:hover:bg-destructive/20">
-                Excluir
-              </div>
-            </DeleteColumnDialog>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {sessionUserMemberRole.role !== "member" && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-8">
+                <MoreHorizontalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <UpdateColumnDialog column={column}>
+                <div className="cursor-default items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden select-none focus:bg-muted focus:text-accent-foreground hover:bg-accent">
+                  Editar
+                </div>
+              </UpdateColumnDialog>
+              <DropdownMenuSeparator />
+              <DeleteColumnDialog column={column}>
+                <div className="cursor-default text-destructive items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden select-none hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive dark:focus:bg-destructive/20 dark:hover:bg-destructive/20">
+                  Excluir
+                </div>
+              </DeleteColumnDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       {children}
       <NewTaskDialog columnId={column.id} members={members}>

@@ -1,7 +1,9 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { listColumns } from "@/http/columns/list-columns";
+import { getMyMembership } from "@/http/members/get-my-membership";
 import { NewColumnDialog } from "../../column-actions/new-column-dialog";
 import { ColumnsList } from "../columns-list";
+import { NoneColumnCreated } from "../none-created";
 import { TaskDialog } from "../task-dialog";
 import { TaskList } from "../tasks-list";
 import { TaskCard } from "./task-card";
@@ -13,9 +15,13 @@ interface DetailedTabProps {
 
 async function DetailedTab({ boardId, workspaceId }: DetailedTabProps) {
   const columns = await listColumns({ boardId });
+  const sessionUserMemberRole = await getMyMembership({ workspaceId });
 
   return (
-    <TabsContent value="detailed" className="flex gap-4 overflow-x-auto md:max-w-[calc(100%-255px)]">
+    <TabsContent
+      value="detailed"
+      className="flex gap-4 overflow-x-auto md:max-w-[calc(100vw-380px)]"
+    >
       {columns.map((column) => (
         <ColumnsList key={column.id} column={column} workspaceId={workspaceId}>
           <TaskList tasks={column.tasks}>
@@ -33,7 +39,13 @@ async function DetailedTab({ boardId, workspaceId }: DetailedTabProps) {
           </TaskList>
         </ColumnsList>
       ))}
-      <NewColumnDialog boardId={boardId} />
+      {sessionUserMemberRole.role !== "member" && (
+        <NewColumnDialog boardId={boardId} />
+      )}
+
+      {sessionUserMemberRole.role === "member" && columns.length === 0 && (
+        <NoneColumnCreated />
+      )}
     </TabsContent>
   );
 }

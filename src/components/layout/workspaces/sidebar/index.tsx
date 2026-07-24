@@ -1,11 +1,12 @@
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarRail,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import { listBoards } from "@/http/boards/list-boards";
+import { getMyMembership } from "@/http/members/get-my-membership";
 import { getWorkspace } from "@/http/workspaces/get-workspace";
 import { getSession } from "@/lib/auth/get-session";
 import type * as React from "react";
@@ -26,13 +27,18 @@ async function WorkspacesSidebar({
   const workspace = await getWorkspace({ workspaceId });
   const session = await getSession();
 
+  const sessionUserMemberRole = await getMyMembership({ workspaceId });
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <WorkspaceSwitcher workspace={workspace} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain workspaceId={workspaceId} />
+        <NavMain
+          workspaceId={workspaceId}
+          sessionUserMemberRole={sessionUserMemberRole?.role}
+        />
         <NavBoards boards={boards} />
       </SidebarContent>
       <SidebarFooter>

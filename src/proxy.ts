@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse, type ProxyConfig } from "next/server";
-import { auth } from "./api/auth";
+import { getSession } from "./lib/auth/get-session";
 
 const publicRoutes = [
   { path: "/sign-in", whenAuthenticated: "redirect" },
@@ -12,9 +11,7 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/sign-in";
 async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const publicRoute = publicRoutes.find((route) => route.path === path);
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session && publicRoute) {
     return NextResponse.next();

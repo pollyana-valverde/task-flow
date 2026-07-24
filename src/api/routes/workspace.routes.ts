@@ -48,6 +48,11 @@ workspaceRoutes.delete(
 
 // workspace members
 workspaceRoutes.get(
+  "/:id/member/my-membership",
+  workspaceController.findMyMembership
+);
+
+workspaceRoutes.get(
   "/:id/member",
   verifyAuthorization(
     ["owner", "admin", "member"] as WorkspaceMemberRole[],

@@ -1,20 +1,27 @@
 import {
   Header,
+  HeaderAction,
   HeaderContent,
   HeaderSubtitle,
   HeaderTitle,
-  HeaderAction,
 } from "@/components/ui/header";
-import z from "zod";
+import type { listMembersResultSchema } from "@/http/members/list-members";
+import type z from "zod";
 import { InviteMemberDialog } from "../invite-member-dialog";
-import { listMembersResultSchema } from "@/http/members/list-members";
 
 interface DashboardHeaderProps {
   members: z.infer<typeof listMembersResultSchema>;
   workspaceId: string;
+  sessionUserMemberRole: {
+    role: "member" | "admin" | "owner";
+  };
 }
 
-function MembersHeader({ members, workspaceId }: DashboardHeaderProps) {
+function MembersHeader({
+  members,
+  workspaceId,
+  sessionUserMemberRole,
+}: DashboardHeaderProps) {
   return (
     <Header>
       <HeaderContent>
@@ -26,9 +33,11 @@ function MembersHeader({ members, workspaceId }: DashboardHeaderProps) {
           · 1 convite pendente
         </HeaderSubtitle>
       </HeaderContent>
-      <HeaderAction>
-        <InviteMemberDialog workspaceId={workspaceId} />
-      </HeaderAction>
+      {sessionUserMemberRole.role !== "member" && (
+        <HeaderAction>
+          <InviteMemberDialog workspaceId={workspaceId} />
+        </HeaderAction>
+      )}
     </Header>
   );
 }

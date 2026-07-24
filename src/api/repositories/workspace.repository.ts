@@ -1,16 +1,16 @@
 import type { IWorkspaceRepository } from "@/api/contracts/workspace.contract";
 import { database } from "@/api/database";
 import {
-    boards,
-    users,
-    workspaceMembers,
-    workspaces,
+  boards,
+  users,
+  workspaceMembers,
+  workspaces,
 } from "@/api/database/schemas";
 import type { User } from "@/api/models/user.model";
 import type {
-    WorkspaceMember,
-    WorkspaceMemberRole,
-    WorkspaceMemberStatus,
+  WorkspaceMember,
+  WorkspaceMemberRole,
+  WorkspaceMemberStatus,
 } from "@/api/models/workspace-member.model";
 import type { Workspace } from "@/api/models/workspace.model";
 import { and, count, eq, getTableColumns, inArray } from "drizzle-orm";
@@ -26,9 +26,14 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .from(workspaces)
       .innerJoin(
         workspaceMembers,
-        eq(workspaceMembers.workspaceId, workspaces.id),
+        eq(workspaceMembers.workspaceId, workspaces.id)
       )
-      .where(and(eq(workspaceMembers.userId, userId), eq(workspaceMembers.status, "active")));
+      .where(
+        and(
+          eq(workspaceMembers.userId, userId),
+          eq(workspaceMembers.status, "active")
+        )
+      );
 
     if (!result.length) return [];
 
@@ -158,8 +163,8 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .where(
         and(
           eq(workspaceMembers.workspaceId, workspaceId),
-          eq(workspaceMembers.userId, userId),
-        ),
+          eq(workspaceMembers.userId, userId)
+        )
       );
 
     return (result[0] as WorkspaceMember) ?? null;
@@ -169,7 +174,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
     workspaceId: Workspace["id"],
     userId: User["id"],
     status?: WorkspaceMemberStatus,
-    role?: WorkspaceMemberRole,
+    role?: WorkspaceMemberRole
   ) {
     const result = await database
       .insert(workspaceMembers)
@@ -186,7 +191,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
 
   async transferOwnership(
     workspaceId: Workspace["id"],
-    newOwnerId: User["id"],
+    newOwnerId: User["id"]
   ) {
     const result = await database
       .update(workspaces)
@@ -200,7 +205,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
   async updateMemberRole(
     workspaceId: Workspace["id"],
     userId: User["id"],
-    role: WorkspaceMemberRole,
+    role: WorkspaceMemberRole
   ) {
     const result = await database
       .update(workspaceMembers)
@@ -208,8 +213,8 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .where(
         and(
           eq(workspaceMembers.workspaceId, workspaceId),
-          eq(workspaceMembers.userId, userId),
-        ),
+          eq(workspaceMembers.userId, userId)
+        )
       )
       .returning({ role: workspaceMembers.role });
 
@@ -219,7 +224,7 @@ class WorkspaceRepository implements IWorkspaceRepository {
   async updateMemberStatus(
     workspaceId: Workspace["id"],
     userId: User["id"],
-    status: WorkspaceMemberStatus,
+    status: WorkspaceMemberStatus
   ) {
     const result = await database
       .update(workspaceMembers)
@@ -227,8 +232,8 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .where(
         and(
           eq(workspaceMembers.workspaceId, workspaceId),
-          eq(workspaceMembers.userId, userId),
-        ),
+          eq(workspaceMembers.userId, userId)
+        )
       )
       .returning({ status: workspaceMembers.status });
 
@@ -241,8 +246,8 @@ class WorkspaceRepository implements IWorkspaceRepository {
       .where(
         and(
           eq(workspaceMembers.workspaceId, workspaceId),
-          eq(workspaceMembers.userId, userId),
-        ),
+          eq(workspaceMembers.userId, userId)
+        )
       );
     return;
   }

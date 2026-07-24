@@ -1,5 +1,3 @@
-import { LayoutGrid } from "lucide-react";
-import { NewBoardDialog } from "../new-board-dialog";
 import {
   NoneCreated,
   NoneCreatedAction,
@@ -8,21 +6,31 @@ import {
   NoneCreatedSubtitle,
   NoneCreatedTitle,
 } from "@/components/ui/none-created";
+import { getMyMembership } from "@/http/members/get-my-membership";
+import { LayoutGrid } from "lucide-react";
+import { NewBoardDialog } from "../new-board-dialog";
 
-function NoneBoardCreated({ workspaceId }: { workspaceId: string }) {
+async function NoneBoardCreated({ workspaceId }: { workspaceId: string }) {
+  const sessionUserMemberRole = await getMyMembership({ workspaceId });
+
   return (
     <NoneCreated>
       <NoneCreatedIcon Icon={LayoutGrid} />
       <NoneCreatedContent>
-        <NoneCreatedTitle>Crie seu primeiro board</NoneCreatedTitle>
+        <NoneCreatedTitle>
+          {sessionUserMemberRole.role !== "member"
+            ? "Crie seu primeiro board"
+            : "Nenhum board criado"}
+        </NoneCreatedTitle>
         <NoneCreatedSubtitle>
-          Boards são quadros kanban com colunas e tarefas. Comece com um modelo
-          ou em branco.
+          Boards são quadros kanban com colunas e tarefas.
         </NoneCreatedSubtitle>
       </NoneCreatedContent>
-      <NoneCreatedAction>
-        <NewBoardDialog workspaceId={workspaceId} />
-      </NoneCreatedAction>
+      {sessionUserMemberRole.role !== "member" && (
+        <NoneCreatedAction>
+          <NewBoardDialog workspaceId={workspaceId} />
+        </NoneCreatedAction>
+      )}
     </NoneCreated>
   );
 }

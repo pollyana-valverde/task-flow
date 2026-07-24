@@ -150,6 +150,19 @@ class WorkspaceService implements IWorkspaceService {
   }
 
   // workspace members
+  async findMyMembership(workspaceId: Workspace["id"], userId: User["id"]) {
+    const member = await this.workspaceRepository.findMember(
+      workspaceId,
+      userId
+    );
+
+    if (!member || member.status !== "active") {
+      throw new AppError("Membership not found", 404);
+    }
+
+    return { role: member.role };
+  }
+
   async findMembers(
     workspaceId: Workspace["id"],
     userId: WorkspaceMember["userId"]

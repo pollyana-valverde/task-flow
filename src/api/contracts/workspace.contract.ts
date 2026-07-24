@@ -69,6 +69,10 @@ interface IWorkspaceService {
   delete(id: Workspace["id"], ownerId: Workspace["ownerId"]): Promise<void>;
 
   // workspace members
+  findMyMembership(
+    workspaceId: Workspace["id"],
+    userId: User["id"]
+  ): Promise<{ role: WorkspaceMemberRole }>;
   findMembers(
     workspaceId: Workspace["id"],
     userId: WorkspaceMember["userId"]

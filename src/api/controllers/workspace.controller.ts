@@ -89,6 +89,18 @@ class WorkspaceController {
   };
 
   // workspace members
+  findMyMembership = async (c: Context) => {
+    const { id: workspaceId } = paramsSchema.parse(c.req.param());
+    const { id: userId } = c.get("user");
+
+    const membership = await this.workspaceService.findMyMembership(
+      workspaceId,
+      userId
+    );
+
+    return c.json(membership, 200);
+  };
+
   findMembers = async (c: Context) => {
     const { id: workspaceId } = paramsSchema.parse(c.req.param());
     const { id: userId } = c.get("user");
