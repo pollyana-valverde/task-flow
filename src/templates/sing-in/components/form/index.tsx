@@ -1,12 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import z from "zod";
 import GoogleIcon from "@/assets/icons/google.png";
 import { Button } from "@/components/ui/button";
 import { ErrorMessage } from "@/components/ui/error-message";
@@ -14,6 +7,13 @@ import { FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputField } from "@/components/ui/form/input-field";
 import { authClient } from "@/lib/auth-client";
 import { translateAuthError } from "@/utils/auth-errors";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
 
 interface SignInFormData {
   email: string;
@@ -27,6 +27,7 @@ const signInSchema = z.object({
 
 function SignInForm() {
   const [googleError, setGoogleError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -55,6 +56,7 @@ function SignInForm() {
 
   async function handleGoogleSignIn() {
     setGoogleError(null);
+    setGoogleLoading(true)
 
     await authClient.signIn.social({
       provider: "google",
@@ -110,7 +112,7 @@ function SignInForm() {
         <hr className="bg-muted w-full" />
       </div>
 
-      <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
+      <Button variant="outline" className="w-full" disabled={googleLoading} onClick={handleGoogleSignIn}>
         <Image
           className="mr-1"
           width={17}
@@ -118,7 +120,7 @@ function SignInForm() {
           src={GoogleIcon}
           alt="Ícone do Google"
         />
-        Entrar com Google
+        {googleLoading ? "Entrando com Google" : "Entrar com Google"}
       </Button>
     </>
   );
