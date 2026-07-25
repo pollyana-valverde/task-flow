@@ -27,7 +27,7 @@ const signInSchema = z.object({
 
 function SignInForm() {
   const [googleError, setGoogleError] = useState<string | null>(null);
-  const [googleLoading, setGoogleLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -56,14 +56,14 @@ function SignInForm() {
 
   async function handleGoogleSignIn() {
     setGoogleError(null);
-    setGoogleLoading(true)
+    setGoogleLoading(true);
 
     await authClient.signIn.social({
       provider: "google",
       fetchOptions: {
         onError: () => {
           setGoogleError(
-            "Ocorreu um erro ao tentar entrar com o Google. Por favor, tente novamente.",
+            "Ocorreu um erro ao tentar entrar com o Google. Por favor, tente novamente."
           );
         },
       },
@@ -112,7 +112,12 @@ function SignInForm() {
         <hr className="bg-muted w-full" />
       </div>
 
-      <Button variant="outline" className="w-full" disabled={googleLoading} onClick={handleGoogleSignIn}>
+      <Button
+        variant="outline"
+        className="w-full"
+        disabled={googleLoading}
+        onClick={handleGoogleSignIn}
+      >
         <Image
           className="mr-1"
           width={17}
@@ -120,7 +125,7 @@ function SignInForm() {
           src={GoogleIcon}
           alt="Ícone do Google"
         />
-        {googleLoading ? "Entrando com Google" : "Entrar com Google"}
+        {googleLoading ? "Entrando com Google..." : "Entrar com Google"}
       </Button>
     </>
   );
