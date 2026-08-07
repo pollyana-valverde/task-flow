@@ -37,7 +37,7 @@ function SwitchThemeCard() {
           )}
         >
           <div className="w-full h-1/2 bg-[#0e1207] border rounded-lg" />
-          <Text className="font-semibold text-foreground">Claro</Text>
+          <Text className="font-semibold text-foreground">Escuro</Text>
         </Button>
       </CardContent>
     </Card>

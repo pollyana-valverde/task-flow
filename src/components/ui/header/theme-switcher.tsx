@@ -13,11 +13,8 @@ function ThemeSwitcher() {
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       className="p-3"
     >
-      {theme === "dark" ? (
-        <Sun className="size-5" />
-      ) : (
-        <Moon className="size-5" />
-      )}
+      <Sun className="size-5 hidden dark:block" />
+      <Moon className="size-5 block dark:hidden" />
     </Button>
   );
 }
