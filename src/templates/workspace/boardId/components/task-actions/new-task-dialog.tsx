@@ -40,6 +40,7 @@ interface NewTaskDialogProps {
   members: {
     id: string;
     userId: string;
+    status: "active" | "pending" | "declined";
     user: {
       name: string;
     };
@@ -62,6 +63,8 @@ type NewTaskDataInput = z.input<typeof newTaskSchema>;
 type NewTaskDataOutput = z.output<typeof newTaskSchema>;
 
 function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
+  const activeMembers = members.filter((member) => member.status === "active");
+
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -220,7 +223,7 @@ function NewTaskDialog({ columnId, children, members }: NewTaskDialogProps) {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          {members.map((member) => (
+                          {activeMembers.map((member) => (
                             <SelectItem key={member.id} value={member.userId}>
                               {member.user.name}
                             </SelectItem>
